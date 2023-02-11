@@ -5,8 +5,6 @@
     </div>
     <div id="manage-content">
       <div id="manage-listbar">
-
-        <!--        -->
         <el-row class="tac">
           <el-col :span="12" style="width: 100%">
             <el-menu
@@ -47,8 +45,6 @@
             </el-menu>
           </el-col>
         </el-row>
-        <!--        -->
-
       </div>
       <div id="manage-text">
         <router-view></router-view>

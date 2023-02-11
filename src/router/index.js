@@ -1,11 +1,11 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import index from "@/views/index.vue";
 import login from "@/views/auth/login.vue";
 import manage from "@/views/manage/manage.vue";
-import Register from "@/views/auth/register.vue";
+import register from "@/views/auth/register.vue";
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
 const routes = [
   {
@@ -22,6 +22,11 @@ const routes = [
     path: '/manage',
     name: 'manage',
     component: manage
+  },
+  {
+    path: '/auth/register',
+    name: 'register',
+    component: register
   }
 ]
 

@@ -1,18 +1,21 @@
 <template>
   <div class="login-wrap">
-    <el-from class="login-container">
-      <h1 class="title">用户登录:</h1>
-      <el-from-item>
-        <el-input type="text" placeholder="账号" v-model="userName" autocomplete="off"></el-input>
-      </el-from-item>
-      <el-from-item>
-        <el-input type="password" placeholder="密码" v-model="password" autocomplete="off"></el-input>
-      </el-from-item>
-        <el-row style="text-align: center;margin-top: -10px;">
-          <el-link type="primary" @click="toRegister">用户注册</el-link>
-          <el-link type="primary">忘记密码</el-link>
-        </el-row>
-    </el-from>
+    <el-form class="login-container" :rules="rule">
+      <h1 class="login-title">登录</h1>
+      <el-form-item></el-form-item>
+      <el-form-item prop="username">
+        <el-input type="text" placeholder="用户账号" v-model="username" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item></el-form-item>
+      <el-form-item prop="password">
+        <el-input type="password" placeholder="用户密码" v-model="password" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item></el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="register" style="width: 48%;">去注册</el-button>
+        <el-button type="primary" @click="toLogin" style="width: 48%;">登录</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
@@ -24,48 +27,56 @@ export default {
   name: 'Login',
   data: function () {
     return {
-      username: '',
-      password: ''
+      loginForm: {
+        username: '',
+        password: ''
+      },
+      rule: {
+        username: [
+          {required: true, message: '用户名不能为空', trigger: 'blur'}
+        ],
+        password: [
+          {required: true, message: '密码不能为空', trigger: 'blur'}
+        ]
+      }
     }
   },
   methods: {
-    doLogin: function () {
-      let username = this.username;
-      let password = this.password;
-      console.log("username=%s,password=%s", username, password);
+    login() {
+
     },
-    toRegister: function () {
-      this.$router.push('/Register');
+    register() {
+      this.$router.push({
+        path: '/auth/register'
+      })
     }
   }
 }
 </script>
 
 <style>
-.login-wrap{
-  box-sizing:border-box;
-  width: 100%;
-  height: 100%;
-  padding-top: 10%;
-  background: url("@/assets/login.png");
-  background-repeat: no-repeat;
-  background-position: center right;
-  background-size: contain;
-}
-.login-container{
-  border-radius: 10px;
-  margin: 0 auto;
-  width: 350px;
-  padding: 30px 35px 15px 35px;
-  background: #fff;
-  border: 1px solid #eaeaea;
-  text-align: left;
-  box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.1);
+.login-wrap {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  background: url("@/assets/img/bg1.png") no-repeat;
+  background-size: cover;
 }
 
-.title {
-  margin: 0px auto 40px auto;
+.login-container {
+  width: 25%;
+  padding: 2vw;
+  height: 40%;
+  margin: 20vh 0 0 0;
+  border-radius: 8px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+}
+
+.login-title {
   text-align: center;
-  color: #505458;
+  font-size: 32px;
+  margin: 0 0 1vh 0;
 }
 </style>
