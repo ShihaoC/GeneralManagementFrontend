@@ -1,14 +1,14 @@
 <template>
   <div class="login-wrap">
-    <el-form class="login-container" :rules="rule">
+    <el-form :model="loginForm" class="login-container" ref="ruleForm" :rules="rule">
       <h1 class="login-title">登录</h1>
       <el-form-item></el-form-item>
       <el-form-item prop="username">
-        <el-input type="text" placeholder="用户账号" v-model="username" autocomplete="off"></el-input>
+        <el-input type="text" placeholder="用户账号" v-model="loginForm.username" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item></el-form-item>
       <el-form-item prop="password">
-        <el-input type="password" placeholder="用户密码" v-model="password" autocomplete="off"></el-input>
+        <el-input type="password" placeholder="用户密码" v-model="loginForm.password" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item></el-form-item>
       <el-form-item>
