@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import index from "@/views/index.vue";
 import login from "@/views/auth/login.vue";
 import manage from "@/views/manage/manage.vue";
+import Register from "@/views/auth/register.vue";
 
 Vue.use(VueRouter)
 
