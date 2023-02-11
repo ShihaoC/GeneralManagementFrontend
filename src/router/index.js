@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import index from "@/views/index.vue";
 import login from "@/views/auth/login.vue";
-import test from "@/views/test.vue"
+import manage from "@/views/manage/manage.vue";
 
 Vue.use(VueRouter)
 
@@ -18,9 +18,9 @@ const routes = [
     component: login
   },
   {
-    path: '/test',
-    name: 'test',
-    component: test
+    path: '/manage',
+    name: 'manage',
+    component: manage
   }
 ]
 
