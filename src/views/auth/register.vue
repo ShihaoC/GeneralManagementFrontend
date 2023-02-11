@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
 <!--  <div class="login-wrap">-->
 <!--    <el-form class="login-container">-->
 <!--      <h1 class="title">用户注册：</h1>-->
@@ -17,6 +18,26 @@
 <!--      </el-form-item>-->
 <!--    </el-form>-->
 <!--  </div>-->
+=======
+  <div class="login-wrap">
+    <el-form class="login-container">
+      <h1 class="title">用户注册：</h1>
+      <el-form-item>
+        <el-input type="text" placeholder="用户账号" v-model="username" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-input type="password" placeholder="用户密码" v-model="password" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-input type="password" placeholder="确认密码" v-model="password1" autocomplete="off"></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="doRegister" style="width: 48%;">注册</el-button>
+        <el-button type="primary" @click="toLogin" style="width: 48%;">返回登录</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
+>>>>>>> origin/master
 </template>
 
 <script>
