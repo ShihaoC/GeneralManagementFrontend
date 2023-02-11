@@ -12,8 +12,8 @@
       </el-form-item>
       <el-form-item></el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="register" style="width: 48%;">去注册</el-button>
         <el-button type="primary" @click="toLogin" style="width: 48%;">登录</el-button>
+        <el-button type="primary" @click="register" style="width: 48%;">去注册</el-button>
       </el-form-item>
     </el-form>
   </div>

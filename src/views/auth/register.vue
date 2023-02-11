@@ -47,10 +47,12 @@ export default {
       },
       rule: {
         username: [
-          {required: true, message: '请输入活动名称', trigger: 'blur'}
+          {required: true, message: '用户名不能为空', trigger: 'blur'},
+          { min: 5, message: '最少5个字符', trigger: 'blur' }
         ],
         password: [
-          {required: true, message: '密码不能为空', trigger: 'blur'}
+          {required: true, message: '密码不能为空', trigger: 'blur'},
+          { min: 6, message: '密码最少6位', trigger: 'blur' }
         ],
         password1: [
           {validator: password1,trigger: 'blur'}
