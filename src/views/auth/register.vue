@@ -99,12 +99,12 @@ export default {
       }).then((resp) => {
         localStorage.setItem("username",this.formData.username)
         localStorage.setItem("password",this.formData.password1)
-        this.$router.push({path: '/auth/login'})
+        this.$router.push({path: '/manage'})
         console.log(resp.data)
       })
     },
     toLogin: function () {
-      this.$router.push("/auth/login")
+      this.$router.push("/")
     }
   }
 }

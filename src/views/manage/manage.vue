@@ -1,7 +1,8 @@
 <template>
     <div id="manage-main">
         <div id="manage-navbar">
-
+          <div id="manage-navbar-title">员工管理系统</div>
+          <div id="manage-navbar-user">{{user}}</div>
         </div>
         <div id="manage-content">
             <div id="manage-listbar">
