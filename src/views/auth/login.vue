@@ -6,12 +6,14 @@
         <h1 id="login-title">登录</h1>
         <el-form-item></el-form-item>
         <el-form-item prop="username">
-          <el-input type="text" placeholder="用户账号" @keydown.enter.native="login()" v-model="loginForm.username" name="username"
+          <el-input type="text" placeholder="用户账号" @keydown.enter.native="login()" v-model="loginForm.username"
+                    name="username"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item></el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" placeholder="用户密码" @keydown.enter.native="login()" v-model="loginForm.password" name="password"
+          <el-input type="password" placeholder="用户密码" @keydown.enter.native="login()" v-model="loginForm.password"
+                    name="password"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item></el-form-item>
@@ -21,7 +23,7 @@
         </el-form-item>
       </el-form>
       <div id="login-yiyan" v-loading="loading" style="text-align: center">
-        <span id="login-yiyan" style="font-size: 8px">{{ yiyan }} --{{yiyan_from}}</span>
+        <span id="login-yiyan" style="font-size: 8px">{{ yiyan }} --{{ yiyan_from }}</span>
       </div>
     </div>
   </div>
@@ -32,6 +34,7 @@
 import Global from "@/views/Global.vue";
 import axios from "axios";
 import particles from 'particlesjs'
+
 let canv = null;
 
 const newAxios = axios.create({
@@ -84,16 +87,16 @@ export default {
   },
   methods: {
     login() {
-      if(!this.loginForm.username || !this.loginForm.password){
+      if (!this.loginForm.username || !this.loginForm.password) {
         this.$message.warning("用户名密码不能为空")
         return
       }
 
       newAxios.post("/auth/login", this.loginForm).then((resp) => {
 
-        if(resp.data.data != null){
+        if (resp.data.data != null) {
           this.$router.push({path: '/manage'})
-        }else {
+        } else {
           this.$message.error("用户名密码不正确")
         }
       })
@@ -115,31 +118,36 @@ export default {
   left: 0;
   z-index: 0;
 }
-#login-main{
+
+#login-main {
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   background-size: cover;
-  #login-wrap{
+
+  #login-wrap {
     margin: 20vh 0 0 0;
     padding: 2vw;
-    width: 30vw;
-    height: 40vh;
+    width: 600px;
+    height: 400px;
     border-radius: 8px;
     box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
   }
-  #login-title{
+
+  #login-title {
     text-align: center;
     font-size: 32px;
     margin: 0 0 1vh 0;
   }
-  #login-yiyan{
+
+  #login-yiyan {
     display: flex;
     justify-content: center;
   }
-  #login-yiyan:after{
+
+  #login-yiyan:after {
     content: '';
     position: absolute;
     width: 0;
@@ -149,7 +157,8 @@ export default {
     margin: 0 auto;
     transition: all 0.5s;
   }
-  #login-yiyan:hover:after{
+
+  #login-yiyan:hover:after {
     width: 80%;
   }
 }

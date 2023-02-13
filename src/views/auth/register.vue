@@ -150,8 +150,8 @@ export default {
 .register-wrap {
   margin: 20vh 0 0 0;
   padding: 2vw;
-  width: 30vw;
-  height: 40vh;
+  width: 600px;
+  height: 400px;
   border-radius: 8px;
   box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(8px);
