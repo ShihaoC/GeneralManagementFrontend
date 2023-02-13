@@ -1,36 +1,63 @@
 <template>
-  <div class="login-wrap">
-    <el-form :model="loginForm" class="login-container" ref="ruleForm" :rules="rule">
-      <h1 class="login-title">登录</h1>
-      <el-form-item></el-form-item>
-      <el-form-item prop="username">
-        <el-input type="text" placeholder="用户账号" v-model="loginForm.username" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item></el-form-item>
-      <el-form-item prop="password">
-        <el-input type="password" placeholder="用户密码" v-model="loginForm.password" autocomplete="off"></el-input>
-      </el-form-item>
-      <el-form-item></el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="toLogin" style="width: 48%;">登录</el-button>
-        <el-button type="primary" @click="register" style="width: 48%;">去注册</el-button>
-      </el-form-item>
-    </el-form>
+  <div id="login-main">
+    <div id="login-wrap">
+      <el-form :model="loginForm" id="login-container" ref="ruleForm" :rules="rule">
+        <h1 id="login-title">登录</h1>
+        <el-form-item></el-form-item>
+        <el-form-item prop="username">
+          <el-input type="text" placeholder="用户账号" v-model="loginForm.username" name="username"
+                    autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item></el-form-item>
+        <el-form-item prop="password">
+          <el-input type="password" placeholder="用户密码" v-model="loginForm.password" name="password"
+                    autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item></el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="login" style="width: 48%;">登录</el-button>
+          <el-button type="primary" @click="register" style="width: 48%;">去注册</el-button>
+        </el-form-item>
+      </el-form>
+      <div id="login-yiyan" v-loading="loading" style="text-align: center">
+        <span id="login-yiyan" style="font-size: 8px">{{ yiyan }} --{{yiyan_from}}</span>
+      </div>
+    </div>
   </div>
+
 </template>
 
 <script>
-import $ from 'jquery'
+import Global from "@/views/Global.vue";
+import axios from "axios";
 
+const newAxios = axios.create({
+  baseURL: Global.baseUrl
+})
 
 export default {
   name: 'Login',
+  mounted() {
+    this.loading = true
+    if (localStorage.getItem("username")) {
+      this.loginForm.username = localStorage.getItem("username")
+      this.loginForm.password = localStorage.getItem("password")
+    }
+    this.axios.get("https://v1.hitokoto.cn/").then((resp) => {
+      this.yiyan = resp.data.hitokoto
+      this.yiyan_from = resp.data.from
+      this.loading = false
+    })
+  },
   data: function () {
     return {
       loginForm: {
         username: '',
         password: ''
       },
+      yiyan: '',
+      yiyan_from: '',
+      loading: false,
       rule: {
         username: [
           {required: true, message: '用户名不能为空', trigger: 'blur'}
@@ -43,7 +70,14 @@ export default {
   },
   methods: {
     login() {
+      newAxios.post("/auth/login", this.loginForm).then((resp) => {
+        console.log(resp)
+        if(resp.data.data != null){
 
+        }
+
+
+      })
     },
     register() {
       this.$router.push({
@@ -54,29 +88,45 @@ export default {
 }
 </script>
 
-<style>
-.login-wrap {
+<style lang="less">
+#login-main{
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
   background: url("@/assets/img/bg1.png") no-repeat;
   background-size: cover;
+  #login-wrap{
+    margin: 20vh 0 0 0;
+    padding: 2vw;
+    width: 500px;
+    height: 400px;
+    border-radius: 8px;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(8px);
+  }
+  #login-title{
+    text-align: center;
+    font-size: 32px;
+    margin: 0 0 1vh 0;
+  }
+  #login-yiyan{
+    display: flex;
+    justify-content: center;
+  }
+  #login-yiyan:after{
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #a6a6a6;
+    bottom: 2.5vh;
+    margin: 0 auto;
+    transition: all 0.5s;
+  }
+  #login-yiyan:hover:after{
+    width: 80%;
+  }
 }
 
-.login-container {
-  width: 500px;
-  height: 400px;
-  padding: 2vw;
-  margin: 20vh 0 0 0;
-  border-radius: 8px;
-  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-}
-
-.login-title {
-  text-align: center;
-  font-size: 32px;
-  margin: 0 0 1vh 0;
-}
 </style>
