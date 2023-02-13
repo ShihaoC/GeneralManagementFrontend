@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import index from "@/views/index.vue";
 import login from "@/views/auth/login.vue";
 import manage from "@/views/manage/manage.vue";
 import register from "@/views/auth/register.vue";
@@ -11,6 +10,11 @@ const routes = [
     path: '/',
     name: 'login',
     component: login
+  },
+  {
+    path: "/test",
+    name: 'test',
+    component: ()=> import("@/views/test/Test.vue")
   },
   {
     path: '/manage',
