@@ -71,7 +71,12 @@ export default {
   methods: {
     login() {
       newAxios.post("/auth/login", this.loginForm).then((resp) => {
-        this.$router.push({path: '/manage'})
+        console.log(resp)
+        if(resp.data.data != null){
+
+        }
+
+
       })
     },
     register() {
