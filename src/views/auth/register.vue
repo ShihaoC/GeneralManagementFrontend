@@ -1,17 +1,21 @@
 <template>
   <div id="register-main">
+    <canvas class="canv"></canvas>
     <div class="register-wrap">
       <el-form :model="formData" :rules="rule" ref="ruleForm" class="register-container">
         <h1 class="register-title">注册</h1>
         <el-form-item prop="username">
-          <el-input type="text" placeholder="用户账号" v-model="formData.username" name="username"
+          <el-input type="text" placeholder="用户账号" @keyup.enter.native="doRegister" v-model="formData.username"
+                    name="username"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" placeholder="用户密码" v-model="formData.password" autocomplete="off"></el-input>
+          <el-input type="password" placeholder="用户密码" @keyup.enter.native="doRegister" v-model="formData.password"
+                    autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item prop="password1">
-          <el-input type="password" placeholder="确认密码" v-model="formData.password1" name="password"
+          <el-input type="password" placeholder="确认密码" @keyup.enter.native="doRegister" v-model="formData.password1"
+                    name="password"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item>
@@ -20,14 +24,14 @@
         </el-form-item>
       </el-form>
       <div id="register-yiyan" v-loading="loading" style="text-align: center">
-        <span id="register-yiyan" style="font-size: 8px">{{ yiyan }} --{{yiyan_from}}</span>
+        <span id="register-yiyan" style="font-size: 8px">{{ yiyan }} --{{ yiyan_from }}</span>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
+import Particles from 'particlesjs'
 import Global from "@/views/Global.vue";
 import axios from "axios";
 
@@ -38,8 +42,12 @@ const newAxios = axios.create({
 export default {
   name: "register",
   mounted() {
+    Particles.init({
+      selector: '.canv',
+      connectParticles: true
+    })
     this.loading = true
-    this.axios.get("https://v1.hitokoto.cn/").then((resp)=>{
+    this.axios.get("https://v1.hitokoto.cn/").then((resp) => {
       this.yiyan = resp.data.hitokoto
       this.yiyan_from = resp.data.from
       this.loading = false
@@ -86,20 +94,16 @@ export default {
   methods: {
     doRegister: function () {
       if (this.formData.username === '' || this.formData.password === '' || this.formData.password1 === '') {
-        this.$notify({
-          title: '错误',
-          message: '用户名密码或密码不能为空',
-          type: "error"
-        })
+        this.$message.warning("用户名密码或密码不能为空")
         return;
       }
       newAxios.post("/auth/register", {
         username: this.formData.username,
         password: this.formData.password1
       }).then((resp) => {
-        localStorage.setItem("username",this.formData.username)
-        localStorage.setItem("password",this.formData.password1)
-        this.$router.push({path: '/manage'})
+        localStorage.setItem("username", this.formData.username)
+        localStorage.setItem("password", this.formData.password1)
+        this.$router.push({path: '/'})
         console.log(resp.data)
       })
     },
@@ -112,12 +116,20 @@ export default {
 </script>
 
 <style lang="less">
+.canv {
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
 #register-main {
   width: 100vw;
   height: 100vh;
   display: flex;
   justify-content: center;
-  background: url("@/assets/img/bg1.png") no-repeat;
+  //background: url("@/assets/img/bg1.png") no-repeat;
   background-size: cover;
 }
 
@@ -136,11 +148,13 @@ export default {
   font-size: 32px;
   margin: 0 0 1vh 0;
 }
-#register-yiyan{
+
+#register-yiyan {
   display: flex;
   justify-content: center;
 }
-#register-yiyan:after{
+
+#register-yiyan:after {
   content: '';
   position: absolute;
   width: 0;
@@ -150,7 +164,8 @@ export default {
   margin: 0 auto;
   transition: all 0.5s;
 }
-#register-yiyan:hover:after{
+
+#register-yiyan:hover:after {
   width: 80%;
 }
 </style>

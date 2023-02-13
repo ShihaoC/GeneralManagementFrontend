@@ -5,12 +5,12 @@
         <h1 id="login-title">登录</h1>
         <el-form-item></el-form-item>
         <el-form-item prop="username">
-          <el-input type="text" placeholder="用户账号" v-model="loginForm.username" name="username"
+          <el-input type="text" placeholder="用户账号" @keydown.enter.native="login()" v-model="loginForm.username" name="username"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item></el-form-item>
         <el-form-item prop="password">
-          <el-input type="password" placeholder="用户密码" v-model="loginForm.password" name="password"
+          <el-input type="password" placeholder="用户密码" @keydown.enter.native="login()" v-model="loginForm.password" name="password"
                     autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item></el-form-item>
@@ -70,13 +70,18 @@ export default {
   },
   methods: {
     login() {
+      if(!this.loginForm.username || !this.loginForm.password){
+        this.$message.warning("用户名密码不能为空")
+        return
+      }
+
       newAxios.post("/auth/login", this.loginForm).then((resp) => {
-        console.log(resp)
+
         if(resp.data.data != null){
-
+          this.$router.push({path: '/manage'})
+        }else {
+          this.$message.error("用户名密码不正确")
         }
-
-
       })
     },
     register() {
