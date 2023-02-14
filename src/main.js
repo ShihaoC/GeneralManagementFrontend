@@ -4,7 +4,6 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import navbar from "@/components/navbar.vue";
 
 import particles from 'particlesjs'
 Vue.use(particles)
@@ -19,7 +18,6 @@ Vue.config.productionTip = false
 Vue.use(VueAxios,axios)
 
 
-Vue.component("navbar",navbar)
 
 new Vue({
   router,
