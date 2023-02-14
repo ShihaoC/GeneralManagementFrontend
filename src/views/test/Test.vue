@@ -1,30 +1,59 @@
 <template>
   <div>
-    <div class="container">
-      Your content here...
-    </div>
-    <a href="javascript:void(0)" @click="dis">123123</a>
-    <canvas class="background"></canvas>
+    <el-form ref="form" :model="form" label-width="80px">
+      <el-form-item label="活动名称">
+        <el-input v-model="form.name"></el-input>
+      </el-form-item>
+      <el-form-item label="活动名称">
+        <el-input v-model="form.phone"></el-input>
+      </el-form-item>
+      <el-form-item label="活动名称">
+        <el-input v-model="form.department"></el-input>
+      </el-form-item>
+
+
+
+      <el-form-item>
+        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button>取消</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script>
+
+import axios from "axios";
+
 export default {
   name: "Test",
+  data(){
+    return{
+      form: {
+        name: '',
+        phone: '',
+        department: ''
+      }
+    }
+  },
   mounted() {
 
   },
-  methods:{
-    dis(){
-      this.$router.push({path: '/'})
+  methods: {
+    onSubmit() {
+      this.axios.post("http://localhost:8848/em/insert_employee",this.form).then((resp)=>{
+        console.log(resp.data)
+      })
     }
 
   }
 }
 </script>
 
-<style >
-html, body { height: 100% }
+<style>
+html, body {
+  height: 100%
+}
 
 body {
   display: flex;
