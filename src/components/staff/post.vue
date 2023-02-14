@@ -1,5 +1,7 @@
 <template>
-    <h1>员工岗位</h1>
+    <div>
+        <h1>岗位管理</h1>
+    </div>
 </template>
 
 <script>
