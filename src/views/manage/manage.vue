@@ -23,7 +23,7 @@
                   <el-menu-item>员工部门</el-menu-item>
                 </router-link>
                 <router-link to="/manage/post">
-                  <el-menu-item>员工岗位</el-menu-item>
+                  <el-menu-item>岗位管理</el-menu-item>
                 </router-link>
                 <router-link to="/manage/reportForm">
                   <el-menu-item>员工报表</el-menu-item>
