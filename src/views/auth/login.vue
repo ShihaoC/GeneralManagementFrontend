@@ -93,8 +93,10 @@ export default {
       }
 
       newAxios.post("/auth/login", this.loginForm).then((resp) => {
-
+        console.log(resp)
         if (resp.data.data != null) {
+          localStorage.setItem("username",this.loginForm.username)
+          localStorage.setItem("token",resp.data.data.token)
           this.$router.push({path: '/manage/department'})
         } else {
           this.$message.error("用户名密码不正确")

@@ -305,6 +305,5 @@ export default {
   top: 0;
   width: 70vw;
   height: 80vh;
-  //background: red;
 }
 </style>

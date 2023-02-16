@@ -2,7 +2,16 @@
   <div id="manage-main">
     <div id="manage-navbar">
       <div id="manage-navbar-title">员工管理系统</div>
-      <div id="manage-navbar-user"> 123123123{{ user }}</div>
+      <div id="manage-navbar-user" @mouseover="showDisLogin" @mouseleave="disShowLogin">
+        {{ user }}
+        <transition name="el-zoom-in-top">
+          <div id="user-list" v-show="showed">
+            <a href="javascript:void(0)" style="color: white;text-decoration: none">
+              <div id="user-list-button" @click="disLogin">注销</div>
+            </a>
+          </div>
+        </transition>
+      </div>
     </div>
     <div id="manage-content">
       <div id="manage-listbar">
@@ -54,10 +63,30 @@
 <script>
 export default {
   name: "manage",
+  mounted() {
+    this.user = localStorage.getItem("username")
+  },
   data() {
     return {
-      user: '123'
+      user: '',
+      showed: false
     }
+  },
+  methods: {
+    disLogin() {
+      localStorage.removeItem("token")
+      localStorage.removeItem("username")
+      this.$router.push({
+        path: '/'
+      })
+    },
+    showDisLogin(){
+      this.showed = true
+    },
+    disShowLogin(){
+      this.showed = false
+    }
+
   }
 }
 </script>
