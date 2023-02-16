@@ -95,7 +95,7 @@ export default {
       newAxios.post("/auth/login", this.loginForm).then((resp) => {
 
         if (resp.data.data != null) {
-          this.$router.push({path: '/manage'})
+          this.$router.push({path: '/manage/department'})
         } else {
           this.$message.error("用户名密码不正确")
         }
