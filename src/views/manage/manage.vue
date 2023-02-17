@@ -1,7 +1,9 @@
 <template>
   <div id="manage-main">
+    <div id="manage-content-Title">
+      <span>员工管理系统</span>
+    </div>
     <div id="manage-navbar">
-      <div id="manage-navbar-title">员工管理系统</div>
       <div id="manage-navbar-user" @mouseover="showDisLogin" @mouseleave="disShowLogin">
         {{ user }}
         <transition name="el-zoom-in-top">
@@ -14,13 +16,15 @@
       </div>
     </div>
     <div id="manage-content">
+
       <div id="manage-listbar">
-        <el-row class="tac">
-          <el-col :span="12" style="width: 100%">
+        <el-row class="tac" >
+          <el-col :span="12" unique-opened="true" style="width: 100%;">
             <el-menu
                 default-active="/manage/department"
                 class="el-menu-vertical-demo"
-                :router="true">
+                :router="true"
+            style="height: 94vh">
               <el-submenu index="1">
                 <template slot="title"><i class="el-icon-user-solid"></i><span>员工管理</span>
                 </template>
@@ -64,7 +68,7 @@
 export default {
   name: "manage",
   mounted() {
-    this.user = localStorage.getItem("username")
+    this.user = localStorage.getItem("username").toUpperCase()
   },
   data() {
     return {
