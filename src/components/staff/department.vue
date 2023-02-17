@@ -3,23 +3,20 @@
     <div class="skip_box"></div>
     <div>
       <div class="up">
-        <!--            el-icon-search-->
-        <span style="font-weight: bold">员工ID:</span>
-        <span>&nbsp;&nbsp;</span>
-        <el-input class="sBox" v-model="input" placeholder="请输入员工ID"></el-input>
-        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+
         <span style="font-weight: bold">员工名称:</span>
         <span>&nbsp;&nbsp;</span>
-        <el-input class="sBox" v-model="input" placeholder="请输入员工名称"></el-input>
+        <el-input class="sBox" v-model="sName" placeholder="请输入员工名称"></el-input>
         <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        <el-button type="primary" icon="el-icon-search" @click="skip">搜索</el-button>
+        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
+          <el-button type="success" icon="el-icon-edit" @click="dialogadd = true"> 添加</el-button>
+          <el-button type="warning" icon="el-icon-upload2">导入</el-button>
+          <el-button type="info" icon="el-icon-download">导出</el-button>
       </div>
-      <div class="operate_box">
-        <!--                dialogFormVisible = true-->
-        <el-button type="success" icon="el-icon-edit" @click="dialogadd = true"> 添加</el-button>
-        <el-button type="warning" icon="el-icon-upload2">导入</el-button>
-        <el-button type="info" icon="el-icon-download">导出</el-button>
-      </div>
+<!--      <div class="operate_box">-->
+<!--        &lt;!&ndash;                dialogFormVisible = true&ndash;&gt;-->
+
+<!--      </div>-->
       <div class="block">
         <el-table
             v-loading="loading"
@@ -117,7 +114,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
-          <el-button type="primary" @click="xiugai">确 定</el-button>
+          <el-button type="primary" @click="modify">确 定</el-button>
         </div>
       </el-dialog>
 
@@ -125,10 +122,10 @@
       <el-dialog title="创建员工" :visible.sync="dialogadd">
         <el-form :inline="true" :model="addform">
           <el-form-item label="员工名称:" :label-width="formLabelWidth">
-            <el-input v-model="addform.name" autocomplete="off" class="sBox"></el-input>
+            <el-input v-model="addform.name" autocomplete="off" class="sBox" placeholder="请输入员工名称"></el-input>
           </el-form-item>
           <el-form-item label="员工手机号:" :label-width="formLabelWidth">
-            <el-input v-model="addform.phone" autocomplete="off" class="sBox"></el-input>
+            <el-input v-model="addform.phone" autocomplete="off" class="sBox" placeholder="请输入员工手机号"></el-input>
           </el-form-item>
           <el-form-item label="员工岗位:" :label-width="formLabelWidth">
             <el-select class="sBox" v-model="addform.department" placeholder="请选择员工岗位">
@@ -165,6 +162,8 @@ export default {
   data() {
     return {
       input: '',
+        sId:'',
+        sName:'',
       tableData: [],
       dialogFormVisible: false,
       dialogadd: false,
@@ -204,10 +203,12 @@ export default {
       })
     }
     ,
-    skip() {
-      newAxios.get("/manage/post").then((resp) => {
+    search(){//查询
+        newAxios.get("/em/select_something?query="+this.sName+"&page="+this.page).then((resp)=>{
+            console.log(resp)
+            this.tableData = resp.data.data.limit_data
+        })
 
-      })
     },
     edit(i, r) {
       this.dialogFormVisible = true
@@ -219,7 +220,7 @@ export default {
       this.form.quit = r.quit
       this.form.value1 = new Date(r.join_date)
     },
-    add() {
+    add() {//添加
       newAxios.post("/em/insert_employee", this.addform).then((resp) => {
         console.log(resp)
       })
@@ -242,7 +243,7 @@ export default {
         })
       },200)
     },
-    xiugai() {
+      modify() {//修改
       newAxios.post("/em/update_employee", this.form).then((resp) => {
         console.log(resp)
         if(resp.data.code === 200){
@@ -263,7 +264,12 @@ export default {
         console.log(resp)
       })
       this.loaddata(this.page)
-    }
+    },
+      export(){
+        newAxios.get("").then((resp)=>{
+
+        })
+      }
   }
 }
 </script>
@@ -287,13 +293,13 @@ export default {
 
 .skip_box {
   width: 1vw;
-  height: 14vh;
+  height: 8vh;
   float: left;
 }
 
-.operate_box {
-  margin: 1vw 0vw 0vw 0vw;
-}
+//.operate_box {
+//  margin: 1vw 0vw 0vw 0vw;
+//}
 
 .amend_box {
   //float: left;
