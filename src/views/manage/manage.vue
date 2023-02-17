@@ -54,6 +54,7 @@
             </el-menu>
           </el-col>
         </el-row>
+        <Live2d></Live2d>
         <!--        -->
 
       </div>
@@ -65,8 +66,11 @@
 </template>
 
 <script>
+import Live2d from "@/components/Live2d.vue";
+
 export default {
   name: "manage",
+  components: {Live2d},
   mounted() {
     this.user = localStorage.getItem("username").toUpperCase()
   },

@@ -55,6 +55,11 @@ const routes = [
     component: register
   },
   {
+    path:'/Home',
+    name: 'Live2D',
+    component:() => import("@/views/Live2D/Home.vue")
+  },
+  {
     path: '/:catchAll(.*)',
     name: '404',
     component: () => import("@/views/error/404.vue")
