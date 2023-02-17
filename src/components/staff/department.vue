@@ -33,7 +33,8 @@
           </el-table-column>
           <el-table-column
               prop="phone"
-              label="手机号">
+              label="手机号"
+          >
           </el-table-column>
           <el-table-column
               prop="join_date"
@@ -43,17 +44,20 @@
               prop="department"
               label="职位">
           </el-table-column>
-          <el-table-column
-              prop="clockin"
-              label="是否打卡(今日)">
-          </el-table-column>
+
           <el-table-column
               prop="work_num"
               label="此工程工数">
           </el-table-column>
-          <el-table-column
-              prop="quit"
-              label="是否离职">
+          <el-table-column label="是否打卡(今日)" prop="clockin">
+            <template slot-scope="scope">
+              {{ scope.row.clockin?"是":"否" }}
+            </template>
+          </el-table-column>
+          <el-table-column label="是否离职" prop="quit">
+            <template slot-scope="scope">
+              {{ scope.row.quit?"是":"否" }}
+            </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -104,7 +108,7 @@
           </el-form-item>
           <el-form-item label="入职日期" :label-width="formLabelWidth">
             <el-date-picker
-                v-model="form.value1"
+                v-model="form.join_date"
                 type="date"
                 placeholder="选择日期"
                 style="width: 15vw"
@@ -218,7 +222,7 @@ export default {
       this.form.department = r.department
       this.form.work_num = r.work_num
       this.form.quit = r.quit
-      this.form.value1 = new Date(r.join_date)
+      this.form.join_date = new Date(r.join_date)
     },
     add() {//添加
       newAxios.post("/em/insert_employee", this.addform).then((resp) => {
