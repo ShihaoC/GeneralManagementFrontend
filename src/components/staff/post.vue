@@ -12,7 +12,7 @@ export default {
 </script>
 <style>
   #post-main{
-    width: 88vw;
+    width: 90vw;
     height: 94vh;
     background: red;
   }

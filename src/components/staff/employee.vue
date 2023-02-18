@@ -1,28 +1,31 @@
 <template>
   <div class="container">
-    <div class="skip_box"></div>
-    <div>
+    <div id="employee-main">
       <div class="up">
-
-        <span style="font-weight: bold">员工名称:</span>
+        <el-button type="success" icon="el-icon-edit" @click="dialogadd = true" plain size="small"> 添加</el-button>
         <span>&nbsp;&nbsp;</span>
-        <el-input class="sBox" v-model="sName" placeholder="请输入员工名称"></el-input>
-        <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-        <el-button type="primary" icon="el-icon-search" @click="search">搜索</el-button>
-          <el-button type="success" icon="el-icon-edit" @click="dialogadd = true"> 添加</el-button>
-          <el-button type="warning" icon="el-icon-upload2">导入</el-button>
-          <el-button type="info" icon="el-icon-download">导出</el-button>
-      </div>
-<!--      <div class="operate_box">-->
-<!--        &lt;!&ndash;                dialogFormVisible = true&ndash;&gt;-->
+        <el-upload
+            style="display: inline-block"
+            class="upload-demo"
+            action="https://jsonplaceholder.typicode.com/posts/"
 
-<!--      </div>-->
+            :limit="3"
+        >
+          <!--          <el-button size="small" type="primary">点击上传</el-button>-->
+          <el-button type="warning" icon="el-icon-upload2" plain size="small">导入</el-button>
+          <!--          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
+        </el-upload>
+
+        <span>&nbsp;&nbsp;</span>
+        <el-button type="info" @click="daochu" icon="el-icon-download" plain size="small">导出</el-button>
+      </div>
       <div class="block">
         <el-table
             v-loading="loading"
             :data="tableData"
-            stripe
-            style="width: 100%">
+            style="width: 100%;"
+            :header-cell-style="header_cell_style"
+            :cell-style="cell_style">
           <el-table-column
               prop="id"
               label="ID">
@@ -51,15 +54,22 @@
           </el-table-column>
           <el-table-column label="是否打卡(今日)" prop="clockin">
             <template slot-scope="scope">
-              {{ scope.row.clockin?"是":"否" }}
+              {{ scope.row.clockin ? "是" : "否" }}
             </template>
           </el-table-column>
           <el-table-column label="是否离职" prop="quit">
             <template slot-scope="scope">
-              {{ scope.row.quit?"是":"否" }}
+              {{ scope.row.quit ? "是" : "否" }}
             </template>
           </el-table-column>
           <el-table-column label="操作">
+            <template slot="header" slot-scope="scope">
+              <el-input
+                  v-model="ss"
+                  size="mini"
+                  placeholder="输入关键字搜索"
+                  @change="search"/>
+            </template>
             <template slot-scope="scope">
               <el-button
                   size="mini"
@@ -73,13 +83,15 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-            layout="prev, pager, next"
-            :total="total"
-            :size="10"
-            :current-page.sync="page"
-            @current-change="changePage">
-        </el-pagination>
+        <div id="pages">
+          <el-pagination
+              layout="prev, pager, next"
+              :total="total"
+              :size="10"
+              :current-page.sync="page"
+              @current-change="changePage">
+          </el-pagination>
+        </div>
       </div>
       <el-dialog title="员工信息" :visible.sync="dialogFormVisible">
         <el-form :inline="true" :model="form">
@@ -124,12 +136,12 @@
 
 
       <el-dialog title="创建员工" :visible.sync="dialogadd">
-        <el-form :inline="true" :model="addform">
-          <el-form-item label="员工名称:" :label-width="formLabelWidth">
+        <el-form :rules="insertRule" ref="ruleForm" :inline="true" :model="addform">
+          <el-form-item label="员工名称:" :label-width="formLabelWidth" prop="name">
             <el-input v-model="addform.name" autocomplete="off" class="sBox" placeholder="请输入员工名称"></el-input>
           </el-form-item>
-          <el-form-item label="员工手机号:" :label-width="formLabelWidth">
-            <el-input v-model="addform.phone" autocomplete="off" class="sBox" placeholder="请输入员工手机号"></el-input>
+          <el-form-item label="员工手机号:" :label-width="formLabelWidth" prop="phone">
+            <el-input v-model.number="addform.phone" autocomplete="off" class="sBox" placeholder="请输入员工手机号"></el-input>
           </el-form-item>
           <el-form-item label="员工岗位:" :label-width="formLabelWidth">
             <el-select class="sBox" v-model="addform.department" placeholder="请选择员工岗位">
@@ -166,8 +178,8 @@ export default {
   data() {
     return {
       input: '',
-        sId:'',
-        sName:'',
+      sId: '',
+      sName: '',
       tableData: [],
       dialogFormVisible: false,
       dialogadd: false,
@@ -192,26 +204,36 @@ export default {
         phone: '',
         department: ''
       },
+      insertRule: {
+        name: [
+          {required: true, message: '用户名不能为空', trigger: 'change'}
+        ],
+        phone:[
+          {required: true, message: '用户名不能为空', trigger: 'change'},
+          { type: 'number', message: '年龄必须为数字值',trigger: 'change'}
+        ]
+      },
       formLabelWidth: '120px',
       loading: false,
       total: 0,
-      page:1,
-      departments: []
+      page: 1,
+      departments: [],
+      ss: ''
     }
   },
   methods: {
-    loadDepartment(){
-      newAxios.get("/dep/all_department").then((resp)=>{
+    loadDepartment() {
+      newAxios.get("/dep/all_department").then((resp) => {
         console.log(resp)
         this.departments = resp.data.data
       })
     }
     ,
-    search(){//查询
-        newAxios.get("/em/select_something?query="+this.sName+"&page="+this.page).then((resp)=>{
-            console.log(resp)
-            this.tableData = resp.data.data.limit_data
-        })
+    search() {//查询
+      newAxios.get("/em/select_something?query=" + this.ss + "&page=" + this.page).then((resp) => {
+        console.log(resp)
+        this.tableData = resp.data.data.limit_data
+      })
 
     },
     edit(i, r) {
@@ -234,23 +256,23 @@ export default {
     },
     loaddata(page) {
       this.loading = true
-      setTimeout(()=>{
-        newAxios.get("/em/select_all?page="+page).then((resp) => {
+      setTimeout(() => {
+        newAxios.get("/em/select_all?page=" + page).then((resp) => {
           console.log(resp)
           this.tableData = resp.data.data.limit_data
           this.loading = false
           this.total = resp.data.data.count
-          if(this.tableData.length === 0 && this.page-1!==0){
+          if (this.tableData.length === 0 && this.page - 1 !== 0) {
             this.loaddata(this.page - 1)
           }
           console.log(this.total)
         })
-      },200)
+      }, 200)
     },
-      modify() {//修改
+    modify() {//修改
       newAxios.post("/em/update_employee", this.form).then((resp) => {
         console.log(resp)
-        if(resp.data.code === 200){
+        if (resp.data.code === 200) {
           this.$message.success("修改成功")
         }
       })
@@ -258,62 +280,60 @@ export default {
 
       this.loaddata(this.page);
     },
-    changePage(index){
+    changePage(index) {
       this.page = index
       this.loaddata(index)
     },
-    toDelete(i,r){
+    toDelete(i, r) {
       console.log(r)
-      newAxios.get("/em/delete_employee?id="+r.id+"&name="+r.name).then((resp)=>{
+      newAxios.get("/em/delete_employee?id=" + r.id + "&name=" + r.name).then((resp) => {
         console.log(resp)
       })
       this.loaddata(this.page)
     },
-      export(){
-        newAxios.get("").then((resp)=>{
+    daochu() {
+      let url = "http://localhost:8848/em/export_excel";
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true); //
+      xhr.responseType = "blob"; //js 中的二进制对象
+      xhr.onreadystatechange = function () {
 
-        })
-      }
+
+        if (xhr.readyState == 3) {
+
+        }
+        if (xhr.readyState == 4) {
+
+        }
+      };
+
+      xhr.onload = function () {
+
+        //
+        if (this.status === 200) {
+          //兼容所有的浏览器的代码
+          let blob = this.response;
+          let a = document.createElement('a');
+          a.download = '员工表.xls';
+          a.href = window.URL.createObjectURL(blob);
+          $("body").append(a);
+          a.click();
+          $(a).remove();
+
+        }
+      };
+//     ajax
+      xhr.send()
+    },
+    cell_style(){
+      return "height:2vh";
+    },
+    header_cell_style(){
+      return "background:#f8f8f9";
+    }
   }
 }
 </script>
 <style lang="less">
-.sBox {
-  width: 15vw;
-}
-
-.block {
-  //position: relative;
-  width: 87vw;
-  text-align: center;
-}
-
-.container {
-  width: 88vw;
-  height: 94vh;
-  padding: 0.5vw;
-  //margin: 1vw 0vw 1vw 1vw;
-}
-
-.skip_box {
-  width: 1vw;
-  height: 8vh;
-  float: left;
-}
-
-//.operate_box {
-//  margin: 1vw 0vw 0vw 0vw;
-//}
-
-.amend_box {
-  //float: left;
-  width: 20vw;
-  height: 40vh;
-}
-
-#dialog-box {
-  top: 0;
-  width: 70vw;
-  height: 80vh;
-}
+@import "@/assets/css/employee-manage.less";
 </style>
