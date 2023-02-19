@@ -2,24 +2,29 @@
   <div id="manage-main">
     <div id="manage-navbar">
       <Breadcrumb class="bread"></Breadcrumb>
-        <div id="head" @mouseleave="noshow">
-          <div id="head-img" @mouseover="showDisLogin">
-          </div>
-          <transition name="el-zoom-in-top">
-            <div v-show="showed" id="box-main">
-              <div id="setting" @click="openSetting">
-                <span> <i class="el-icon-setting"></i> 系统设置</span>
-              </div>
-              <div id="dislogin">
-                <span> <i class="el-icon-close"></i> 退出登录</span>
-              </div>
-            </div>
-          </transition>
+      <div id="head" @mouseleave="noshow">
+        <div id="head-img" @mouseover="showDisLogin">
         </div>
+        <transition name="el-zoom-in-top">
+          <div v-show="showed" id="box-main">
+            <div id="user" @click="">
+              <span> <i class="icon icon-user"></i> 个人中心 </span>
+            </div>
+            <div id="setting" @click="openSetting">
+              <span> <i class="el-icon-setting"></i> 系统设置</span>
+            </div>
+            <div id="dislogin" @click="disLogin">
+              <span> <i class="el-icon-close"></i> 退出登录</span>
+            </div>
+
+          </div>
+        </transition>
+      </div>
     </div>
     <div id="manage-content">
       <div id="manage-listbar">
         <el-menu
+            :collapse="false"
             default-active="/manage/department"
             class="el-menu-vertical-demo"
             :router="true"
@@ -39,7 +44,7 @@
             <el-menu-item index="/manage/department">人员管理</el-menu-item>
             <el-menu-item index="/manage/post">岗位管理</el-menu-item>
             <el-menu-item index="/manage/reportForm">员工报表</el-menu-item>
-            <el-menu-item index="/manage/power">用户权限</el-menu-item>
+            <el-menu-item index="/manage/power">角色管理</el-menu-item>
           </el-submenu>
           <el-menu-item>
             <i class="el-icon-menu"></i>
@@ -51,23 +56,40 @@
             <el-menu-item index="/manage/operation">操作日志</el-menu-item>
             <el-menu-item to="/manage/logLogin">日志登录</el-menu-item>
           </el-submenu>
-          <el-menu-item index="/system/setting">
+          <el-menu-item @click="openSetting">
             <i class="el-icon-setting"></i>
             <span slot="title">设置</span>
           </el-menu-item>
         </el-menu>
-        <Live2d></Live2d>
+        <transition name="el-fade-in">
+          <Live2d v-show="kanbanniang"></Live2d>
+        </transition>
       </div>
       <div id="manage-text">
         <router-view></router-view>
       </div>
       <div id="setting-box">
         <el-drawer
-            title="我是标题"
+            :size="400"
             :visible.sync="drawer"
             :direction="direction"
-            :before-close="handleClose">
-          <span>我来啦!</span>
+            :with-header="false">
+          <div id="drawer-title">
+            <span>系统设置</span>
+          </div>
+          <div id="drawer-settings">
+            <ul>
+              <li>
+                <span class="drawer-settings-item">看板娘设置</span>
+                <el-switch
+                    v-model="kanbanniang"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    id="kanbanniang-btn">
+                </el-switch>
+              </li>
+            </ul>
+          </div>
         </el-drawer>
       </div>
     </div>
@@ -90,12 +112,15 @@ export default {
       showed: false,
       drawer: false,
       direction: 'rtl',
+      kanbanniang: true,
+      collapse1: false
     }
   },
   methods: {
     disLogin() {
       localStorage.removeItem("token")
       localStorage.removeItem("username")
+      localStorage.removeItem("password")
       this.$router.push({
         path: '/'
       })
@@ -103,11 +128,18 @@ export default {
     showDisLogin() {
       this.showed = true;
     },
-    noshow(){
+    noshow() {
       this.showed = false
     },
-    openSetting(){
+    openSetting() {
       this.drawer = true
+    },
+    collapse(){
+      if(this.collapse1){
+        this.collapse1 = false
+      }else {
+        this.collapse1 = true
+      }
     }
 
   }

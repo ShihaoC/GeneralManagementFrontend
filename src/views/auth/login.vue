@@ -87,6 +87,8 @@ export default {
   },
   methods: {
     login() {
+      console.log(this.loginForm.username)
+      console.log(this.loginForm.password)
       if (!this.loginForm.username || !this.loginForm.password) {
         this.$message.warning("用户名密码不能为空")
         return
@@ -96,6 +98,7 @@ export default {
         console.log(resp)
         if (resp.data.data != null) {
           localStorage.setItem("username", this.loginForm.username)
+          localStorage.setItem("password", this.loginForm.password)
           localStorage.setItem("token", resp.data.data.token)
           this.$router.push({path: '/manage/department'})
         } else {

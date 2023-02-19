@@ -54,12 +54,14 @@
           </el-table-column>
           <el-table-column label="是否打卡(今日)" prop="clockin">
             <template slot-scope="scope">
-              {{ scope.row.clockin ? "是" : "否" }}
+              <el-tag type="warning" v-if="!scope.row.clockin">未签到</el-tag>
+              <el-tag type="success" v-else>已签到</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="是否离职" prop="quit">
             <template slot-scope="scope">
-              {{ scope.row.quit ? "是" : "否" }}
+              <el-tag type="success" v-if="!scope.row.quit">在职</el-tag>
+              <el-tag type="warning" v-else>离职</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作">
@@ -141,7 +143,8 @@
             <el-input v-model="addform.name" autocomplete="off" class="sBox" placeholder="请输入员工名称"></el-input>
           </el-form-item>
           <el-form-item label="员工手机号:" :label-width="formLabelWidth" prop="phone">
-            <el-input v-model.number="addform.phone" autocomplete="off" class="sBox" placeholder="请输入员工手机号"></el-input>
+            <el-input v-model.number="addform.phone" autocomplete="off" class="sBox"
+                      placeholder="请输入员工手机号"></el-input>
           </el-form-item>
           <el-form-item label="员工岗位:" :label-width="formLabelWidth">
             <el-select class="sBox" v-model="addform.department" placeholder="请选择员工岗位">
@@ -208,9 +211,9 @@ export default {
         name: [
           {required: true, message: '用户名不能为空', trigger: 'change'}
         ],
-        phone:[
+        phone: [
           {required: true, message: '用户名不能为空', trigger: 'change'},
-          { type: 'number', message: '年龄必须为数字值',trigger: 'change'}
+          {type: 'number', message: '年龄必须为数字值', trigger: 'change'}
         ]
       },
       formLabelWidth: '120px',
@@ -247,24 +250,29 @@ export default {
       this.form.join_date = new Date(r.join_date)
     },
     add() {//添加
-      newAxios.post("/em/insert_employee", this.addform).then((resp) => {
-        console.log(resp)
-      })
-
-      this.dialogadd = false
-      this.loaddata(this.page);
+      if (this.addform.name && this.addform.phone && this.addform.department) {
+        newAxios.post("/em/insert_employee", this.addform).then((resp) => {
+          console.log(resp)
+          this.$message.success("添加成功")
+        })
+        this.dialogadd = false
+        this.loaddata(this.page);
+      } else {
+        this.$message.warning("请检查表单内容，不能为空")
+        return
+      }
     },
     loaddata(page) {
       this.loading = true
       setTimeout(() => {
         newAxios.get("/em/select_all?page=" + page).then((resp) => {
-          console.log(resp)
           this.tableData = resp.data.data.limit_data
           this.loading = false
           this.total = resp.data.data.count
           if (this.tableData.length === 0 && this.page - 1 !== 0) {
             this.loaddata(this.page - 1)
           }
+          this.$message.success("查询成功")
           console.log(this.total)
         })
       }, 200)
@@ -325,10 +333,10 @@ export default {
 //     ajax
       xhr.send()
     },
-    cell_style(){
+    cell_style() {
       return "height:2vh";
     },
-    header_cell_style(){
+    header_cell_style() {
       return "background:#f8f8f9";
     }
   }
