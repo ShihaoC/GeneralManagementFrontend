@@ -4,8 +4,7 @@ import router from './router'
 import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
-import AtComponents from 'at-ui'
-import 'at-ui-style'    // 引入组件样式
+
 
 import Live2d from "@/components/Live2d.vue";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb.vue";
@@ -21,7 +20,6 @@ Vue.use(ElementUI);
 Vue.config.productionTip = false
 
 Vue.use(VueAxios,axios)
-Vue.use(AtComponents)
 Vue.component("Breadcrumb",Breadcrumb)
 
 

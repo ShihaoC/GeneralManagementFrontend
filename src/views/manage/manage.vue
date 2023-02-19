@@ -8,7 +8,7 @@
         <transition name="el-zoom-in-top">
           <div v-show="showed" id="box-main">
             <div id="user" @click="">
-              <span> <i class="icon icon-user"></i> 个人中心 </span>
+              <span> <i class="el-icon-user"></i> 个人中心 </span>
             </div>
             <div id="setting" @click="openSetting">
               <span> <i class="el-icon-setting"></i> 系统设置</span>
@@ -16,7 +16,6 @@
             <div id="dislogin" @click="disLogin">
               <span> <i class="el-icon-close"></i> 退出登录</span>
             </div>
-
           </div>
         </transition>
       </div>
@@ -24,7 +23,6 @@
     <div id="manage-content">
       <div id="manage-listbar">
         <el-menu
-            :collapse="false"
             default-active="/manage/department"
             class="el-menu-vertical-demo"
             :router="true"
@@ -39,27 +37,29 @@
             <span>首页</span>
           </el-menu-item>
           <el-submenu index="1">
-            <template slot="title"><i class="el-icon-user-solid"></i><span>员工管理</span>
+            <template slot="title"><i class="el-icon-user-solid"></i><span>系统管理</span>
             </template>
             <el-menu-item index="/manage/department">人员管理</el-menu-item>
             <el-menu-item index="/manage/post">岗位管理</el-menu-item>
-            <el-menu-item index="/manage/reportForm">员工报表</el-menu-item>
             <el-menu-item index="/manage/power">角色管理</el-menu-item>
+            <el-menu-item index="/manage/reportForm">员工报表</el-menu-item>
           </el-submenu>
-          <el-menu-item>
-            <i class="el-icon-menu"></i>
-            <span slot="title">用户管理</span>
-          </el-menu-item>
+          <el-submenu>
+            <template slot="title"> <i class="el-icon-data-analysis"></i> <span>系统监控</span> </template>
+            <el-menu-item>
+              <span slot="title">资源概览</span>
+            </el-menu-item>
+            <el-menu-item>
+              <span slot="title">数据库概览</span>
+            </el-menu-item>
+          </el-submenu>
+
           <el-submenu index="3">
             <template slot="title"><i class="el-icon-document"></i><span>日志管理</span>
             </template>
             <el-menu-item index="/manage/operation">操作日志</el-menu-item>
             <el-menu-item to="/manage/logLogin">日志登录</el-menu-item>
           </el-submenu>
-          <el-menu-item @click="openSetting">
-            <i class="el-icon-setting"></i>
-            <span slot="title">设置</span>
-          </el-menu-item>
         </el-menu>
         <transition name="el-fade-in">
           <Live2d v-show="kanbanniang"></Live2d>
@@ -134,10 +134,10 @@ export default {
     openSetting() {
       this.drawer = true
     },
-    collapse(){
-      if(this.collapse1){
+    collapse() {
+      if (this.collapse1) {
         this.collapse1 = false
-      }else {
+      } else {
         this.collapse1 = true
       }
     }
