@@ -1,0 +1,30 @@
+{
+  "id": "3904282",
+  "name": "毕设",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "13743932",
+      "name": "gitee-fill-round",
+      "font_class": "gitee-fill-round",
+      "unicode": "e686",
+      "unicode_decimal": 59014
+    },
+    {
+      "icon_id": "4937000",
+      "name": "github-fill",
+      "font_class": "github-fill",
+      "unicode": "e885",
+      "unicode_decimal": 59525
+    },
+    {
+      "icon_id": "21053781",
+      "name": "MySQL",
+      "font_class": "MySQL",
+      "unicode": "e682",
+      "unicode_decimal": 59010
+    }
+  ]
+}

@@ -2,6 +2,16 @@
   <div id="manage-main">
     <div id="manage-navbar">
       <Breadcrumb class="bread"></Breadcrumb>
+      <div id="open">
+        <ul>
+          <li>
+            <i class="iconfont icon-gitee-fill-round"></i>
+          </li>
+          <li>
+            <i class="iconfont icon-github-fill"></i>
+          </li>
+        </ul>
+      </div>
       <div id="weather">
         <ul>
           <li>
@@ -65,7 +75,7 @@
           </el-submenu>
           <el-submenu index="2">
             <template slot="title"><i class="el-icon-data-analysis"></i> <span>系统监控</span></template>
-            <el-menu-item index="3">
+            <el-menu-item index="/system/resource">
               <span slot="title">资源概览</span>
             </el-menu-item>
             <el-menu-item index="3">
@@ -130,7 +140,7 @@ export default {
   name: "manage",
   components: {Live2d},
   mounted() {
-    if(this.$route.path === '/index'){
+    if(this.$route.path === '/index' || $("#itemss").focus){
       $("#items").css({
         "color":"#000000"
       })

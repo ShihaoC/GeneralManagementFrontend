@@ -13,6 +13,11 @@ const routes = [
         component: login
     },
     {
+        path: '/demo',
+        name: 'demo',
+        component: () => import('@/components/Echearts/Demo.vue')
+    },
+    {
         path: '/index',
         name: 'index',
         component: manage,
@@ -69,11 +74,11 @@ const routes = [
                 }
             },
             {
-                path: '/system/setting',
+                path: '/system/resource',
                 name: 'setting',
-                component: () => import("@/components/setting/setting.vue"),
+                component: () => import("@/components/system/resource.vue"),
                 meta: {
-                    title: '设置'
+                    title: '资源概览'
                 }
             }
 

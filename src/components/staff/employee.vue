@@ -9,24 +9,26 @@
             style="display: inline-block"
             class="upload-demo"
             action="https://jsonplaceholder.typicode.com/posts/"
-
-            :limit="3"
         >
-          <!--          <el-button size="small" type="primary">点击上传</el-button>-->
           <el-button type="warning" icon="el-icon-upload2" plain size="small">导入</el-button>
-          <!--          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
         </el-upload>
 
         <span>&nbsp;&nbsp;</span>
         <el-button type="info" @click="daochu" icon="el-icon-download" plain size="small">导出</el-button>
+        <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-download" plain size="small">删除</el-button>
       </div>
       <div class="block">
         <el-table
+            ref="multipleTable"
             v-loading="loading"
             :data="tableData"
             style="width: 100%;"
             :header-cell-style="header_cell_style"
-            :cell-style="cell_style">
+            :cell-style="cell_style"
+            @selection-change="handleSelectionChange">
+          <el-table-column
+              type="selection">
+          </el-table-column>
           <el-table-column
               prop="id"
               label="ID">
@@ -220,7 +222,9 @@ export default {
       total: 0,
       page: 1,
       departments: [],
-      ss: ''
+      ss: '',
+      multipleSelection: [],
+      select: true
     }
   },
   methods: {
@@ -280,6 +284,14 @@ export default {
         })
       }, 200)
     },
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+      if(this.multipleSelection.length !== 0){
+        this.select = false
+      }else {
+        this.select = true
+      }
+    },
     modify() {//修改
       this.checkAuth(()=>{
         newAxios.post("/em/update_employee", this.form).then((resp) => {
@@ -308,6 +320,12 @@ export default {
       })
 
     },
+    batch_Delete(){
+      newAxios.post("/em/batch_Delete",this.multipleSelection).then((resp)=>{
+        this.loaddata(this.page)
+      })
+    },
+
     daochu() {
       let url = "http://localhost:8848/em/export_excel";
       let xhr = new XMLHttpRequest();
