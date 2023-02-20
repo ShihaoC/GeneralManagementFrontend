@@ -167,7 +167,7 @@
 import axios from "axios";
 import global from "@/views/Global";
 import $ from 'jquery'
-import Post from "@/components/staff/post";
+import Post from "@/components/staff/department.vue";
 
 let newAxios = axios.create({
   baseURL: global.baseUrl
@@ -250,17 +250,21 @@ export default {
       this.form.join_date = new Date(r.join_date)
     },
     add() {//添加
-      if (this.addform.name && this.addform.phone && this.addform.department) {
-        newAxios.post("/em/insert_employee", this.addform).then((resp) => {
-          console.log(resp)
-          this.$message.success("添加成功")
-        })
-        this.dialogadd = false
-        this.loaddata(this.page);
-      } else {
-        this.$message.warning("请检查表单内容，不能为空")
-        return
-      }
+      this.checkAuth(()=>{
+        if (this.addform.name && this.addform.phone && this.addform.department) {
+          newAxios.post("/em/insert_employee", this.addform).then((resp) => {
+            console.log(resp)
+            this.$message.success("添加成功")
+          })
+          this.dialogadd = false
+          this.loaddata(this.page);
+        } else {
+          this.$message.warning("请检查表单内容，不能为空")
+          return
+        }
+      })
+      this.dialogadd = false
+
     },
     loaddata(page) {
       this.loading = true
@@ -278,26 +282,32 @@ export default {
       }, 200)
     },
     modify() {//修改
-      newAxios.post("/em/update_employee", this.form).then((resp) => {
-        console.log(resp)
-        if (resp.data.code === 200) {
-          this.$message.success("修改成功")
-        }
+      this.checkAuth(()=>{
+        newAxios.post("/em/update_employee", this.form).then((resp) => {
+          console.log(resp)
+          if (resp.data.code === 200) {
+            this.$message.success("修改成功")
+          }
+        })
+        this.dialogFormVisible = false
+
+        this.loaddata(this.page);
       })
       this.dialogFormVisible = false
 
-      this.loaddata(this.page);
     },
     changePage(index) {
       this.page = index
       this.loaddata(index)
     },
     toDelete(i, r) {
-      console.log(r)
-      newAxios.get("/em/delete_employee?id=" + r.id + "&name=" + r.name).then((resp) => {
-        console.log(resp)
+      this.checkAuth(()=>{
+        newAxios.get("/em/delete_employee?id=" + r.id + "&name=" + r.name).then((resp) => {
+          console.log(resp)
+        })
+        this.loaddata(this.page)
       })
-      this.loaddata(this.page)
+
     },
     daochu() {
       let url = "http://localhost:8848/em/export_excel";
@@ -338,6 +348,14 @@ export default {
     },
     header_cell_style() {
       return "background:#f8f8f9";
+    },
+    checkAuth(fun){
+      if(localStorage.getItem("auth") === 'ROOT'){
+        fun()
+      }else {
+        this.$message.error("权限不足")
+        return
+      }
     }
   }
 }

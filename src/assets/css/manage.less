@@ -9,6 +9,22 @@
     height: 6vh;
     background: #fff;
     border-bottom: 1px solid #e6e6e6;
+    #weather{
+      width: auto;
+      height: 6vh;
+      display: flex;
+      align-items: center;
+      position: absolute;
+      right: 6vw;
+      ul{
+        li{
+          color: #909399;
+          display: inline-block;
+          margin: 0 0.6vw 0 0.6vw;
+          font-size: 0.4vw;
+        }
+      }
+    }
   }
   #manage-content{
     display: flex;
@@ -59,6 +75,14 @@
 
 #items:hover{
   background: #ffffff;
+}
+#items:focus{
+  background: #ffffff;
+  color: #000000;
+}
+#itemsss:focus #items{
+  background: #ffffff;
+  color: #000000;
 }
 #items-text{
   font-weight: bolder;

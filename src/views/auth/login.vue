@@ -100,6 +100,7 @@ export default {
           localStorage.setItem("username", this.loginForm.username)
           localStorage.setItem("password", this.loginForm.password)
           localStorage.setItem("token", resp.data.data.token)
+          localStorage.setItem("auth",resp.data.data.role)
           this.$router.push({path: '/manage/department'})
         } else {
           this.$message.error("用户名密码不正确")

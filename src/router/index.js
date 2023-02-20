@@ -31,7 +31,7 @@ const routes = [
             {
                 path: '/manage/post',
                 name: 'test',
-                component: () => import("@/components/staff/post"),
+                component: () => import("@/components/staff/department.vue"),
                 meta: {
                     title: '岗位管理'
                 }
@@ -39,7 +39,7 @@ const routes = [
             {
                 path: '/manage/power',
                 name: 'test',
-                component: () => import("@/components/staff/power"),
+                component: () => import("@/components/staff/authority.vue"),
                 meta: {
                     title: '员工管理'
                 }
@@ -63,7 +63,7 @@ const routes = [
             {
                 path: '/manage/reportForm',
                 name: 'test',
-                component: () => import("@/components/staff/reportForm"),
+                component: () => import("@/components/staff/statement.vue"),
                 meta: {
                     title: '员工管理'
                 }
