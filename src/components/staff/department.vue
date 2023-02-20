@@ -200,30 +200,35 @@
                 this.upfrom.department = r.department
             },
             toDelete(i, r) {//删除方法
+                this.checkAuth(()=> {
                     newAxios.get("/dep/delete_department?id=" + r.id).then((resp) => {
                         console.log(resp)
                     })
                     this.loadData(this.page);
+                })
 
             },
             changePage() {
 
             },
             add() {//添加方法
-                if (this.addform.nick && this.addform.department) {
-                    newAxios.post("/dep/insert_department", this.addform).then((resp) => {
-                        console.log(resp)
-                        this.$message.success("添加成功")
-                    })
-                    this.dialogadd = false
-                    this.loadData(this.page);
-                } else {
-                    this.$message.warning("请检查表单内容，不能为空")
-                    return
-                }
+                this.checkAuth(()=> {
+                    if (this.addform.nick && this.addform.department) {
+                        newAxios.post("/dep/insert_department", this.addform).then((resp) => {
+                            console.log(resp)
+                            this.$message.success("添加成功")
+                        })
+                        this.dialogadd = false
+                        this.loadData(this.page);
+                    } else {
+                        this.$message.warning("请检查表单内容，不能为空")
+                        return
+                    }
+                })
+                this.dialogadd = false
             },
             modify() {//修改
-                // this.checkAuth(()=>{
+                this.checkAuth(()=>{
                     newAxios.post("/dep/update_department", this.upfrom).then((resp) => {
                         console.log(resp)
                         if (resp.data.code === 200) {
@@ -233,9 +238,17 @@
                     this.dialogFormVisible = false
 
                     this.loadData(this.page);
-                // })
-                // this.dialogFormVisible = false
+                })
+                this.dialogFormVisible = false
 
+            },
+            checkAuth(fun){
+                if(localStorage.getItem("auth") === 'ROOT'){
+                    fun()
+                }else {
+                    this.$message.error("权限不足")
+                    return
+                }
             },
 //             daochu() {
 //                 let url = "http://localhost:8848/em/export_excel";
