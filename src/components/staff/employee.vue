@@ -48,7 +48,6 @@
               prop="department"
               label="职位">
           </el-table-column>
-
           <el-table-column
               prop="work_num"
               label="此工程工数">
@@ -137,7 +136,6 @@
         </div>
       </el-dialog>
 
-
       <el-dialog title="创建员工" :visible.sync="dialogadd">
         <el-form :rules="insertRule" ref="ruleForm" :inline="true" :model="addform">
           <el-form-item label="员工名称:" :label-width="formLabelWidth" prop="name">
@@ -214,7 +212,7 @@ export default {
         ],
         phone: [
           {required: true, message: '用户名不能为空', trigger: 'change'},
-          {type: 'number', message: '年龄必须为数字值', trigger: 'change'}
+          {type: 'number', message: '手机号必须为数字值', trigger: 'change'}
         ]
       },
       formLabelWidth: '120px',

@@ -41,7 +41,7 @@ const routes = [
                 name: 'test',
                 component: () => import("@/components/staff/authority.vue"),
                 meta: {
-                    title: '员工管理'
+                    title: '角色管理'
                 }
             },
             {
