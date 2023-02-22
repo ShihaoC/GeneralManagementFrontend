@@ -10,7 +10,7 @@
       <div id="weather">
         <ul>
           <li>
-            <i class="iconfont icon-quanping_o"></i>
+            <i class="iconfont icon-fullscreen"></i>
           </li>
           <li>
             <i class="iconfont icon-gitee-fill-round"></i>
