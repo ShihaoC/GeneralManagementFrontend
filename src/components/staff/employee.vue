@@ -160,7 +160,6 @@
         </div>
       </el-dialog>
     </div>
-
   </div>
 </template>
 
@@ -240,7 +239,6 @@ export default {
         console.log(resp)
         this.tableData = resp.data.data.limit_data
       })
-
     },
     edit(i, r) {
       this.dialogFormVisible = true
@@ -318,7 +316,6 @@ export default {
         })
         this.loaddata(this.page)
       })
-
     },
     batch_Delete(){
       newAxios.post("/em/batch_Delete",this.multipleSelection).then((resp)=>{

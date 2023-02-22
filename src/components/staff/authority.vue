@@ -34,23 +34,21 @@
           </el-table-column>
           <el-table-column
               prop="department"
-              label="岗位代号">
+              label="员工岗位">
           </el-table-column>
           <el-table-coloumn
-          prop="nick"
-          label="岗位名称">
+              prop="nick"
+              label="岗位名称">
           </el-table-coloumn>
           <el-table-column
               prop="jurisdiction"
-            label="权限">
+              label="权限">
           </el-table-column>
-          <el-table-column label="是否停用" prop="quit">
-            <el-switch
-                @change="disable_this_user"
-                v-model="deactivateOrNot"
-                active-color="#13ce66"
-                inactive-color="#ff4949">
-            </el-switch>
+          <el-table-column label="是否离职" prop="quit">
+            <template slot-scope="scope">
+              <el-tag type="success" v-if="!scope.row.quit">在职</el-tag>
+              <el-tag type="warning" v-else>离职</el-tag>
+            </template>
           </el-table-column>
           <el-table-column label="操作">
             <template slot="header" slot-scope="scope">
@@ -100,9 +98,31 @@
             <el-input v-model="form.phone" autocomplete="off" class="sBox"></el-input>
           </el-form-item>
           <el-form-item babel="是否离职:" :label-width="formLabelWidth">
-<!--            <el-input v-model="form.quit" placeholder="" class="sBox"></el-input>-->
-
+            <el-select v-model="form.quit" placeholder="" class="sBox">
+            <el-option label="是" :value="true"></el-option>
+            <el-option label="否" :value="false"></el-option>
+            </el-select>
           </el-form-item>
+          <el-table-column label="操作">
+            <template slot="header" slot-scope="scope">
+              <el-input
+                  v-model="ss"
+                  size="mini"
+                  placeholder="输入关键字搜索"
+                  @change="search"/>
+            </template>
+            <template slot-scope="scope">
+              <el-button
+                  size="mini"
+                  @click="edit(scope.$index, scope.row)">编辑
+              </el-button>
+              <el-button
+                  size="mini"
+                  type="danger"
+                  @click="toDelete(scope.$index, scope.row)">删除
+              </el-button>
+            </template>
+          </el-table-column>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -127,6 +147,20 @@ export default {
   mounted() {
     this.loaddata(1);
     this.loadDepartment()
+    console.log("123" + localStorage.getItem("deactivateOrNot"))
+    if (localStorage.getItem("deactivateOrNot")) {
+
+      if (localStorage.getItem("deactivateOrNot") === 'true') {
+        this.deactivateOrNot = true
+      } else {
+        this.deactivateOrNot = false
+      }
+    } else {
+      this.deactivateOrNot   = true
+    }
+    this.user = localStorage.getItem("username").toUpperCase()
+    console.log(this.$router.Location)
+    this.init()
   },
   data() {
     return {
@@ -140,8 +174,7 @@ export default {
         name: '',
         phone: '',
         department: '',
-        quit:'',
-
+        quit: '',
         type: [],
         value1: null,
         pickerOptions: {
@@ -161,7 +194,7 @@ export default {
         ],
         phone: [
           {required: true, message: '用户名不能为空', trigger: 'change'},
-          {type: '手机号必须为数字值', trigger: 'change'}
+          {type: 'number', message: '手机号必须为数字值', trigger: 'change'}
         ]
       },
       formLabelWidth: '120px',
@@ -169,7 +202,9 @@ export default {
       total: 0,
       page: 1,
       departments: [],
-      ss: ''
+      ss: '',
+      multipleSelection: [],
+      select: true
     }
   },
   methods: {
@@ -185,9 +220,6 @@ export default {
         this.tableData = resp.data.data.limit_data
       })
     },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      },
 
     edit(i, r) {
       this.dialogFormVisible = true
@@ -195,11 +227,12 @@ export default {
       this.form.id = r.id
       this.form.name = r.name
       this.form.department = r.department
+      this.form.quit = r.quit
     },
     add() {
       this.checkAuth(() => {
         if (this.addform.name && this.addform.phone && this.addform.department) {
-          newAxios.post("/em/insert_employee", this.addform).then((resp) => {
+          newAxios.post("/user/user_insert", this.addform).then((resp) => {
             console.log(resp)
             this.$message.success("添加成功")
           })
@@ -227,12 +260,17 @@ export default {
         })
       }, 200)
     },
-    disable_this_user(a){
-
+    handleSelectionChange(val) {
+      this.multtiplesSelection = val;
+      if (this.multtiplesSelection.length !== 0) {
+        this.select = false
+      } else {
+        this.select = true
+      }
     },
     modify() {
       this.checkAuth(() => {
-        newAxios.post("/em/update_employee", this.form).then((resp) => {
+        newAxios.post("/user/user_update", this.form).then((resp) => {
           console.log(resp)
           if (resp.data.code === 200) {
             this.$message.success("修改成功")
@@ -249,9 +287,14 @@ export default {
     },
     toDelete(i, r) {
       this.checkAuth(() => {
-        newAxios.get("/em/delete_employee?id=" + r.id + "&name=" + r.name).then((resp) => {
+        newAxios.get("/user/user_delete?id=" + r.id + "&name=" + r.name).then((resp) => {
           console.log(resp)
         })
+        this.loaddata(this.page)
+      })
+    },
+    batch_Delete() {
+      newAxios.post("/em/batch_Delete", this.multtiplesSelection).then((resp) => {
         this.loaddata(this.page)
       })
     },
