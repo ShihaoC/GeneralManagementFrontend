@@ -22,7 +22,7 @@
             时间: {{ time }}
           </li>
           <li>
-            温度: {{ temp }}
+            温度: {{ temp }}℃
           </li>
           <li>
             湿度: {{ humidity }} %
