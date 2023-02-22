@@ -34,13 +34,24 @@
           </el-table-column>
           <el-table-column
               prop="department"
-              label="职位">
+              label="岗位代号">
           </el-table-column>
+          <el-table-coloumn
+          prop="nick"
+          label="岗位名称">
+          </el-table-coloumn>
           <el-table-column
               prop="jurisdiction"
             label="权限">
           </el-table-column>
-
+          <el-table-column label="是否停用" prop="quit">
+            <el-switch
+                @change="disable_this_user"
+                v-model="deactivateOrNot"
+                active-color="#13ce66"
+                inactive-color="#ff4949">
+            </el-switch>
+          </el-table-column>
           <el-table-column label="操作">
             <template slot="header" slot-scope="scope">
               <el-input
@@ -88,6 +99,10 @@
           <el-form-item label="员工手机号:" :label-width="formLabelWidth">
             <el-input v-model="form.phone" autocomplete="off" class="sBox"></el-input>
           </el-form-item>
+          <el-form-item babel="是否离职:" :label-width="formLabelWidth">
+<!--            <el-input v-model="form.quit" placeholder="" class="sBox"></el-input>-->
+
+          </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -125,6 +140,7 @@ export default {
         name: '',
         phone: '',
         department: '',
+        quit:'',
 
         type: [],
         value1: null,
@@ -164,11 +180,15 @@ export default {
       })
     },
     search() {
-      newAxios.get("/em/select_something?query" + this.ss + "&page" + this.page).then((resp) => {
+      newAxios.get("/dep/somedpartment?query=" + this.ss + "&page" + this.page).then((resp) => {
         console.log(resp)
         this.tableData = resp.data.data.limit_data
       })
     },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+
     edit(i, r) {
       this.dialogFormVisible = true
       this.form.phone = r.phone
@@ -206,6 +226,9 @@ export default {
           console.log(this.total)
         })
       }, 200)
+    },
+    disable_this_user(a){
+
     },
     modify() {
       this.checkAuth(() => {
