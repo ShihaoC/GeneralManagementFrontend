@@ -12,12 +12,21 @@ export default {
   props:["id","ChartStyle","name","title","data_field","api"],
   mounted() {
     setTimeout(()=>{
+      Global.newAxios.get(this.api).then((resp)=>{
+        this.dataa = resp.data
+      })
       //代码
       this.initChart();
     },800)
   },
+  data(){
+    return{
+      dataa: []
+    }
+  },
   methods:{
     initChart(){
+
       let myChart = this.$echarts.init(document.getElementById(this.id));
       // 指定图表的配置项和数据
       let option = {
@@ -72,20 +81,24 @@ export default {
             emphasis: {
               focus: 'series'
             },
+            data: this.dataa
+          },
+          {
+            name: 'Email',
+            type: 'line',
+            stack: 'Total',
+            areaStyle: {},
+            emphasis: {
+              focus: 'series'
+            },
             data: []
-          }
+          },
         ]
       };
       // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option);
 
-      Global.newAxios.get(this.api).then((resp)=>{
-        myChart.setOption({
-          series:[{
-            data:resp.data
-          }]
-        })
-      })
+
       setInterval(()=>{
         Global.newAxios.get(this.api).then((resp)=>{
           myChart.setOption({

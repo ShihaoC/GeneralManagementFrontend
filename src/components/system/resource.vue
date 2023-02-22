@@ -70,7 +70,7 @@
                     :api="'/api/count'"></BasicChart>
         <BasicChart class="resource-echarts-item" :data_field="fileid_data" :title="'登录次数'" :id="'test2'"
                     :name="'login'" :chart-style="'width: 100%; height: 30vh;'"
-                    :api="'/api/count'"></BasicChart>
+                    :api="'/api/login'"></BasicChart>
       </div>
     </div>
   </div>
@@ -86,14 +86,13 @@ let newAxios = axios.create({
 export default {
   name: "resource",
   mounted() {
-    // this.loading = true
+    this.loading = true
     newAxios.get("/system/cpu").then((resp) => {
       this.CPUTable = resp.data
-      this.MemTable = resp.data
-      // this.loading = false
+      this.loading = false
     })
     newAxios.get("/system/mem").then((resp) => {
-      // this.MemTable = resp.data
+      this.MemTable = resp.data
 
     })
     newAxios.get("/api/count").then((resp) => {
