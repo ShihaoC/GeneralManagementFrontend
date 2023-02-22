@@ -5,6 +5,8 @@ import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import echarts from "echarts";
+import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
+
 Vue.prototype.$echarts = echarts;
 import '@/assets/icon/iconfont.css'
 
@@ -15,7 +17,8 @@ import BasicChart from "@/components/Echearts/BasicChart.vue";
 
 import particles from 'particlesjs'
 Vue.use(particles,Live2d)
-
+Vue.use(BootstrapVue);
+Vue.use(IconsPlugin);
 import axios from 'axios'
 import VueAxios from "vue-axios";
 Vue.use(ElementUI);

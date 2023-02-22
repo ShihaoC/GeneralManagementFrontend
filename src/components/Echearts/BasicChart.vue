@@ -4,16 +4,12 @@
 
 <script>
 import echarts from "echarts";
-import axios from "axios";
 import Global from "@/views/Global.vue";
 
-let newAxios = axios.create({
-  baseURL: Global.baseUrl
-})
 
 export default {
   name: "InterfaceInvoke",
-  props:["line_data","id","ChartStyle","name","title","data_field","api"],
+  props:["id","ChartStyle","name","title","data_field","api"],
   mounted() {
     setTimeout(()=>{
       //代码
@@ -83,8 +79,15 @@ export default {
       // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option);
 
+      Global.newAxios.get(this.api).then((resp)=>{
+        myChart.setOption({
+          series:[{
+            data:resp.data
+          }]
+        })
+      })
       setInterval(()=>{
-        newAxios.get(this.api).then((resp)=>{
+        Global.newAxios.get(this.api).then((resp)=>{
           myChart.setOption({
             series:[{
               data:resp.data
@@ -92,6 +95,10 @@ export default {
           })
         })
       },1000)
+      const chartObserver = new ResizeObserver(() => {
+        myChart.resize();
+      });
+      chartObserver.observe(document.getElementById(this.id));
     }
   }
 }
