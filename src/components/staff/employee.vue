@@ -104,7 +104,7 @@
           </el-form-item>
           <el-form-item label="员工岗位:" :label-width="formLabelWidth">
             <el-select class="sBox" v-model="form.department" placeholder="请选择员工岗位">
-              <el-option v-for="item in departments" :label="item.department" :value="item.department"></el-option>
+              <el-option v-for="item in departments" :label="item.nick" :value="item.nick"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="员工名称:" :label-width="formLabelWidth">
@@ -148,8 +148,8 @@
                       placeholder="请输入员工手机号"></el-input>
           </el-form-item>
           <el-form-item label="员工岗位:" :label-width="formLabelWidth">
-            <el-select class="sBox" v-model="addform.department" placeholder="请选择员工岗位">
-              <el-option v-for="item in departments" :label="item.department" :value="item.department"></el-option>
+            <el-select class="sBox" v-model="addform.nick" placeholder="请选择员工岗位">
+              <el-option v-for="item in departments" :label="item.nick" :value="item.nick"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
