@@ -12,11 +12,13 @@
       </div>
       <div class="block">
         <el-table
-            v-loading="loading"
+            ref="multipleTable"
+            v-loading="false"
             :data="tableData"
             style="width: 100%;"
             :header-cell-style="header_cell_style"
-            :cell-style="cell_style">
+            :cell-style="cell_style"
+            @select-change="handleSelectionChange">
           <el-table-column
               prop="id"
               label="ID">
@@ -34,6 +36,10 @@
               prop="department"
               label="职位">
           </el-table-column>
+          <el-table-column
+              prop="jurisdiction"
+            label="权限">
+          </el-table-column>
 
           <el-table-column label="操作">
             <template slot="header" slot-scope="scope">
@@ -43,17 +49,17 @@
                   placeholder="输入关键字搜索"
                   @change="search"/>
             </template>
-          <template slot-scope="scope">
-            <el-button
-                size="mini"
-                @click="edit(scope.$index, scope.row)">编辑
-            </el-button>
-            <el-button
-                size="mini"
-                type="danger"
-                @click="toDelete(scope.$index, scope.row)">删除
-            </el-button>
-          </template>
+            <template slot-scope="scope">
+              <el-button
+                  size="mini"
+                  @click="edit(scope.$index, scope.row)">编辑
+              </el-button>
+              <el-button
+                  size="mini"
+                  type="danger"
+                  @click="toDelete(scope.$index, scope.row)">删除
+              </el-button>
+            </template>
           </el-table-column>
         </el-table>
         <div id="pages">
@@ -102,110 +108,110 @@ let newAxios = axios.create({
   baseURL: global.baseUrl
 })
 export default {
-  components:{Post},
+  components: {Post},
   mounted() {
     this.loaddata(1);
     this.loadDepartment()
   },
-  data(){
-    return{
-      input:'',
-      sId:'',
-      tableData:[],
-      dialogFormVisible:false,
-      dialogadd:false,
-      form:{
-        id:'',
-        name:'',
-        phone:'',
-        department:'',
+  data() {
+    return {
+      input: '',
+      sId: '',
+      tableData: [],
+      dialogFormVisible: false,
+      dialogadd: false,
+      form: {
+        id: '',
+        name: '',
+        phone: '',
+        department: '',
 
-        type:[],
-        value1:null,
+        type: [],
+        value1: null,
         pickerOptions: {
           disabledDate(time) {
             return time.getTime() > Date.now();
           },
         },
       },
-      addform:{
-        name:'',
-        phone:'',
-        department:'',
+      addform: {
+        name: '',
+        phone: '',
+        department: '',
       },
-      insertRule:{
-        name:[
-          {required:true,message:'用户名不能为空',trigger:'change'}
+      insertRule: {
+        name: [
+          {required: true, message: '用户名不能为空', trigger: 'change'}
         ],
-        phone:[
-            {required:true,message:'用户名不能为空',trigger:'change'},
-          {type:'手机号必须为数字值',trigger:'change'}
+        phone: [
+          {required: true, message: '用户名不能为空', trigger: 'change'},
+          {type: '手机号必须为数字值', trigger: 'change'}
         ]
       },
-      formLabelWidth:'120px',
-      loading:false,
-      total:0,
-      page:1,
-      departments:[],
-      ss:''
+      formLabelWidth: '120px',
+      loading: false,
+      total: 0,
+      page: 1,
+      departments: [],
+      ss: ''
     }
   },
-  methods:{
+  methods: {
     loadDepartment() {
-      newAxios.get("/dep/all_department").then((resp)=>{
+      newAxios.get("/dep/all_department").then((resp) => {
         console.log(resp)
         this.departments = resp.data.data
       })
     },
-    search(){
-      newAxios.get("/em/select_something?query"+this.ss+"&page"+this.page).then((resp)=>{
+    search() {
+      newAxios.get("/em/select_something?query" + this.ss + "&page" + this.page).then((resp) => {
         console.log(resp)
         this.tableData = resp.data.data.limit_data
       })
     },
-    edit(i,r){
+    edit(i, r) {
       this.dialogFormVisible = true
       this.form.phone = r.phone
       this.form.id = r.id
       this.form.name = r.name
       this.form.department = r.department
     },
-    add(){
-      this.checkAuth(() =>{
-        if (this.addform.name && this.addform.phone && this.addform.department){
-          newAxios.post("/em/insert_employee",this.addform).then((resp) =>{
+    add() {
+      this.checkAuth(() => {
+        if (this.addform.name && this.addform.phone && this.addform.department) {
+          newAxios.post("/em/insert_employee", this.addform).then((resp) => {
             console.log(resp)
             this.$message.success("添加成功")
           })
           this.dialogadd = false
           this.loaddata(this.page);
-        }else{
+        } else {
           this.$message.warning("请检查表单内容,不能为空")
           return
         }
       })
       this.dialogadd = false
     },
-    loaddata(page){
+    loaddata(page) {
       this.loading = true
-      setTimeout(() =>{
-        newAxios.get("/em/select_all?page="+page).then((resp) =>{
+      setTimeout(() => {
+        newAxios.get("/em/select_all?page=" + page).then((resp) => {
           this.tableData = resp.data.data.limit_data
           this.loading = false
           this.total = resp.data.data.count
-          if (this.tableData.length === 0 && this.page - 1!==0){
+          if (this.tableData.length === 0 && this.page - 1 !== 0) {
             this.loaddata(this.page - 1)
           }
-          this.$message.success("查询成功")
+          // this.$message.success("查询成功")
           console.log(this.total)
         })
-      },200)
+      }, 200)
     },
-    modify(){
-      this.checkAuth(()=>{
-        newAxios.post("/em/update_employee",this.form).then((resp) =>{
-        console.log(resp)
-          if (resp.data.code === 200){
+    modify() {
+      this.checkAuth(() => {
+        newAxios.post("/em/update_employee", this.form).then((resp) => {
+          console.log(resp)
+          if (resp.data.code === 200) {
             this.$message.success("修改成功")
           }
         })
@@ -214,13 +220,13 @@ export default {
       })
       this.dialogFormVisible = false
     },
-    changePage(index){
+    changePage(index) {
       this.page = index
       this.loaddata(index)
     },
-    toDelete(i,r){
-      this.checkAuth(() =>{
-        newAxios.get("/em/delete_employee?id="+r.id + "&name=" +r.name).then((resp) =>{
+    toDelete(i, r) {
+      this.checkAuth(() => {
+        newAxios.get("/em/delete_employee?id=" + r.id + "&name=" + r.name).then((resp) => {
           console.log(resp)
         })
         this.loaddata(this.page)
@@ -266,10 +272,10 @@ export default {
     header_cell_style() {
       return "background:#f8f8f9";
     },
-    checkAuth(fun){
-      if(localStorage.getItem("auth") === 'ROOT'){
+    checkAuth(fun) {
+      if (localStorage.getItem("auth") === 'ROOT') {
         fun()
-      }else {
+      } else {
         this.$message.error("权限不足")
         return
       }

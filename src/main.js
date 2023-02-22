@@ -9,6 +9,7 @@ import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 
 Vue.prototype.$echarts = echarts;
 import '@/assets/icon/iconfont.css'
+import '@/assets/Full screen/iconfont.css'
 
 import Live2d from "@/components/Live2d.vue";
 import Breadcrumb from "@/components/Breadcrumb/Breadcrumb.vue";
