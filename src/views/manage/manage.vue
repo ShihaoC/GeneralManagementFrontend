@@ -5,6 +5,9 @@
       <div id="open">
         <ul>
           <li>
+            <i class="iconfont icon-quanping_o"></i>
+          </li>
+          <li>
             <i class="iconfont icon-gitee-fill-round"></i>
           </li>
           <li>
