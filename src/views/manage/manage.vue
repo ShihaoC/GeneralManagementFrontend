@@ -4,7 +4,6 @@
       <Breadcrumb class="bread"></Breadcrumb>
       <div id="open">
         <ul>
-
         </ul>
       </div>
       <div id="weather">
@@ -167,7 +166,6 @@ export default {
     this.user = localStorage.getItem("username").toUpperCase()
     console.log(this.$router.Location)
     this.init()
-
   },
   data() {
     return {
