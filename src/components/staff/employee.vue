@@ -252,7 +252,7 @@ export default {
     },
     add() {//添加
       this.checkAuth(()=>{
-        if (this.addform.name && this.addform.phone && this.addform.department) {
+        if (this.addform.name && this.addform.phone && this.addform.nick) {
           newAxios.post("/em/insert_employee", this.addform).then((resp) => {
             console.log(resp)
             this.$message.success("添加成功")
@@ -277,7 +277,7 @@ export default {
           if (this.tableData.length === 0 && this.page - 1 !== 0) {
             this.loaddata(this.page - 1)
           }
-          this.$message.success("查询成功")
+          // this.$message.success("查询成功")
           console.log(this.total)
         })
       }, 200)
