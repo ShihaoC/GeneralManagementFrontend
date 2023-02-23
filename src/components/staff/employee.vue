@@ -252,7 +252,7 @@ export default {
     },
     add() {//添加
       this.checkAuth(()=>{
-        if (this.addform.name && this.addform.phone && this.addform.department) {
+        if (this.addform.name && this.addform.phone && this.addform.nick) {
           newAxios.post("/em/insert_employee", this.addform).then((resp) => {
             console.log(resp)
             this.$message.success("添加成功")
