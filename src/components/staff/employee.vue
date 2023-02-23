@@ -277,7 +277,7 @@ export default {
           if (this.tableData.length === 0 && this.page - 1 !== 0) {
             this.loaddata(this.page - 1)
           }
-          this.$message.success("查询成功")
+          // this.$message.success("查询成功")
           console.log(this.total)
         })
       }, 200)

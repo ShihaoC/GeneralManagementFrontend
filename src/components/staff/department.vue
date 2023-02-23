@@ -177,7 +177,7 @@
                         if (this.tableData.length === 0 && this.page - 1 !== 0) {
                             this.loaddata(this.page - 1)
                         }
-                        this.$message.success("查询成功")
+                        // this.$message.success("查询成功")
                         console.log(this.total)
                     })
                 },200)
@@ -202,6 +202,7 @@
                 this.checkAuth(()=> {
                     newAxios.get("/dep/delete_department?id=" + r.id).then((resp) => {
                         console.log(resp)
+                        console.log(r.id)
                     })
                     this.loadData(this.page);
                 })
