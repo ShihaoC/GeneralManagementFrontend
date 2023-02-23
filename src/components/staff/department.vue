@@ -204,6 +204,7 @@
                         console.log(resp)
                         console.log(r.id)
                     })
+                    this.$message.error("删除成功")
                     this.loadData(this.page);
                 })
 
