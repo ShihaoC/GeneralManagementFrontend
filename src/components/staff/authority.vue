@@ -8,6 +8,7 @@
         <el-upload
             style="display: inline-block">
           <el-button type="info" @click="daochu" icon="el-icon-download" plain size="small">导出</el-button>
+          <el-button :disabled="select" type="danger" @click="batch_Delete" ico="el-icon-close" plain size="small">删除</el-button>
         </el-upload>
       </div>
       <div class="block">
@@ -19,6 +20,9 @@
             :header-cell-style="header_cell_style"
             :cell-style="cell_style"
             @select-change="handleSelectionChange">
+          <el-table-column
+          type="selection">
+          </el-table-column>
           <el-table-column
               prop="id"
               label="ID">
@@ -106,30 +110,31 @@
             <el-option label="否" :value="false"></el-option>
             </el-select>
           </el-form-item>
-          <el-table-column label="操作">
-            <template slot="header" slot-scope="scope">
-              <el-input
-                  v-model="ss"
-                  size="mini"
-                  placeholder="输入关键字搜索"
-                  @change="search"/>
-            </template>
-            <template slot-scope="scope">
-              <el-button
-                  size="mini"
-                  @click="edit(scope.$index, scope.row)">编辑
-              </el-button>
-              <el-button
-                  size="mini"
-                  type="danger"
-                  @click="toDelete(scope.$index, scope.row)">删除
-              </el-button>
-            </template>
-          </el-table-column>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogFormVisible = false">取 消</el-button>
           <el-button type="primary" @click="modify">确 定</el-button>
+        </div>
+      </el-dialog>
+      <el-dialog
+      title="创建员工" :visible.sync="dialogadd">
+        <el-form :rules="insertRule" ref="ruleForm" :inline="true" :model="addform">
+          <el-form-item label="员工名称:" :label-width="formLabelWidth" prop="name">
+            <el-input v-model="addform.name" autocomplete="off" class="sBox" placeholder="请输入员工名称"></el-input>
+          </el-form-item>
+          <el-form-item label="员工手机号:" :label-width="formLabelWidth" prop="phone">
+            <el-input v-model.number="addform.phone" autocomplete="off" class="sBox"
+                      placeholder="请输入员工手机号"></el-input>
+          </el-form-item>
+          <el-form-item label="员工岗位:" :label-width="formLabelWidth">
+            <el-select class="sBox" v-model="addform.department" placeholder="请选择员工岗位">
+              <el-option v-for="item in departments" :label="item.nick" :value="item.nick"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogadd = false">取消</el-button>
+          <el-button type="primary" @click="addTest">确定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -137,14 +142,12 @@
 </template>
 
 <script>
-import axios from "axios";
 import global from "@/views/Global";
 import $ from 'jquery'
 import Post from "@/components/staff/department.vue";
+import service from "@/service";
 
-let newAxios = axios.create({
-  baseURL: global.baseUrl
-})
+let newAxios = global.newAxios
 export default {
   components: {Post},
   mounted() {
@@ -155,6 +158,7 @@ export default {
     return {
       input: '',
       sId: '',
+      sName:'',
       tableData: [],
       dialogFormVisible: false,
       dialogadd: false,
@@ -194,19 +198,18 @@ export default {
       departments: [],
       ss: '',
       multipleSelection: [],
-      select: true
+      select: true,
+      fullscreen:false
     }
   },
   methods: {
     loadDepartment() {
-      newAxios.get("/dep/all_department").then((resp) => {
-        console.log(resp)
+      service.get("/dep/all_department",resp => {
         this.departments = resp.data.data
       })
     },
     search() {
-      newAxios.get("/user/user_query?query=" + this.ss + "&page" + this.page).then((resp) => {
-        console.log(resp)
+      newAxios.get("/em/select_something?query=" + this.ss + "&page" + this.page).then((resp) => {
         this.tableData = resp.data.data.limit_data
       })
     },
@@ -219,34 +222,28 @@ export default {
       this.form.department = r.department
       this.form.quit = r.quit
     },
-    add() {
-      this.checkAuth(() => {
-        if (this.addform.name && this.addform.phone && this.addform.department) {
-          newAxios.post("/user/user_insert", this.addform).then((resp) => {
-            console.log(resp)
-            this.$message.success("添加成功")
-          })
+    addTest() {
+      if (this.addform.name && this.addform.phone && this.addform.department) {
+        service.post("/em/insert_employee", this.addform, resp => {
+          this.CodeCheck(resp.data.code)
           this.dialogadd = false
-          this.loaddata(this.page);
-        } else {
-          this.$message.warning("请检查表单内容,不能为空")
-          return
-        }
-      })
-      this.dialogadd = false
+          this.loaddata(this.page)
+        })
+      }else{
+        this.$message.warning("请检查表单内容，不能为空")
+        return
+      }
     },
     loaddata(page) {
       this.loading = true
       setTimeout(() => {
-        newAxios.get("/em/select_all?page=" + page).then((resp) => {
+        service.get("/em/select_all?page=" + page,resp => {
           this.tableData = resp.data.data.limit_data
           this.loading = false
           this.total = resp.data.data.count
           if (this.tableData.length === 0 && this.page - 1 !== 0) {
             this.loaddata(this.page - 1)
           }
-          // this.$message.success("查询成功")
-          console.log(this.total)
         })
       }, 200)
     },
@@ -258,36 +255,34 @@ export default {
         this.select = true
       }
     },
-    modify() {
+    modify() {//修改
       this.checkAuth(() => {
-        newAxios.post("/user/user_update", this.form).then((resp) => {
-          console.log(resp)
+        service.post("/user/user_update", this.form,resp => {
           if (resp.data.code === 200) {
             this.$message.success("修改成功")
           }
         })
         this.dialogFormVisible = false
         this.loaddata(this.page);
+        this.dialogFormVisible = false
       })
-      this.dialogFormVisible = false
     },
     changePage(index) {
       this.page = index
       this.loaddata(index)
     },
     toDelete(i, r) {
-      this.checkAuth(() => {
-        newAxios.get("/user/user_delete?id=" + r.id + "&name=" + r.name).then((resp) => {
+        service.get("/user/user_delete?id=" + r.id + "&name=" + r.name).then((resp) => {
           console.log(resp)
         })
         this.loaddata(this.page)
-      })
     },
     batch_Delete() {
       newAxios.post("/em/batch_Delete", this.multtiplesSelection).then((resp) => {
         this.loaddata(this.page)
       })
     },
+
     daochu() {
       let url = "http://localhost:8848/em/export_excel";
       let xhr = new XMLHttpRequest();
@@ -334,6 +329,19 @@ export default {
       } else {
         this.$message.error("权限不足")
         return
+      }
+    },
+    CodeCheck(ErrCode) {
+      if (ErrCode === 200) {
+        this.$message.success("成功")
+      } else if (ErrCode === 404) {
+        this.$message.warning("未找到")
+      } else if (ErrCode === 500) {
+        this.$message.error("服务器错误,请检查表单参数")
+      } else if (ErrCode === 330) {
+        this.$message.error("已经存在")
+      } else if (ErrCode === 340) {
+        this.$message.error("不存在")
       }
     }
   }
