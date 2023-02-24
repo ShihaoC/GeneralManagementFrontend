@@ -37,6 +37,7 @@ import Global from "@/views/Global.vue";
 import axios from "axios";
 import particles from 'particlesjs'
 import qs from 'qs'
+import service from "@/service";
 
 let canv = null;
 
@@ -97,8 +98,7 @@ export default {
         this.$message.warning("用户名密码不能为空")
         return
       }
-
-      newAxios.post("/login?" +qs.stringify(this.loginForm)).then((resp) => {
+      service.post("/login?"+qs.stringify(this.loginForm),null,resp=>{
         console.log(resp)
         if (resp.data.data != null) {
           localStorage.setItem("username", this.loginForm.username)
@@ -110,6 +110,18 @@ export default {
           this.$message.error("用户名密码不正确")
         }
       })
+      // newAxios.post("/login?" +qs.stringify(this.loginForm)).then((resp) => {
+      //   console.log(resp)
+      //   if (resp.data.data != null) {
+      //     localStorage.setItem("username", this.loginForm.username)
+      //     localStorage.setItem("password", this.loginForm.password)
+      //     localStorage.setItem("authorization", resp.headers['authorization'])
+      //     console.log(resp.headers['authorization'])
+      //     this.$router.push({path: '/manage/department'})
+      //   } else {
+      //     this.$message.error("用户名密码不正确")
+      //   }
+      // })
     },
     register() {
       this.$router.push({

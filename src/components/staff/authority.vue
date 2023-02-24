@@ -3,7 +3,7 @@
   <div class="container">
     <div id="power-main">
       <div class="up">
-        <el-button type="success" icon="el-icon-edit" @click="dialogadd = true" plain size="small"> 添加</el-button>
+        <el-button type="success" icon="el-icon-edit" plain size="small" @click="dialogadd = true"> 添加</el-button>
         <span>&nbsp;&nbsp;</span>
         <el-upload
             style="display: inline-block">
@@ -97,6 +97,9 @@
           <el-form-item label="员工手机号:" :label-width="formLabelWidth">
             <el-input v-model="form.phone" autocomplete="off" class="sBox"></el-input>
           </el-form-item>
+          <el-form-item label="权限:" :label-width="formLabelWidth">
+          <el-input v-model="form.root" autocomplete="off" class="sBox"></el-input>
+          </el-form-item>
           <el-form-item babel="是否离职:" :label-width="formLabelWidth">
             <el-select v-model="form.quit" placeholder="" class="sBox">
             <el-option label="是" :value="true"></el-option>
@@ -147,20 +150,6 @@ export default {
   mounted() {
     this.loaddata(1);
     this.loadDepartment()
-    console.log("123" + localStorage.getItem("deactivateOrNot"))
-    if (localStorage.getItem("deactivateOrNot")) {
-
-      if (localStorage.getItem("deactivateOrNot") === 'true') {
-        this.deactivateOrNot = true
-      } else {
-        this.deactivateOrNot = false
-      }
-    } else {
-      this.deactivateOrNot   = true
-    }
-    this.user = localStorage.getItem("username").toUpperCase()
-    console.log(this.$router.Location)
-    this.init()
   },
   data() {
     return {
@@ -174,6 +163,7 @@ export default {
         name: '',
         phone: '',
         department: '',
+        root:'',
         quit: '',
         type: [],
         value1: null,
@@ -215,7 +205,7 @@ export default {
       })
     },
     search() {
-      newAxios.get("/dep/somedpartment?query=" + this.ss + "&page" + this.page).then((resp) => {
+      newAxios.get("/user/user_query?query=" + this.ss + "&page" + this.page).then((resp) => {
         console.log(resp)
         this.tableData = resp.data.data.limit_data
       })

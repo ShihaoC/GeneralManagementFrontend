@@ -3,7 +3,8 @@ import router from "./router";
 import Element from 'element-ui'
 
 
-axios.defaults.baseURL = "http://localhost:8848";
+// axios.defaults.baseURL = "http://localhost:8848";
+axios.defaults.baseURL = "http://39.106.16.171:8848";
 
 const request = axios.create({
     timeout: 5000,
@@ -25,6 +26,7 @@ let get = (url, fun) => {
             fun(resp)
         })
         .catch(err => {
+            console.log(err)
             clearTimeout(time)
             time = setTimeout(()=>{
                 router.push({path: '/'})
@@ -44,6 +46,7 @@ let post = (url, data, fun) => {
             fun(resp)
         })
         .catch(err => {
+            console.log(err)
             clearTimeout(time)
             time = setTimeout(()=>{
                 router.push({path: '/'})
