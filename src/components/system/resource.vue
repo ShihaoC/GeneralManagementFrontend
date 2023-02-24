@@ -81,6 +81,7 @@
 <script>
 import axios from "axios";
 import Global from "@/views/Global.vue";
+import service from "@/service";
 
 let newAxios = axios.create({
   baseURL: Global.baseUrl
@@ -89,17 +90,28 @@ export default {
   name: "resource",
   mounted() {
     this.loading = true
-    newAxios.get("/system/cpu").then((resp) => {
+    service.get("/system/cpu",resp=>{
       this.CPUTable = resp.data
       this.loading = false
     })
-    newAxios.get("/system/mem").then((resp) => {
+    // newAxios.get("/system/cpu").then((resp) => {
+    //   this.CPUTable = resp.data
+    //   this.loading = false
+    // })
+    service.get("/system/mem",resp=>{
       this.MemTable = resp.data
 
     })
-    newAxios.get("/api/count").then((resp) => {
+    // newAxios.get("/system/mem").then((resp) => {
+    //   this.MemTable = resp.data
+    //
+    // })
+    service.get("/api/count",resp=>{
       this.line_data = resp.data
     })
+    // newAxios.get("/api/count").then((resp) => {
+    //   this.line_data = resp.data
+    // })
     setInterval(() => {
       // this.loadSystemInformation()
     }, 5000)

@@ -61,37 +61,37 @@
             style="height: 100vh;"
             :unique-opened=true
             >
-          <el-menu-item id="items" index="/index">
+          <el-menu-item id="items" index="/index" @click="check()">
             <i class="el-icon-s-grid"></i>
             <span id="items-text">员工管理系统</span>
           </el-menu-item>
-          <el-menu-item index="/index" id="itemss">
+          <el-menu-item index="/index" id="itemss" @click="check()">
             <i class="el-icon-s-home"></i>
             <span>首页</span>
           </el-menu-item>
           <el-submenu index="1">
             <template slot="title"><i class="el-icon-user-solid"></i><span>系统管理</span>
             </template>
-            <el-menu-item index="/manage/department">人员管理</el-menu-item>
-            <el-menu-item index="/manage/post">岗位管理</el-menu-item>
-            <el-menu-item index="/manage/power">角色管理</el-menu-item>
-            <el-menu-item index="/manage/reportForm">员工报表</el-menu-item>
+            <el-menu-item index="/manage/department" @click="check()">人员管理</el-menu-item>
+            <el-menu-item index="/manage/post" @click="check()">岗位管理</el-menu-item>
+            <el-menu-item index="/manage/power" @click="check()">角色管理</el-menu-item>
+            <el-menu-item index="/manage/reportForm" @click="check()">员工报表</el-menu-item>
           </el-submenu>
           <el-submenu index="2">
             <template slot="title"><i class="el-icon-data-analysis"></i> <span>系统监控</span></template>
-            <el-menu-item index="/system/resource">
+            <el-menu-item index="/system/resource" @click="check()">
               <span slot="title">资源概览</span>
             </el-menu-item>
-            <el-menu-item index="3">
+            <el-menu-item index="3" @click="check()">
               <span slot="title">数据库概览</span>
             </el-menu-item>
           </el-submenu>
 
-          <el-submenu index="3">
+          <el-submenu index="3" >
             <template slot="title"><i class="el-icon-document"></i><span>日志管理</span>
             </template>
-            <el-menu-item index="/manage/operation">操作日志</el-menu-item>
-            <el-menu-item to="/manage/logLogin">日志登录</el-menu-item>
+            <el-menu-item index="/manage/operation" @click="check()">操作日志</el-menu-item>
+            <el-menu-item to="/manage/logLogin" @click="check()">日志登录</el-menu-item>
           </el-submenu>
         </el-menu>
         <transition name="el-fade-in">
@@ -99,6 +99,16 @@
         </transition>
       </div>
       <div id="manage-text">
+
+
+<!--        首页-->
+        <div v-show="index_show" id="index-main">
+
+        </div>
+<!--        首页-->
+
+
+
         <router-view></router-view>
       </div>
       <div id="setting-box">
@@ -132,7 +142,6 @@
 
 <script>
 import Live2d from "@/components/Live2d.vue";
-import axios from "axios";
 import service from "@/service";
 import $ from 'jquery'
 
@@ -149,6 +158,9 @@ export default {
         "color":"#909399"
       })
     }
+    if(this.$route.path !== '/index'){
+      this.index_show = false
+    }
     console.log("123" + localStorage.getItem("kanbanniang"))
     if (localStorage.getItem("kanbanniang")) {
 
@@ -160,12 +172,12 @@ export default {
     } else {
       this.kanbanniang = true
     }
-    this.user = localStorage.getItem("username").toUpperCase()
     console.log(this.$router.Location)
     this.init()
   },
   data() {
     return {
+      index_show:true,
       user: '',
       showed: false,
       drawer: false,
@@ -180,6 +192,15 @@ export default {
     }
   },
   methods: {
+    check(){
+      console.log("check")
+      console.log(this.$route.path)
+      if(this.$route.path !== '/index'){
+        this.index_show = false
+      }else {
+        this.index_show = true
+      }
+    },
     full(){
       console.log(123)
       console.log(this.$fullscreen.isEnabled);
@@ -188,7 +209,7 @@ export default {
       localStorage.removeItem("token")
       localStorage.removeItem("username")
       localStorage.removeItem("password")
-      localStorage.removeItem("auth")
+      localStorage.removeItem("authorization")
       this.$router.push({
         path: '/'
       })

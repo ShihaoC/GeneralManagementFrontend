@@ -5,7 +5,7 @@
 <script>
 import echarts from "echarts";
 import Global from "@/views/Global.vue";
-
+import service from "@/service";
 
 export default {
   name: "InterfaceInvoke",
@@ -94,7 +94,7 @@ export default {
 
 
       setInterval(()=>{
-        Global.newAxios.get(this.api).then((resp)=>{
+        service.get(this.api,resp=>{
           myChart.setOption({
             series:[{
               data:resp.data

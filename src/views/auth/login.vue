@@ -101,7 +101,7 @@ export default {
       service.post("/login?"+qs.stringify(this.loginForm),null,resp=>{
         console.log(resp)
         if (resp.data.data != null) {
-          localStorage.setItem("username", this.loginForm.username)
+          localStorage.setItem("username ", this.loginForm.username)
           localStorage.setItem("password", this.loginForm.password)
           localStorage.setItem("authorization", resp.headers['authorization'])
           console.log(resp.headers['authorization'])
