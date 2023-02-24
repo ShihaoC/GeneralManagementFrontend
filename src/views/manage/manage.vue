@@ -99,7 +99,7 @@
 
 <!--        首页-->
         <div v-show="index_show" id="index-main">
-       <h1>崔世豪big SB</h1>
+       <h1></h1>
         </div>
 <!--        首页-->
 
