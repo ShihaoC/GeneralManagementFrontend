@@ -2,10 +2,6 @@
   <div id="manage-main">
     <div id="manage-navbar">
       <Breadcrumb class="bread"></Breadcrumb>
-      <div id="open">
-        <ul>
-        </ul>
-      </div>
       <div id="weather">
         <ul>
           <li class="top_item">

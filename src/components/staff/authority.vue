@@ -347,9 +347,6 @@ export default {
   }
 }
 </script>
-<style>
-#power-main {
-  width: 100%;
-  height: 100%;
-}
+<style lang="less">
+@import "@/assets/css/department.less";
 </style>

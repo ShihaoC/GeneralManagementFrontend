@@ -3,8 +3,8 @@ import router from "./router";
 import Element from 'element-ui'
 
 
-axios.defaults.baseURL = "http://localhost:8848";
-// axios.defaults.baseURL = "http://39.106.16.171:8848";
+// axios.defaults.baseURL = "http://localhost:8848";
+axios.defaults.baseURL = "http://39.106.16.171:8848";
 
 const request = axios.create({
     timeout: 5000,
@@ -29,6 +29,7 @@ let get = (url, fun) => {
             console.log(err)
             clearTimeout(time)
             time = setTimeout(()=>{
+                router.push({path: '/'})
                 Element.Message.error("没有登录或无权限")
             },200)
         })
@@ -48,6 +49,7 @@ let post = (url, data, fun) => {
             console.log(err)
             clearTimeout(time)
             time = setTimeout(()=>{
+                router.push({path: '/'})
                 Element.Message.error("没有登录或无权限")
             },200)
         })
