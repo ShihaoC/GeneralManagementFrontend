@@ -1,6 +1,6 @@
 <!--人员页面-->
 <template>
-  <div class="container">
+  <div class="container" v-loading="fullscreen">
     <div id="employee-main">
       <div class="up">
         <el-button type="success" icon="el-icon-edit" @click="dialogadd = true" plain size="small"> 添加</el-button>
@@ -9,13 +9,15 @@
             style="display: inline-block"
             class="upload-demo"
             action="https://jsonplaceholder.typicode.com/posts/"
+            :show-file-list="false"
         >
           <el-button type="warning" icon="el-icon-upload2" plain size="small">导入</el-button>
         </el-upload>
 
         <span>&nbsp;&nbsp;</span>
         <el-button type="info" @click="daochu" icon="el-icon-download" plain size="small">导出</el-button>
-        <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-download" plain size="small">删除</el-button>
+        <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain size="small">删除
+        </el-button>
       </div>
       <div class="block">
         <el-table
@@ -104,7 +106,7 @@
           </el-form-item>
           <el-form-item label="员工岗位:" :label-width="formLabelWidth">
             <el-select class="sBox" v-model="form.department" placeholder="请选择员工岗位">
-              <el-option v-for="item in departments" :label="item.department" :value="item.department"></el-option>
+              <el-option v-for="item in departments" :label="item.nick" :value="item.nick"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="员工名称:" :label-width="formLabelWidth">
@@ -149,14 +151,14 @@
           </el-form-item>
           <el-form-item label="员工岗位:" :label-width="formLabelWidth">
             <el-select class="sBox" v-model="addform.department" placeholder="请选择员工岗位">
-              <el-option v-for="item in departments" :label="item.department" :value="item.department"></el-option>
+              <el-option v-for="item in departments" :label="item.nick" :value="item.nick"></el-option>
             </el-select>
           </el-form-item>
         </el-form>
 
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogadd = false">取 消</el-button>
-          <el-button type="primary" @click="add">确 定</el-button>
+          <el-button type="primary" @click="addTest">确 定</el-button>
         </div>
       </el-dialog>
     </div>
@@ -164,14 +166,12 @@
 </template>
 
 <script>
-import axios from "axios";
 import global from "@/views/Global";
-import $ from 'jquery'
 import Post from "@/components/staff/department.vue";
+import service from '@/service.js'
+// import service from '@/assets/util/service.vue'
 
-let newAxios = axios.create({
-  baseURL: global.baseUrl
-})
+let newAxios = global.newAxios
 export default {
   components: {Post},
   mounted() {
@@ -223,20 +223,18 @@ export default {
       departments: [],
       ss: '',
       multipleSelection: [],
-      select: true
+      select: true,
+      fullscreen: false
     }
   },
   methods: {
     loadDepartment() {
-      newAxios.get("/dep/all_department").then((resp) => {
-        console.log(resp)
+      service.get("/dep/all_department", resp => {
         this.departments = resp.data.data
       })
-    }
-    ,
+    },
     search() {//查询
-      newAxios.get("/em/select_something?query=" + this.ss + "&page=" + this.page).then((resp) => {
-        console.log(resp)
+      service.get("/em/select_something?query=" + this.ss + "&page=" + this.page, resp => {
         this.tableData = resp.data.data.limit_data
       })
     },
@@ -250,58 +248,48 @@ export default {
       this.form.quit = r.quit
       this.form.join_date = new Date(r.join_date)
     },
-    add() {//添加
-      this.checkAuth(()=>{
-        if (this.addform.name && this.addform.phone && this.addform.nick) {
-          newAxios.post("/em/insert_employee", this.addform).then((resp) => {
-            console.log(resp)
-            this.$message.success("添加成功")
-          })
-          this.dialogadd = false
-          this.loaddata(this.page);
-        } else {
-          this.$message.warning("请检查表单内容，不能为空")
-          return
-        }
-      })
-      this.dialogadd = false
+    addTest() {
+      if (this.addform.name && this.addform.phone && this.addform.department) {
+        service.post("/em/insert_employee", this.addform, (resp) => {
 
+          this.CodeCheck(resp.data.code)
+          this.dialogadd = false
+          this.loaddata(this.page)
+        })
+      } else {
+        this.$message.warning("请检查表单内容，不能为空")
+        return
+      }
     },
     loaddata(page) {
       this.loading = true
       setTimeout(() => {
-        newAxios.get("/em/select_all?page=" + page).then((resp) => {
+        service.get("/em/select_all?page=" + page, resp => {
           this.tableData = resp.data.data.limit_data
           this.loading = false
           this.total = resp.data.data.count
           if (this.tableData.length === 0 && this.page - 1 !== 0) {
             this.loaddata(this.page - 1)
           }
-          // this.$message.success("查询成功")
-          console.log(this.total)
         })
       }, 200)
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
-      if(this.multipleSelection.length !== 0){
+      if (this.multipleSelection.length !== 0) {
         this.select = false
-      }else {
+      } else {
         this.select = true
       }
     },
     modify() {//修改
-      this.checkAuth(()=>{
-        newAxios.post("/em/update_employee", this.form).then((resp) => {
-          console.log(resp)
-          if (resp.data.code === 200) {
-            this.$message.success("修改成功")
-          }
-        })
-        this.dialogFormVisible = false
-
-        this.loaddata(this.page);
+      service.post("/em/update_employee", this.form, resp => {
+        if (resp.data.code === 200) {
+          this.$message.success("修改成功")
+        }
       })
+      this.dialogFormVisible = false
+      this.loaddata(this.page);
       this.dialogFormVisible = false
 
     },
@@ -310,15 +298,13 @@ export default {
       this.loaddata(index)
     },
     toDelete(i, r) {
-      this.checkAuth(()=>{
-        newAxios.get("/em/delete_employee?id=" + r.id + "&name=" + r.name).then((resp) => {
-          console.log(resp)
-        })
-        this.loaddata(this.page)
+      service.get("/em/delete_employee?id=" + r.id + "&name=" + r.name, resp => {
+        console.log(resp)
       })
+      this.loaddata(this.page)
     },
-    batch_Delete(){
-      newAxios.post("/em/batch_Delete",this.multipleSelection).then((resp)=>{
+    batch_Delete() {
+      service.post("/em/batch_Delete", this.multipleSelection, resp => {
         this.loaddata(this.page)
       })
     },
@@ -328,6 +314,7 @@ export default {
       let xhr = new XMLHttpRequest();
       xhr.open('GET', url, true); //
       xhr.responseType = "blob"; //js 中的二进制对象
+      xhr.setRequestHeader("authorization", localStorage.getItem("authorization"))
       xhr.onreadystatechange = function () {
 
 
@@ -335,7 +322,6 @@ export default {
 
         }
         if (xhr.readyState == 4) {
-
         }
       };
 
@@ -354,7 +340,6 @@ export default {
 
         }
       };
-//     ajax
       xhr.send()
     },
     cell_style() {
@@ -363,12 +348,25 @@ export default {
     header_cell_style() {
       return "background:#f8f8f9";
     },
-    checkAuth(fun){
-      if(localStorage.getItem("auth") === 'ROOT'){
+    checkAuth(fun) {
+      if (localStorage.getItem("auth") === 'ROOT') {
         fun()
-      }else {
+      } else {
         this.$message.error("权限不足")
         return
+      }
+    },
+    CodeCheck(ErrCode) {
+      if (ErrCode === 200) {
+        this.$message.success("成功")
+      } else if (ErrCode === 404) {
+        this.$message.warning("未找到")
+      } else if (ErrCode === 500) {
+        this.$message.error("服务器错误,请检查表单参数")
+      } else if (ErrCode === 330) {
+        this.$message.error("已经存在")
+      } else if (ErrCode === 340) {
+        this.$message.error("不存在")
       }
     }
   }

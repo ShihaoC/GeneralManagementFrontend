@@ -1,7 +1,9 @@
 <template>
   <div id="login-main">
     <canvas class="canv" id="canv" v-show="true"></canvas>
+
     <div id="login-wrap">
+
       <el-form :model="loginForm" id="login-container" ref="ruleForm" :rules="rule">
         <h1 id="login-title">登录</h1>
         <el-form-item></el-form-item>
@@ -34,6 +36,7 @@
 import Global from "@/views/Global.vue";
 import axios from "axios";
 import particles from 'particlesjs'
+import qs from 'qs'
 
 let canv = null;
 
@@ -44,6 +47,7 @@ const newAxios = axios.create({
 export default {
   name: 'Login',
   mounted() {
+
     this.loading = true
     if (localStorage.getItem("username")) {
       this.loginForm.username = localStorage.getItem("username")
@@ -94,13 +98,13 @@ export default {
         return
       }
 
-      newAxios.post("/auth/login", this.loginForm).then((resp) => {
+      newAxios.post("/login?" +qs.stringify(this.loginForm)).then((resp) => {
         console.log(resp)
         if (resp.data.data != null) {
           localStorage.setItem("username", this.loginForm.username)
           localStorage.setItem("password", this.loginForm.password)
-          localStorage.setItem("token", resp.data.data.token)
-          localStorage.setItem("auth",resp.data.data.role)
+          localStorage.setItem("authorization", resp.headers['authorization'])
+          console.log(resp.headers['authorization'])
           this.$router.push({path: '/manage/department'})
         } else {
           this.$message.error("用户名密码不正确")
@@ -140,6 +144,7 @@ export default {
     border-radius: 8px;
     box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(8px);
+    background: rgba(255,255,255,0.2);
   }
 
   #login-title {

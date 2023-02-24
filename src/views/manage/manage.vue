@@ -8,14 +8,14 @@
       </div>
       <div id="weather">
         <ul>
-          <li>
-            <i class="iconfont icon-fullscreen"></i>
+          <li class="top_item">
+            <i id="full-screen" @click="full" class="iconfont icon-fullscreen top-item"></i>
+          </li>
+          <li >
+            <i id="gitee" class="iconfont icon-gitee-fill-round"></i>
           </li>
           <li>
-            <i class="iconfont icon-gitee-fill-round"></i>
-          </li>
-          <li>
-            <i class="iconfont icon-github-fill"></i>
+            <i id="github" class="iconfont icon-github-fill"></i>
           </li>
           <li>
             时间: {{ time }}
@@ -133,12 +133,9 @@
 <script>
 import Live2d from "@/components/Live2d.vue";
 import axios from "axios";
-import Global from "@/views/Global.vue";
+import service from "@/service";
 import $ from 'jquery'
 
-let newAxios = axios.create({
-  baseURL: Global.baseUrl
-})
 
 export default {
   name: "manage",
@@ -183,6 +180,10 @@ export default {
     }
   },
   methods: {
+    full(){
+      console.log(123)
+      console.log(this.$fullscreen.isEnabled);
+    },
     disLogin() {
       localStorage.removeItem("token")
       localStorage.removeItem("username")
@@ -222,7 +223,8 @@ export default {
       return hour + ":" + minute
     },
     getWeather() {
-      newAxios.get("/api/weather").then((resp) => {
+      console.log(localStorage.getItem("token"))
+      service.get("/api/weather",resp=>{
         this.temp = resp.data.data.temp
         this.humidity = resp.data.data.humidity
         this.windScale = resp.data.data.windScale

@@ -13,5 +13,8 @@
   padding: 0;
   box-sizing: border-box;
 }
-
+html {
+  background-color: #ffffff;
+  /* Or any color / image you want */
+}
 </style>

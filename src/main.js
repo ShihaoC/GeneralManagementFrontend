@@ -7,6 +7,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 import echarts from "echarts";
 import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 
+import VueFullscreen from 'vue-fullscreen'
+
 Vue.prototype.$echarts = echarts;
 import '@/assets/icon/iconfont.css'
 
@@ -22,6 +24,7 @@ Vue.use(IconsPlugin);
 import axios from 'axios'
 import VueAxios from "vue-axios";
 Vue.use(ElementUI);
+Vue.use(VueFullscreen)
 
 Vue.config.productionTip = false
 

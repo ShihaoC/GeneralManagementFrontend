@@ -67,10 +67,12 @@
         <BasicChart class="resource-echarts-item" :data_field="fileid_data" :title="'接口调用次数'" :id="'test1'"
                     :name="'interface'" :chart-style="'width: 100%; height: 30vh;'"
                     :line_data="line_data"
-                    :api="'/api/count'"></BasicChart>
+                    :api="'/api/count'"
+                    :context="'接口调用次数'"></BasicChart>
         <BasicChart class="resource-echarts-item" :data_field="fileid_data" :title="'登录次数'" :id="'test2'"
                     :name="'login'" :chart-style="'width: 100%; height: 30vh;'"
-                    :api="'/api/login'"></BasicChart>
+                    :api="'/api/login'"
+                    :context="'登录次数'"></BasicChart>
       </div>
     </div>
   </div>

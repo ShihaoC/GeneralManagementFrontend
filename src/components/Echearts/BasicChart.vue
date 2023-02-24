@@ -9,7 +9,7 @@ import Global from "@/views/Global.vue";
 
 export default {
   name: "InterfaceInvoke",
-  props:["id","ChartStyle","name","title","data_field","api"],
+  props:["id","ChartStyle","name","title","data_field","api","context"],
   mounted() {
     setTimeout(()=>{
       Global.newAxios.get(this.api).then((resp)=>{
@@ -53,11 +53,11 @@ export default {
         yAxis: {
           type: 'value',
           min: 0,
-          max: 20
+          max: 50
         },
         series: [
           {
-            name: 'Line 1',
+            name: this.context,
             type: 'line',
             stack: 'Total',
             smooth: true,
@@ -68,13 +68,17 @@ export default {
             areaStyle: {
               opacity: 0.8,
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: 'rgb(128, 255, 165)'
-                },
+                // {
+                //   offset: 0,
+                //   color: 'rgb(128, 255, 165)'
+                // },
+                // {
+                //   offset: 1,
+                //   color: 'rgb(1, 191, 236)'
+                // }
                 {
                   offset: 1,
-                  color: 'rgb(1, 191, 236)'
+                  color: '#409eff'
                 }
               ])
             },
@@ -82,17 +86,7 @@ export default {
               focus: 'series'
             },
             data: this.dataa
-          },
-          {
-            name: 'Email',
-            type: 'line',
-            stack: 'Total',
-            areaStyle: {},
-            emphasis: {
-              focus: 'series'
-            },
-            data: []
-          },
+          }
         ]
       };
       // 使用刚指定的配置项和数据显示图表。

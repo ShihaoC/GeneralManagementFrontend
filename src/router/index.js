@@ -15,7 +15,7 @@ const routes = [
     {
         path: '/demo',
         name: 'demo',
-        component: () => import('@/components/Echearts/Demo.vue')
+        component: () => import('@/components/music/music-comp.vue')
     },
     {
         path: '/index',
