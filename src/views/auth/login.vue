@@ -105,7 +105,7 @@ export default {
           localStorage.setItem("password", this.loginForm.password)
           localStorage.setItem("authorization", resp.headers['authorization'])
           console.log(resp.headers['authorization'])
-          this.$router.push({path: '/manage/department'})
+          this.$router.push({path: '/index'})
         } else {
           this.$message.error("用户名密码不正确")
         }
