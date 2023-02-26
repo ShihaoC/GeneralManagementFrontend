@@ -9,6 +9,8 @@ import { BootstrapVue, IconsPlugin } from "bootstrap-vue";
 
 import VueFullscreen from 'vue-fullscreen'
 
+import Role_Authority from "@/components/auth/Role_Authority.vue";
+
 Vue.prototype.$echarts = echarts;
 import '@/assets/icon/iconfont.css'
 
@@ -31,6 +33,7 @@ Vue.config.productionTip = false
 Vue.use(VueAxios,axios)
 Vue.component("Breadcrumb",Breadcrumb)
 Vue.component("BasicChart",BasicChart)
+Vue.component("Role_Authority",Role_Authority)
 
 
 

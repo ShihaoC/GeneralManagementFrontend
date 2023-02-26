@@ -1,20 +1,12 @@
 <template>
   <div id="music-main">
-    <div id="contant">
-
-    </div>
+    <Role_Authority></Role_Authority>
   </div>
 </template>
 
 <script>
-import service from '@/service'
 export default {
   name: "music-comp",
-  mounted() {
-    service.get("/test/test2",(resp)=>{
-      console.log(resp)
-    });
-  }
 }
 </script>
 
