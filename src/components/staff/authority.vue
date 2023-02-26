@@ -5,11 +5,8 @@
       <div class="up">
         <el-button type="success" icon="el-icon-edit" plain size="small" @click="dialogadd = true"> 添加</el-button>
         <span>&nbsp;&nbsp;</span>
-        <el-upload
-            style="display: inline-block">
-          <el-button type="info" @click="daochu" icon="el-icon-download" plain size="small">导出</el-button>
-          <el-button :disabled="select" type="danger" @click="batch_Delete" ico="el-icon-close" plain size="small">删除</el-button>
-        </el-upload>
+        <el-button type="info" @click="daochu" icon="el-icon-download" plain size="small">导出</el-button>
+        <el-button :disabled="select" type="danger" @click="batch_Delete" ico="el-icon-close" plain size="small">删除</el-button>
       </div>
       <div class="block">
         <el-table
@@ -67,6 +64,7 @@
                   @click="toDelete(scope.$index, scope.row)">删除
               </el-button>
               <el-button
+                  @click="Authority_Update(scope.row)"
               size="mini"
               type="">修改权限
               </el-button>
@@ -126,6 +124,24 @@
           <el-button type="primary" @click="addTest">确定</el-button>
         </div>
       </el-dialog>
+
+      <el-dialog :visible.sync="Authority_Dialog" :title="'修改权限'">
+        <el-tree
+            v-loading="Authority_loading"
+            :data="TreeData"
+            show-checkbox
+            node-key="id"
+            :default-expand-all="true"
+            :default-checked-keys="checked"
+            @check="checking"
+            ref="tree">
+        </el-tree>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="uploadAuthority()">保存</el-button>
+          <el-button type="primary" @click="Authority_Dialog = false">取消</el-button>
+        </div>
+
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -142,9 +158,20 @@ export default {
   components: {Post},
   mounted() {
     this.loaddata(1,'');
+    this.role_id = this.$route.query.role_id;
+    service.get("/auth/getAuthority?role_id=1",(resp)=>{
+      this.TreeData = resp.data.data
+    });
+    service.get("/auth/default_check?role_id=1",resp=>{
+      this.checked = resp.data.data
+    })
   },
   data() {
     return {
+      Authority_loading: true,
+      TreeData: [],
+      checked: [],
+      role_id: 1,
       input: '',
       tableData: [],
       dialogFormVisible: false,
@@ -186,10 +213,41 @@ export default {
       ss: '',
       multipleSelection: [],
       select: true,
-      fullscreen:false
+      fullscreen:false,
+      Authority_Dialog: false
     }
   },
   methods: {
+    uploadAuthority(){
+      this.Authority_loading = true
+      service.post("/auth/update?role_id="+this.role_id,this.checked,resp=>{
+        console.log(resp)
+        this.Authority_Dialog = false
+        this.Authority_loading = false
+      })
+    },
+    Authority_Update(row){
+      this.role_id = row.id
+      console.log(row)
+      this.Authority_Dialog = true
+      this.loadDefaultChecked();
+    },
+    loadDefaultChecked(){
+      this.Authority_loading = true
+      service.get("/auth/default_check?role_id="+this.role_id,resp=>{
+        this.checked = resp.data.data
+        this.$refs.tree.setCheckedKeys(this.checked);
+        this.Authority_loading = false
+      })
+    },
+    search(){
+
+    },
+    checking(a,b,c){
+      console.log(a,b,c)
+      this.checked = b.checkedKeys
+      console.log(this.checked)
+    },
     enable,
     edit(i, r) {
       this.dialogFormVisible = true

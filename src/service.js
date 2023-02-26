@@ -27,7 +27,7 @@ let get = (url, fun) => {
             fun(resp)
         })
         .catch(err => {
-            Element.Message.error(err.response.status+"错误")
+            Element.Message.error(err.response.data.msg)
         })
 }
 
