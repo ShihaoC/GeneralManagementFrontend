@@ -4,7 +4,8 @@ import Element from 'element-ui'
 
 
 // axios.defaults.baseURL = "http://localhost:8848";
-axios.defaults.baseURL = "http://39.106.16.171:8848";
+axios.defaults.baseURL = "http://172.20.10.2:8848";
+// axios.defaults.baseURL = "http://39.106.16.171:8848";
 
 const request = axios.create({
     timeout: 5000,

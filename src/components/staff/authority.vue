@@ -28,33 +28,27 @@
               label="ID">
           </el-table-column>
           <el-table-column
-              prop="name"
-              label="姓名">
+              prop="role_name"
+              label="角色代号">
           </el-table-column>
           <el-table-column
-              prop="phone"
-              label="手机号"
-          >
-          </el-table-column>
-          <el-table-column
-              prop="department"
-              label="员工岗位">
-          </el-table-column>
-          <el-table-coloumn
               prop="nick"
-              label="岗位名称">
-          </el-table-coloumn>
+              label="角色名称">
+          </el-table-column>
           <el-table-column
-              prop="jurisdiction"
+              width="300px"
+              prop="mark"
               label="权限">
           </el-table-column>
-          <el-table-column label="是否离职" prop="quit">
-            <template slot-scope="scope">
-              <el-tag type="success" v-if="!scope.row.quit">在职</el-tag>
-              <el-tag type="warning" v-else>离职</el-tag>
-            </template>
+          <el-table-column
+              prop="enable"
+              label="是否启用">
+            <el-switch
+                active-color="#13ce66"
+                inactive-color="#ff4949">
+            </el-switch>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="250">
             <template slot="header" slot-scope="scope">
               <el-input
                   v-model="ss"
@@ -71,6 +65,10 @@
                   size="mini"
                   type="danger"
                   @click="toDelete(scope.$index, scope.row)">删除
+              </el-button>
+              <el-button
+              size="mini"
+              type="">修改权限
               </el-button>
             </template>
           </el-table-column>
@@ -90,25 +88,14 @@
           <el-form-item label="员工ID:" :label-width="formLabelWidth">
             <el-input v-model="form.id" autocomplete="off" class="sBox" disabled></el-input>
           </el-form-item>
-          <el-form-item label="员工岗位:" :label-width="formLabelWidth">
-            <el-select class="sBox" v-model="form.department" placeholder="请选择员工岗位">
-              <el-option v-for="item in departments" :label="item.department" :value="item.department"></el-option>
-            </el-select>
+          <el-form-item label="角色代号:" :label-width="formLabelWidth">
+            <el-input v-model="form.role_name"></el-input>
           </el-form-item>
-          <el-form-item label="员工名称:" :label-width="formLabelWidth">
+          <el-form-item label="角色名称:" :label-width="formLabelWidth">
             <el-input v-model="form.name" autocomplete="off" class="sBox"></el-input>
           </el-form-item>
-          <el-form-item label="员工手机号:" :label-width="formLabelWidth">
-            <el-input v-model="form.phone" autocomplete="off" class="sBox"></el-input>
-          </el-form-item>
           <el-form-item label="权限:" :label-width="formLabelWidth">
-          <el-input v-model="form.root" autocomplete="off" class="sBox"></el-input>
-          </el-form-item>
-          <el-form-item babel="是否离职:" :label-width="formLabelWidth">
-            <el-select v-model="form.quit" placeholder="" class="sBox">
-            <el-option label="是" :value="true"></el-option>
-            <el-option label="否" :value="false"></el-option>
-            </el-select>
+          <el-input v-model="form.mark" autocomplete="off" class="sBox"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -117,19 +104,21 @@
         </div>
       </el-dialog>
       <el-dialog
-      title="创建员工" :visible.sync="dialogadd">
+      title="创建角色" :visible.sync="dialogadd">
         <el-form :rules="insertRule" ref="ruleForm" :inline="true" :model="addform">
-          <el-form-item label="员工名称:" :label-width="formLabelWidth" prop="name">
-            <el-input v-model="addform.name" autocomplete="off" class="sBox" placeholder="请输入员工名称"></el-input>
+
+          <el-form-item label="角色代号:" :label-width="formLabelWidth" prop="role_name">
+            <el-input v-model="addform.role_name" autocomplete="off" class="sBox"
+                      placeholder="请输入角色代号"></el-input>
           </el-form-item>
-          <el-form-item label="员工手机号:" :label-width="formLabelWidth" prop="phone">
-            <el-input v-model.number="addform.phone" autocomplete="off" class="sBox"
-                      placeholder="请输入员工手机号"></el-input>
+          <el-form-item label="角色名称:" :label-width="formLabelWidth" prop="nick">
+            <el-input v-model="addform.nick" autocomplete="off" class="sBox"
+                      placeholder="请输入角色名称"></el-input>
           </el-form-item>
-          <el-form-item label="员工岗位:" :label-width="formLabelWidth">
-            <el-select class="sBox" v-model="addform.department" placeholder="请选择员工岗位">
-              <el-option v-for="item in departments" :label="item.nick" :value="item.nick"></el-option>
-            </el-select>
+          <el-form-item label="权限:" :label-width="formLabelWidth" prop="mark">
+          <el-input v-model="addform.mark" autocomplete="off" class="sBox"
+                    placeholder="请输入权限">
+          </el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -146,29 +135,25 @@ import global from "@/views/Global";
 import $ from 'jquery'
 import Post from "@/components/staff/department.vue";
 import service from "@/service";
+import {enable} from "core-js/internals/internal-metadata";
 
 let newAxios = global.newAxios
 export default {
   components: {Post},
   mounted() {
-    this.loaddata(1);
-    this.loadDepartment()
+    this.loaddata(1,'');
   },
   data() {
     return {
       input: '',
-      sId: '',
-      sName:'',
       tableData: [],
       dialogFormVisible: false,
       dialogadd: false,
       form: {
         id: '',
-        name: '',
-        phone: '',
-        department: '',
-        root:'',
-        quit: '',
+        role_name:'',
+        nick:'',
+        mark:'',
         type: [],
         value1: null,
         pickerOptions: {
@@ -178,17 +163,19 @@ export default {
         },
       },
       addform: {
-        name: '',
-        phone: '',
-        department: '',
+        role_name:'',
+        nick:'',
+        mark:'',
       },
       insertRule: {
-        name: [
-          {required: true, message: '用户名不能为空', trigger: 'change'}
+        role_name: [
+          {required: true, message: '角色代号不能为空', trigger: 'change'}
         ],
-        phone: [
-          {required: true, message: '用户名不能为空', trigger: 'change'},
-          {type: 'number', message: '手机号必须为数字值', trigger: 'change'}
+        nick:[
+          {required: true, message: '角色名称不能为空', trigger: 'change'}
+        ],
+        mark:[
+          {required: true, message: '权限不能为空', trigger: 'change'}
         ]
       },
       formLabelWidth: '120px',
@@ -203,27 +190,16 @@ export default {
     }
   },
   methods: {
-    loadDepartment() {
-      service.get("/dep/all_department",resp => {
-        this.departments = resp.data.data
-      })
-    },
-    search() {
-      newAxios.get("/em/select_something?query=" + this.ss + "&page" + this.page).then((resp) => {
-        this.tableData = resp.data.data.limit_data
-      })
-    },
-
+    enable,
     edit(i, r) {
       this.dialogFormVisible = true
-      this.form.phone = r.phone
-      this.form.id = r.id
-      this.form.name = r.name
-      this.form.department = r.department
-      this.form.quit = r.quit
+      this.id=r.id
+      this.role_name=r.name
+      this.nick=r.nick
+      this.mark=r.mark
     },
     addTest() {
-      if (this.addform.name && this.addform.phone && this.addform.department) {
+      if (this.addform.role_name && this.addform.nick && this.addform.mark) {
         service.post("/em/insert_employee", this.addform, resp => {
           this.CodeCheck(resp.data.code)
           this.dialogadd = false
@@ -234,11 +210,11 @@ export default {
         return
       }
     },
-    loaddata(page) {
+    loaddata(page,search) {
       this.loading = true
       setTimeout(() => {
-        service.get("/em/select_all?page=" + page,resp => {
-          this.tableData = resp.data.data.limit_data
+        service.get("/role/list?page="+this.page+"&search="+search,resp => {
+          this.tableData =  resp.data.data.limit_data
           this.loading = false
           this.total = resp.data.data.count
           if (this.tableData.length === 0 && this.page - 1 !== 0) {
