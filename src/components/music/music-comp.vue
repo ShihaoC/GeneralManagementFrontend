@@ -1,6 +1,6 @@
 <template>
   <div id="music-main">
-    <Role_Authority></Role_Authority>
+    <ImageCropper></ImageCropper>
   </div>
 </template>
 
@@ -11,16 +11,5 @@ export default {
 </script>
 
 <style lang="less">
-#music-main {
-  width: 30vw;
-  height: 20vh;
-  background: red;
-  padding: 1vw;
 
-  #contant {
-    width: 10vw;
-    height: 10vw;
-    background: black;
-  }
-}
 </style>

@@ -118,6 +118,17 @@
           <div id="drawer-settings">
             <ul>
               <li>
+                <span class="drawer-settings-item">头像设置</span>
+                <el-upload
+                    class="upload-demo"
+                    :action="uploadURL"
+                    multiple
+                    :limit="1"
+                    :file-list="false">
+                  <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
+              </li>
+              <li>
                 <span class="drawer-settings-item">看板娘设置</span>
                 <el-switch
                     @change="kanban"
@@ -185,9 +196,11 @@ export default {
     }
     console.log(this.$router.Location)
     this.init()
+    this.uploadURL = 'http://localhost:8848/user/uploadImage/'+localStorage.getItem("userid")
   },
   data() {
     return {
+      uploadURL: '',
       index_show: true,
       user: '',
       showed: false,
@@ -199,7 +212,8 @@ export default {
       temp: '-',
       humidity: '-',
       windScale: '-',
-      windDir: '-'
+      windDir: '-',
+      fileList: []
     }
   },
   methods: {

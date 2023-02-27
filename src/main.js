@@ -6,6 +6,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import echarts from "echarts";
 import {BootstrapVue, IconsPlugin} from "bootstrap-vue";
+import VueCropper from 'vue-cropper'
+Vue.use(VueCropper)
+
 
 import VueFullscreen from 'vue-fullscreen'
 import '@/assets/icon/iconfont.css'
@@ -20,6 +23,8 @@ import Role_Authority from "@/components/auth/Role_Authority.vue";
 import {message} from '@/assets/util/resetMessage'
 
 Vue.prototype.$echarts = echarts;
+
+import ImageCropper from "@/components/cropper/ImageCropper.vue";
 
 Vue.use(particles, Live2d)
 Vue.use(BootstrapVue);
@@ -37,7 +42,7 @@ Vue.use(VueAxios, axios)
 Vue.component("Breadcrumb", Breadcrumb)
 Vue.component("BasicChart", BasicChart)
 Vue.component("Role_Authority", Role_Authority)
-
+Vue.component("ImageCropper", ImageCropper)
 
 new Vue({
     router,
