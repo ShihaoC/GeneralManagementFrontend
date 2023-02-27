@@ -9,5 +9,5 @@ export default {
 </script>
 
 <style scoped>
-
+  *{transition: all 1s}
 </style>

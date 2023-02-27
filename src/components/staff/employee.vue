@@ -60,7 +60,7 @@
             <template slot-scope="scope">
               <el-tag type="warning" v-if="scope.row.statue === '已经签退'">{{scope.row.statue}}</el-tag>
               <el-tag type="success" v-if="scope.row.statue === '已签到'">{{scope.row.statue}}</el-tag>
-              <el-tag type="danger" v-if="scope.row.statue === ''">未签到</el-tag>
+              <el-tag type="danger" v-if="!scope.row.statue">未签到</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="是否离职" prop="quit">

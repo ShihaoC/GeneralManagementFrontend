@@ -100,6 +100,10 @@ export default {
       }
       service.post("/login?"+qs.stringify(this.loginForm),null,resp=>{
         console.log(resp)
+        if(resp.data.data === "账户停用"){
+          this.$message.error(resp.data.data)
+          return
+        }
         if (resp.data.data != null) {
           localStorage.setItem("username ", this.loginForm.username)
           localStorage.setItem("password", this.loginForm.password)
@@ -113,18 +117,6 @@ export default {
           this.$message.error("用户名密码不正确")
         }
       })
-      // newAxios.post("/login?" +qs.stringify(this.loginForm)).then((resp) => {
-      //   console.log(resp)
-      //   if (resp.data.data != null) {
-      //     localStorage.setItem("username", this.loginForm.username)
-      //     localStorage.setItem("password", this.loginForm.password)
-      //     localStorage.setItem("authorization", resp.headers['authorization'])
-      //     console.log(resp.headers['authorization'])
-      //     this.$router.push({path: '/manage/department'})
-      //   } else {
-      //     this.$message.error("用户名密码不正确")
-      //   }
-      // })
     },
     register() {
       this.$router.push({

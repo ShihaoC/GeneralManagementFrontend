@@ -80,6 +80,14 @@ const routes = [
                 meta: {
                     title: '资源概览'
                 }
+            },
+            {
+                path: '/manage/user',
+                name: 'user',
+                component: () => import("@/components/staff/user.vue"),
+                meta: {
+                    title: '用户管理'
+                }
             }
 
         ]

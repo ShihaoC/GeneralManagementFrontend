@@ -1,5 +1,5 @@
 <template>
-  <div id="manage-main">
+  <div id="manage-main" v-loading="fullscreenLoading">
     <div id="manage-navbar">
       <Breadcrumb class="bread"></Breadcrumb>
       <div id="weather">
@@ -68,9 +68,10 @@
           <el-submenu index="1">
             <template slot="title"><i class="el-icon-setting"></i><span>系统管理</span>
             </template>
-            <el-menu-item index="/manage/department" @click="check()">人员管理</el-menu-item>
-            <el-menu-item index="/manage/post" @click="check()">岗位管理</el-menu-item>
+            <el-menu-item index="/manage/user" @click="check()">用户管理</el-menu-item>
             <el-menu-item index="/manage/power" @click="check()">角色管理</el-menu-item>
+            <el-menu-item index="/manage/department" @click="check()">员工管理</el-menu-item>
+            <el-menu-item index="/manage/post" @click="check()">岗位管理</el-menu-item>
             <el-menu-item index="/manage/reportForm" @click="check()">员工报表</el-menu-item>
           </el-submenu>
           <el-submenu index="2">
@@ -159,20 +160,16 @@ export default {
   name: "manage",
   components: {Live2d},
   mounted() {
-    /**
-     * width: 2.5vw;
-     *     height: 2.5vw;
-     *     background: url("../img/1000.webp") no-repeat;
-     *     background-size: cover;
-     *     border-radius: 8px;
-     *     border: 1px solid #e6e6e6;
-     */
-    $("#head-img").css({
-      "height": "2.5vw",
-      "background": "url(" + localStorage.getItem("image") + ") no-repeat",
-      "background-size": "cover",
-      "border-radius": "8px",
-      "border": "1px solid #e6e6e6"
+    this.fullscreenLoading = true
+    service.get("/user/headImage/" + localStorage.getItem("userid"), resp => {
+      console.log(resp.data)
+      $("#head-img").css({
+        "height": "2.5vw",
+        "background": "url(" + resp.data.data + ") no-repeat",
+        "background-size": "cover",
+        "border-radius": "8px",
+        "border": "1px solid #e6e6e6"
+      })
     })
     if (this.$route.path === '/index' || $("#itemss").focus) {
       $("#items").css({
@@ -198,10 +195,12 @@ export default {
     }
     console.log(this.$router.Location)
     this.init()
-    this.uploadURL = 'http://localhost:8848/user/uploadImage/'+localStorage.getItem("userid")
+    this.uploadURL = 'http://localhost:8848/user/uploadImage/' + localStorage.getItem("userid")
+    this.fullscreenLoading = false
   },
   data() {
     return {
+      fullscreenLoading: false,
       uploadURL: '',
       index_show: true,
       user: '',
@@ -219,8 +218,10 @@ export default {
     }
   },
   methods: {
-    reload_head(){
-      service.get("/user/headImage/"+localStorage.getItem("userid"),resp=>{
+    reload_head() {
+      this.fullscreenLoading = true
+      this.fileList = []
+      service.get("/user/headImage/" + localStorage.getItem("userid"), resp => {
         console.log(resp.data)
         $("#head-img").css({
           "height": "2.5vw",
@@ -229,8 +230,11 @@ export default {
           "border-radius": "8px",
           "border": "1px solid #e6e6e6"
         })
-        this.$message.success("修改成功")
+        this.fullscreenLoading = false
+        this.drawer = false
       })
+      this.$message.success("修改成功")
+
 
     },
     check() {
@@ -243,9 +247,9 @@ export default {
       }
     },
     full() {
-      if(!screenfull.isFullscreen){
+      if (!screenfull.isFullscreen) {
         $("#full-screen").removeClass("iconfont icon-fullscreen top-item").addClass("iconfont icon-fullscreen-exit top-item")
-      }else {
+      } else {
         $("#full-screen").removeClass("iconfont icon-fullscreen-exit top-item").addClass("iconfont icon-fullscreen top-item")
 
       }

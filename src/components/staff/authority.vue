@@ -20,8 +20,7 @@
             @selection-change="handleSelectionChange"
             @cell-click="cellclick">
           <el-table-column
-              type="selection"
-              v-show="false">
+              type="selection">
           </el-table-column>
           <el-table-column
               prop="id"
@@ -353,11 +352,12 @@ export default {
         service.get("/role/delete/" + r.id, resp => {
           console.log(resp)
           this.loaddata(this.page, '')
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
         })
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
+
       }).catch(() => {
         this.loaddata(this.page, '')
       });
