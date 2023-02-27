@@ -7,7 +7,7 @@
           <li class="top_item">
             <i id="full-screen" @click="full" class="iconfont icon-fullscreen top-item"></i>
           </li>
-          <li >
+          <li>
             <i id="gitee" class="iconfont icon-gitee-fill-round"></i>
           </li>
           <li>
@@ -56,7 +56,7 @@
             :router="true"
             style="height: 100vh;"
             :unique-opened=true
-            >
+        >
           <el-menu-item id="items" index="/index" @click="check()">
             <i class="el-icon-s-grid"></i>
             <span id="items-text">员工管理系统</span>
@@ -66,7 +66,7 @@
             <span>首页</span>
           </el-menu-item>
           <el-submenu index="1">
-            <template slot="title"><i class="el-icon-user-solid"></i><span>系统管理</span>
+            <template slot="title"><i class="el-icon-setting"></i><span>系统管理</span>
             </template>
             <el-menu-item index="/manage/department" @click="check()">人员管理</el-menu-item>
             <el-menu-item index="/manage/post" @click="check()">岗位管理</el-menu-item>
@@ -83,7 +83,7 @@
             </el-menu-item>
           </el-submenu>
 
-          <el-submenu index="3" >
+          <el-submenu index="3">
             <template slot="title"><i class="el-icon-document"></i><span>日志管理</span>
             </template>
             <el-menu-item index="/manage/operation" @click="check()">操作日志</el-menu-item>
@@ -97,12 +97,11 @@
       <div id="manage-text">
 
 
-<!--        首页-->
+        <!--        首页-->
         <div v-show="index_show" id="index-main">
-       <h1></h1>
+          <h1></h1>
         </div>
-<!--        首页-->
-
+        <!--        首页-->
 
 
         <router-view></router-view>
@@ -140,21 +139,37 @@
 import Live2d from "@/components/Live2d.vue";
 import service from "@/service";
 import $ from 'jquery'
+import screenfull from "screenfull";
 
 
 export default {
   name: "manage",
   components: {Live2d},
   mounted() {
-    if(this.$route.path === '/index' || $("#itemss").focus){
+    /**
+     * width: 2.5vw;
+     *     height: 2.5vw;
+     *     background: url("../img/1000.webp") no-repeat;
+     *     background-size: cover;
+     *     border-radius: 8px;
+     *     border: 1px solid #e6e6e6;
+     */
+    $("#head-img").css({
+      "height": "2.5vw",
+      "background": "url(" + localStorage.getItem("image") + ") no-repeat",
+      "background-size": "cover",
+      "border-radius": "8px",
+      "border": "1px solid #e6e6e6"
+    })
+    if (this.$route.path === '/index' || $("#itemss").focus) {
       $("#items").css({
-        "color":"#000000"
+        "color": "#000000"
       })
       $(".el-icon-s-grid").css({
-        "color":"#909399"
+        "color": "#909399"
       })
     }
-    if(this.$route.path !== '/index'){
+    if (this.$route.path !== '/index') {
       this.index_show = false
     }
     console.log("123" + localStorage.getItem("kanbanniang"))
@@ -173,7 +188,7 @@ export default {
   },
   data() {
     return {
-      index_show:true,
+      index_show: true,
       user: '',
       showed: false,
       drawer: false,
@@ -188,18 +203,28 @@ export default {
     }
   },
   methods: {
-    check(){
+    check() {
       console.log("check")
       console.log(this.$route.path)
-      if(this.$route.path !== '/index'){
+      if (this.$route.path !== '/index') {
         this.index_show = false
-      }else {
+      } else {
         this.index_show = true
       }
     },
-    full(){
-      console.log(123)
-      console.log(this.$fullscreen.isEnabled);
+    full() {
+      if(!screenfull.isFullscreen){
+        $("#full-screen").removeClass("iconfont icon-fullscreen top-item").addClass("iconfont icon-fullscreen-exit top-item")
+      }else {
+        $("#full-screen").removeClass("iconfont icon-fullscreen-exit top-item").addClass("iconfont icon-fullscreen top-item")
+
+      }
+
+      if (screenfull.isEnabled) {
+        screenfull.toggle()
+      } else {
+        this.$message.error("您的浏览器不支持全屏")
+      }
     },
     disLogin() {
       localStorage.removeItem("token")
@@ -241,7 +266,7 @@ export default {
     },
     getWeather() {
       console.log(localStorage.getItem("token"))
-      service.get("/api/weather",resp=>{
+      service.get("/api/weather", resp => {
         this.temp = resp.data.data.temp
         this.humidity = resp.data.data.humidity
         this.windScale = resp.data.data.windScale
@@ -260,10 +285,10 @@ export default {
         this.getWeather();
       }, 1000)
     },
-    checkAuth(){
-      if(localStorage.getItem("auth") === 'root'){
+    checkAuth() {
+      if (localStorage.getItem("auth") === 'root') {
 
-      }else {
+      } else {
         return
       }
     }

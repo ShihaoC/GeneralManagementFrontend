@@ -1,8 +1,8 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 3909565 */
-  src: url('iconfont.woff2?t=1677037661287') format('woff2'),
-       url('iconfont.woff?t=1677037661287') format('woff'),
-       url('iconfont.ttf?t=1677037661287') format('truetype');
+  font-family: "iconfont"; /* Project id 3904282 */
+  src: url('iconfont.woff2?t=1677460693764') format('woff2'),
+       url('iconfont.woff?t=1677460693764') format('woff'),
+       url('iconfont.ttf?t=1677460693764') format('truetype');
 }
 
 .iconfont {
@@ -13,15 +13,23 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-github-fill:before {
-  content: "\e885";
+.icon-fullscreen-exit:before {
+  content: "\e69b";
 }
 
 .icon-fullscreen:before {
-  content: "\e664";
+  content: "\e69c";
 }
 
 .icon-gitee-fill-round:before {
   content: "\e686";
+}
+
+.icon-github-fill:before {
+  content: "\e885";
+}
+
+.icon-MySQL:before {
+  content: "\e682";
 }
 

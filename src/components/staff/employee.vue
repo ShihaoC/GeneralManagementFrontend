@@ -277,6 +277,7 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+      console.log(this.multipleSelection)
       if (this.multipleSelection.length !== 0) {
         this.select = false
       } else {
@@ -311,37 +312,7 @@ export default {
     },
 
     daochu() {
-      let url = "http://localhost:8848/em/export_excel";
-      let xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true); //
-      xhr.responseType = "blob"; //js 中的二进制对象
-      xhr.setRequestHeader("authorization", localStorage.getItem("authorization"))
-      xhr.onreadystatechange = function () {
-
-
-        if (xhr.readyState == 3) {
-
-        }
-        if (xhr.readyState == 4) {
-        }
-      };
-
-      xhr.onload = function () {
-
-        //
-        if (this.status === 200) {
-          //兼容所有的浏览器的代码
-          let blob = this.response;
-          let a = document.createElement('a');
-          a.download = '员工表.xls';
-          a.href = window.URL.createObjectURL(blob);
-          $("body").append(a);
-          a.click();
-          $(a).remove();
-
-        }
-      };
-      xhr.send()
+      service.download("/em/export_excel")
     },
     cell_style() {
       return "height:2vh";

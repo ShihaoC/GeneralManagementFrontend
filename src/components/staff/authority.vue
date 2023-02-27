@@ -6,19 +6,22 @@
         <el-button type="success" icon="el-icon-edit" plain size="small" @click="dialogadd = true"> 添加</el-button>
         <span>&nbsp;&nbsp;</span>
         <el-button type="info" @click="daochu" icon="el-icon-download" plain size="small">导出</el-button>
-        <el-button :disabled="select" type="danger" @click="batch_Delete" ico="el-icon-close" plain size="small">删除</el-button>
+        <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain size="small">删除
+        </el-button>
       </div>
       <div class="block">
         <el-table
             ref="multipleTable"
-            v-loading="false"
+            v-loading="table_loading"
             :data="tableData"
             style="width: 100%;"
             :header-cell-style="header_cell_style"
             :cell-style="cell_style"
-            @select-change="handleSelectionChange">
+            @selection-change="handleSelectionChange"
+            @cell-click="cellclick">
           <el-table-column
-          type="selection">
+              type="selection"
+              v-show="false">
           </el-table-column>
           <el-table-column
               prop="id"
@@ -40,10 +43,16 @@
           <el-table-column
               prop="enable"
               label="是否启用">
-            <el-switch
-                active-color="#13ce66"
-                inactive-color="#ff4949">
-            </el-switch>
+            <template v-slot="scope">
+              <el-switch
+                  :disabled="scope.row.role_name === 'admin'"
+                  active-color="#13ce66"
+                  inactive-color="#ff4949"
+                  @change="changeStatue"
+                  v-model="scope.row.enable">
+              </el-switch>
+            </template>
+
           </el-table-column>
           <el-table-column label="操作" width="250">
             <template slot="header" slot-scope="scope">
@@ -56,17 +65,20 @@
             <template slot-scope="scope">
               <el-button
                   size="mini"
-                  @click="edit(scope.$index, scope.row)">编辑
+                  @click="edit(scope.$index, scope.row)"
+                  :disabled="scope.row.role_name === 'admin'">编辑
               </el-button>
               <el-button
                   size="mini"
                   type="danger"
-                  @click="toDelete(scope.$index, scope.row)">删除
+                  @click="toDelete(scope.$index, scope.row)"
+                  :disabled="scope.row.role_name === 'admin'">删除
               </el-button>
               <el-button
                   @click="Authority_Update(scope.row)"
-              size="mini"
-              type="">修改权限
+                  size="mini"
+                  type=""
+                  :disabled="scope.row.role_name === 'admin'">修改权限
               </el-button>
             </template>
           </el-table-column>
@@ -81,19 +93,19 @@
           </el-pagination>
         </div>
       </div>
-      <el-dialog title="员工信息" :visible.sync="dialogFormVisible">
-        <el-form :inline="true" :model="form">
-          <el-form-item label="员工ID:" :label-width="formLabelWidth">
+      <el-dialog title="修改角色信息" :visible.sync="dialogFormVisible" width="30%">
+        <el-form :model="form">
+          <el-form-item label="角色ID:" :label-width="formLabelWidth">
             <el-input v-model="form.id" autocomplete="off" class="sBox" disabled></el-input>
           </el-form-item>
           <el-form-item label="角色代号:" :label-width="formLabelWidth">
-            <el-input v-model="form.role_name"></el-input>
+            <el-input v-model="form.role_name" class="sBox"></el-input>
           </el-form-item>
           <el-form-item label="角色名称:" :label-width="formLabelWidth">
-            <el-input v-model="form.name" autocomplete="off" class="sBox"></el-input>
+            <el-input v-model="form.nick" autocomplete="off" class="sBox"></el-input>
           </el-form-item>
           <el-form-item label="权限:" :label-width="formLabelWidth">
-          <el-input v-model="form.mark" autocomplete="off" class="sBox"></el-input>
+            <el-input v-model="form.mark" autocomplete="off" class="sBox"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -102,8 +114,8 @@
         </div>
       </el-dialog>
       <el-dialog
-      title="创建角色" :visible.sync="dialogadd">
-        <el-form :rules="insertRule" ref="ruleForm" :inline="true" :model="addform">
+          title="创建角色" :visible.sync="dialogadd" width="30%">
+        <el-form :rules="insertRule" ref="ruleForm" :model="addform">
 
           <el-form-item label="角色代号:" :label-width="formLabelWidth" prop="role_name">
             <el-input v-model="addform.role_name" autocomplete="off" class="sBox"
@@ -113,20 +125,21 @@
             <el-input v-model="addform.nick" autocomplete="off" class="sBox"
                       placeholder="请输入角色名称"></el-input>
           </el-form-item>
-          <el-form-item label="权限:" :label-width="formLabelWidth" prop="mark">
-          <el-input v-model="addform.mark" autocomplete="off" class="sBox"
-                    placeholder="请输入权限">
-          </el-input>
+          <el-form-item label="备注:" :label-width="formLabelWidth" prop="mark">
+            <el-input v-model="addform.mark" autocomplete="off" class="sBox"
+                      placeholder="请输入权限">
+            </el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="dialogadd = false">取消</el-button>
-          <el-button type="primary" @click="addTest">确定</el-button>
+          <el-button type="primary" @click="insert">确定</el-button>
         </div>
       </el-dialog>
 
-      <el-dialog :visible.sync="Authority_Dialog" :title="'修改权限'">
+      <el-dialog :visible.sync="Authority_Dialog" :title="'修改权限'" @close="clearNode" width="30%">
         <el-tree
+            auto-expand-parent
             v-loading="Authority_loading"
             :data="TreeData"
             show-checkbox
@@ -157,17 +170,19 @@ let newAxios = global.newAxios
 export default {
   components: {Post},
   mounted() {
-    this.loaddata(1,'');
+    this.loaddata(1, '');
     this.role_id = this.$route.query.role_id;
-    service.get("/auth/getAuthority?role_id=1",(resp)=>{
+    service.get("/auth/getAuthority?role_id=1", (resp) => {
       this.TreeData = resp.data.data
     });
-    service.get("/auth/default_check?role_id=1",resp=>{
+    service.get("/auth/default_check?role_id=1", resp => {
       this.checked = resp.data.data
     })
   },
   data() {
     return {
+      role_id_change: 0,
+      table_loading: false,
       Authority_loading: true,
       TreeData: [],
       checked: [],
@@ -178,9 +193,9 @@ export default {
       dialogadd: false,
       form: {
         id: '',
-        role_name:'',
-        nick:'',
-        mark:'',
+        role_name: '',
+        nick: '',
+        mark: '',
         type: [],
         value1: null,
         pickerOptions: {
@@ -190,18 +205,18 @@ export default {
         },
       },
       addform: {
-        role_name:'',
-        nick:'',
-        mark:'',
+        role_name: '',
+        nick: '',
+        mark: '',
       },
       insertRule: {
         role_name: [
           {required: true, message: '角色代号不能为空', trigger: 'change'}
         ],
-        nick:[
+        nick: [
           {required: true, message: '角色名称不能为空', trigger: 'change'}
         ],
-        mark:[
+        mark: [
           {required: true, message: '权限不能为空', trigger: 'change'}
         ]
       },
@@ -213,67 +228,92 @@ export default {
       ss: '',
       multipleSelection: [],
       select: true,
-      fullscreen:false,
+      fullscreen: false,
       Authority_Dialog: false
     }
   },
   methods: {
-    uploadAuthority(){
+    clearNode() {
+      this.$refs.tree.setCheckedKeys([])
+    },
+    changeStatue(a) {
+      console.log(a)
+      this.$confirm('您要修改状态吗', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        service.get("/role/update_statue/" + this.role_id_change + "?statue=" + a, resp => {
+          console.log(resp)
+        })
+        this.$message({
+          type: 'success',
+          message: '修改成功!'
+        });
+      }).catch(() => {
+        this.loaddata(this.page, '')
+      });
+    },
+    uploadAuthority() {
       this.Authority_loading = true
-      service.post("/auth/update?role_id="+this.role_id,this.checked,resp=>{
+      service.post("/auth/update?role_id=" + this.role_id, this.checked, resp => {
         console.log(resp)
         this.Authority_Dialog = false
         this.Authority_loading = false
       })
     },
-    Authority_Update(row){
+    Authority_Update(row) {
       this.role_id = row.id
       console.log(row)
       this.Authority_Dialog = true
       this.loadDefaultChecked();
     },
-    loadDefaultChecked(){
+    loadDefaultChecked() {
       this.Authority_loading = true
-      service.get("/auth/default_check?role_id="+this.role_id,resp=>{
+      service.get("/auth/default_check?role_id=" + this.role_id, resp => {
         this.checked = resp.data.data
         this.$refs.tree.setCheckedKeys(this.checked);
         this.Authority_loading = false
       })
     },
-    search(){
-
+    search() {
+      this.loaddata(this.page,this.ss)
     },
-    checking(a,b,c){
-      console.log(a,b,c)
+    cellclick(row, column, cell, event) {
+      this.role_id_change = row.id
+    },
+    checking(a, b, c) {
+      console.log(a, b, c)
       this.checked = b.checkedKeys
       console.log(this.checked)
     },
     enable,
     edit(i, r) {
+      console.log(r)
       this.dialogFormVisible = true
-      this.id=r.id
-      this.role_name=r.name
-      this.nick=r.nick
-      this.mark=r.mark
+      this.form.id = r.id
+      this.form.role_name = r.role_name
+      this.form.nick = r.nick
+      this.form.mark = r.mark
     },
-    addTest() {
+    insert() {
       if (this.addform.role_name && this.addform.nick && this.addform.mark) {
-        service.post("/em/insert_employee", this.addform, resp => {
-          this.CodeCheck(resp.data.code)
+        service.post("/role/insert", this.addform, resp => {
           this.dialogadd = false
-          this.loaddata(this.page)
+          this.loaddata(this.page, '')
         })
-      }else{
+      } else {
         this.$message.warning("请检查表单内容，不能为空")
         return
       }
     },
-    loaddata(page,search) {
-      this.loading = true
+    loaddata(page, search) {
+      this.table_loading = true
       setTimeout(() => {
-        service.get("/role/list?page="+this.page+"&search="+search,resp => {
-          this.tableData =  resp.data.data.limit_data
-          this.loading = false
+        service.get("/role/list?page=" + this.page + "&search=" + search, resp => {
+          console.log(resp)
+          this.tableData = resp.data.data.limit_data
+          this.table_loading = false
           this.total = resp.data.data.count
           if (this.tableData.length === 0 && this.page - 1 !== 0) {
             this.loaddata(this.page - 1)
@@ -282,8 +322,9 @@ export default {
       }, 200)
     },
     handleSelectionChange(val) {
-      this.multtiplesSelection = val;
-      if (this.multtiplesSelection.length !== 0) {
+      this.multipleSelection = val;
+      console.log(this.multipleSelection)
+      if (this.multipleSelection.length !== 0) {
         this.select = false
       } else {
         this.select = true
@@ -291,13 +332,11 @@ export default {
     },
     modify() {//修改
       this.checkAuth(() => {
-        service.post("/user/user_update", this.form,resp => {
-          if (resp.data.code === 200) {
-            this.$message.success("修改成功")
-          }
+        service.post("/role/update", this.form, resp => {
+          console.log(resp)
         })
         this.dialogFormVisible = false
-        this.loaddata(this.page);
+        this.loaddata(this.page, '');
         this.dialogFormVisible = false
       })
     },
@@ -306,50 +345,21 @@ export default {
       this.loaddata(index)
     },
     toDelete(i, r) {
-        service.get("/user/user_delete?id=" + r.id + "&name=" + r.name).then((resp) => {
-          console.log(resp)
-        })
-        this.loaddata(this.page)
+      console.log(r)
+      service.get("/role/delete/" + r.id, resp => {
+        console.log(resp)
+        this.loaddata(this.page, '')
+      })
     },
     batch_Delete() {
-      newAxios.post("/em/batch_Delete", this.multtiplesSelection).then((resp) => {
-        this.loaddata(this.page)
+      service.post("/role/batch_Delete",this.multipleSelection,resp=>{
+        this.loaddata(this.page,'')
       })
+
     },
 
     daochu() {
-      let url = "http://localhost:8848/em/export_excel";
-      let xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true); //
-      xhr.responseType = "blob"; //js 中的二进制对象
-      xhr.onreadystatechange = function () {
-
-
-        if (xhr.readyState == 3) {
-
-        }
-        if (xhr.readyState == 4) {
-
-        }
-      };
-
-      xhr.onload = function () {
-
-        //
-        if (this.status === 200) {
-          //兼容所有的浏览器的代码
-          let blob = this.response;
-          let a = document.createElement('a');
-          a.download = '权限表.xls';
-          a.href = window.URL.createObjectURL(blob);
-          $("body").append(a);
-          a.click();
-          $(a).remove();
-
-        }
-      };
-//     ajax
-      xhr.send()
+      service.download("/role/export_excel", "角色表")
     },
     cell_style() {
       return "height:2vh";

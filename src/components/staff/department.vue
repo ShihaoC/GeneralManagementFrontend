@@ -20,7 +20,7 @@
       <div class="block">
         <el-table
             ref="multipleTable"
-            v-loading="false"
+            v-loading="loading"
             :data="tableData"
             style="width: 100%;"
             :header-cell-style="header_cell_style"
@@ -125,11 +125,8 @@
 <script>
 import axios from "axios";
 import Global from "@/views/Global.vue";
+import service from "@/service";
 
-
-let newAxios = axios.create({
-  baseURL: Global.baseUrl
-})
 
 export default {
   name: 'department',
@@ -152,6 +149,7 @@ export default {
         nick: '',
         department: '',
       },
+      loading: false,
       insertRule: {},
       formLabelWidth: '120px'
 
@@ -170,21 +168,19 @@ export default {
     loadData(page) {
       this.loading = true
       setTimeout(() => {
-        newAxios.get("/dep/all_department_page?page=" + page).then((resp) => {
+        service.get("/dep/all_department_page?page=" + page, resp => {
           this.tableData = resp.data.data.limit_data
           this.loading = false
           this.total = resp.data.data.count
           if (this.tableData.length === 0 && this.page - 1 !== 0) {
             this.loaddata(this.page - 1)
           }
-          // this.$message.success("查询成功")
           console.log(this.total)
         })
       }, 200)
     },
     search() {//查询方法
-      newAxios.get("/dep/somedepartment?query=" + this.ss + "&page=" + this.page).then((resp) => {
-        console.log(resp)
+      service.get("/dep/somedepartment?query=" + this.ss + "&page=" + this.page, resp => {
         this.tableData = resp.data.data.limit_data
       })
 
@@ -200,9 +196,8 @@ export default {
     },
     toDelete(i, r) {//删除方法
       this.checkAuth(() => {
-        newAxios.get("/dep/delete_department?id=" + r.id).then((resp) => {
-          console.log(resp)
-          console.log(r.id)
+        service.get("/dep/delete_department?id=" + r.id, resp => {
+
         })
         this.loadData(this.page);
       })
@@ -212,78 +207,63 @@ export default {
 
     },
     add() {//添加方法
-      this.checkAuth(() => {
-        if (this.addform.nick && this.addform.department) {
-          newAxios.post("/dep/insert_department", this.addform).then((resp) => {
-            console.log(resp)
-            this.$message.success("添加成功")
-          })
-          this.dialogadd = false
-          this.loadData(this.page);
-        } else {
-          this.$message.warning("请检查表单内容，不能为空")
-          return
-        }
-      })
+      if (this.addform.nick && this.addform.department) {
+        service.post("/dep/insert_department", this.addform, resp => {
+          this.$message.success("添加成功")
+        })
+        this.dialogadd = false
+        this.loadData(this.page);
+      } else {
+        this.$message.warning("请检查表单内容，不能为空")
+        return
+      }
       this.dialogadd = false
     },
     modify() {//修改
-      this.checkAuth(() => {
-        newAxios.post("/dep/update_department", this.upfrom).then((resp) => {
-          console.log(resp)
+        service.post("/dep/update_department", this.upfrom, resp => {
           if (resp.data.code === 200) {
             this.$message.success("修改成功")
           }
         })
         this.dialogFormVisible = false
-
         this.loadData(this.page);
-      })
       this.dialogFormVisible = false
 
     },
-    checkAuth(fun) {
-      if (localStorage.getItem("auth") === 'ROOT') {
-        fun()
-      } else {
-        this.$message.error("权限不足")
-        return
-      }
+    daochu() {
+      let url = "http://localhost:8848/em/export_excel";
+      let xhr = new XMLHttpRequest();
+      xhr.open('GET', url, true); //
+      xhr.responseType = "blob"; //js 中的二进制对象
+      xhr.onreadystatechange = function () {
+
+
+        if (xhr.readyState == 3) {
+
+        }
+        if (xhr.readyState == 4) {
+
+        }
+      };
+
+      xhr.onload = function () {
+
+        //
+        if (this.status === 200) {
+          //兼容所有的浏览器的代码
+          let blob = this.response;
+          let a = document.createElement('a');
+          a.download = '员工表.xls';
+          a.href = window.URL.createObjectURL(blob);
+          $("body").append(a);
+          a.click();
+          $(a).remove();
+
+        }
+      };
+//     ajax
+      xhr.send()
     },
-//             daochu() {
-//                 let url = "http://localhost:8848/em/export_excel";
-//                 let xhr = new XMLHttpRequest();
-//                 xhr.open('GET', url, true); //
-//                 xhr.responseType = "blob"; //js 中的二进制对象
-//                 xhr.onreadystatechange = function () {
-//
-//
-//                     if (xhr.readyState == 3) {
-//
-//                     }
-//                     if (xhr.readyState == 4) {
-//
-//                     }
-//                 };
-//
-//                 xhr.onload = function () {
-//
-//                     //
-//                     if (this.status === 200) {
-//                         //兼容所有的浏览器的代码
-//                         let blob = this.response;
-//                         let a = document.createElement('a');
-//                         a.download = '员工表.xls';
-//                         a.href = window.URL.createObjectURL(blob);
-//                         $("body").append(a);
-//                         a.click();
-//                         $(a).remove();
-//
-//                     }
-//                 };
-// //     ajax
-//                 xhr.send()
-//             },
 
   }
 };
