@@ -16,6 +16,7 @@
         </el-upload>
         <span>&nbsp;&nbsp;</span>
         <el-button type="info" icon="el-icon-download" plain size="small">导出</el-button>
+          <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain size="small">删除</el-button>
       </div>
       <div class="block">
         <el-table
@@ -26,6 +27,9 @@
             :header-cell-style="header_cell_style"
             :cell-style="cell_style"
             @selection-change="handleSelectionChange">
+            <el-table-column
+                    type="selection">
+            </el-table-column>
           <el-table-column
               prop="id"
               label="ID">
@@ -123,9 +127,9 @@
 </template>
 
 <script>
-import axios from "axios";
-import Global from "@/views/Global.vue";
 import service from "@/service";
+
+
 
 
 export default {
@@ -142,7 +146,6 @@ export default {
       addform: {
         nick: '',//岗位名称
         department: '',//岗位代号
-
       },
       upfrom: {
         id: '',
@@ -151,7 +154,8 @@ export default {
       },
       loading: false,
       insertRule: {},
-      formLabelWidth: '120px'
+      formLabelWidth: '120px',
+      select: true,
 
     }
   },
@@ -168,7 +172,7 @@ export default {
     loadData(page) {
       this.loading = true
       setTimeout(() => {
-        service.get("/dep/all_department_page?page=" + page, resp => {
+          service.get("/dep/all_department_page?page=" + page , resp => {
           this.tableData = resp.data.data.limit_data
           this.loading = false
           this.total = resp.data.data.count
@@ -177,16 +181,22 @@ export default {
           }
           console.log(this.total)
         })
-      }, 200)
+      }, 100)
     },
     search() {//查询方法
-      service.get("/dep/somedepartment?query=" + this.ss + "&page=" + this.page, resp => {
+        service.get("/dep/somedepartment?query=" + this.ss + "&page=" + this.page ,resp => {
+        console.log(resp)
         this.tableData = resp.data.data.limit_data
       })
 
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+        if (this.multipleSelection.length !== 0) {
+            this.select = false
+        } else {
+            this.select = true
+        }
     },
     edit(i, r) {//修改显示
       this.dialogFormVisible = true
@@ -195,32 +205,38 @@ export default {
       this.upfrom.department = r.department
     },
     toDelete(i, r) {//删除方法
-      this.checkAuth(() => {
-        service.get("/dep/delete_department?id=" + r.id, resp => {
-
+      // this.checkAuth(() => {
+          service.get("/dep/delete_department?id=" + r.id,resp => {
+          console.log(resp)
+          console.log(r.id)
         })
+        this.$message.error("删除成功")
         this.loadData(this.page);
-      })
+      // })
 
     },
     changePage() {
 
     },
     add() {//添加方法
-      if (this.addform.nick && this.addform.department) {
-        service.post("/dep/insert_department", this.addform, resp => {
-          this.$message.success("添加成功")
-        })
-        this.dialogadd = false
-        this.loadData(this.page);
-      } else {
-        this.$message.warning("请检查表单内容，不能为空")
-        return
-      }
+      // this.checkAuth(() => {
+        if (this.addform.nick && this.addform.department) {
+            service.post("/dep/insert_department", this.addform,resp => {
+            console.log(resp)
+            this.$message.success("添加成功")
+          })
+          this.dialogadd = false
+          this.loadData(this.page);
+        } else {
+          this.$message.warning("请检查表单内容，不能为空")
+          return
+        }
+      // })
       this.dialogadd = false
     },
     modify() {//修改
-        service.post("/dep/update_department", this.upfrom, resp => {
+        service.post("/dep/update_department", this.upfrom,resp => {
+          console.log(resp)
           if (resp.data.code === 200) {
             this.$message.success("修改成功")
           }
@@ -230,39 +246,11 @@ export default {
       this.dialogFormVisible = false
 
     },
-    daochu() {
-      let url = "http://localhost:8848/em/export_excel";
-      let xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true); //
-      xhr.responseType = "blob"; //js 中的二进制对象
-      xhr.onreadystatechange = function () {
-
-
-        if (xhr.readyState == 3) {
-
-        }
-        if (xhr.readyState == 4) {
-
-        }
-      };
-
-      xhr.onload = function () {
-
-        //
-        if (this.status === 200) {
-          //兼容所有的浏览器的代码
-          let blob = this.response;
-          let a = document.createElement('a');
-          a.download = '员工表.xls';
-          a.href = window.URL.createObjectURL(blob);
-          $("body").append(a);
-          a.click();
-          $(a).remove();
-
-        }
-      };
-//     ajax
-      xhr.send()
+    batch_Delete(){//批量删除
+        service.post("/dep/batch_Delete",this.multipleSelection,resp =>{
+            this.$message.error("删除成功")
+            this.loadData(this.page)
+        })
     },
 
   }

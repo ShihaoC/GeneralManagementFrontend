@@ -167,12 +167,12 @@
 </template>
 
 <script>
-import global from "@/views/Global";
+// import global from "@/views/Global";
 import Post from "@/components/staff/department.vue";
 import service from '@/service.js'
 // import service from '@/assets/util/service.vue'
 
-let newAxios = global.newAxios
+// let newAxios = global.newAxios
 export default {
   components: {Post},
   mounted() {
