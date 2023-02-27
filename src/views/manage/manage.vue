@@ -120,11 +120,13 @@
               <li>
                 <span class="drawer-settings-item">头像设置</span>
                 <el-upload
+                    :on-success="reload_head"
                     class="upload-demo"
                     :action="uploadURL"
                     multiple
                     :limit="1"
-                    :file-list="false">
+                    :file-list="fileList"
+                    :show-file-list="false">
                   <el-button size="small" type="primary">点击上传</el-button>
                 </el-upload>
               </li>
@@ -217,6 +219,20 @@ export default {
     }
   },
   methods: {
+    reload_head(){
+      service.get("/user/headImage/"+localStorage.getItem("userid"),resp=>{
+        console.log(resp.data)
+        $("#head-img").css({
+          "height": "2.5vw",
+          "background": "url(" + resp.data.data + ") no-repeat",
+          "background-size": "cover",
+          "border-radius": "8px",
+          "border": "1px solid #e6e6e6"
+        })
+        this.$message.success("修改成功")
+      })
+
+    },
     check() {
       console.log("check")
       console.log(this.$route.path)

@@ -137,7 +137,7 @@
         </div>
       </el-dialog>
 
-      <el-dialog :visible.sync="Authority_Dialog" :title="'修改权限'" @close="clearNode" width="30%">
+      <el-dialog  :visible.sync="Authority_Dialog" :title="'修改权限'" @close="clearNode" width="30%">
         <el-tree
             auto-expand-parent
             v-loading="Authority_loading"
@@ -238,7 +238,7 @@ export default {
     },
     changeStatue(a) {
       console.log(a)
-      this.$confirm('您要修改状态吗', '提示', {
+      this.$confirm('您要修改状态吗,拥有此权限的所有用户都要重新分配角色', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -277,7 +277,7 @@ export default {
       })
     },
     search() {
-      this.loaddata(this.page,this.ss)
+      this.loaddata(this.page, this.ss)
     },
     cellclick(row, column, cell, event) {
       this.role_id_change = row.id
@@ -345,15 +345,28 @@ export default {
       this.loaddata(index)
     },
     toDelete(i, r) {
-      console.log(r)
-      service.get("/role/delete/" + r.id, resp => {
-        console.log(resp)
+      this.$confirm('您要删除吗', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        service.get("/role/delete/" + r.id, resp => {
+          console.log(resp)
+          this.loaddata(this.page, '')
+        })
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      }).catch(() => {
         this.loaddata(this.page, '')
-      })
+      });
+      console.log(r)
+
     },
     batch_Delete() {
-      service.post("/role/batch_Delete",this.multipleSelection,resp=>{
-        this.loaddata(this.page,'')
+      service.post("/role/batch_Delete", this.multipleSelection, resp => {
+        this.loaddata(this.page, '')
       })
 
     },
