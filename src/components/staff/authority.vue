@@ -138,12 +138,10 @@
 
       <el-dialog  :visible.sync="Authority_Dialog" :title="'修改权限'" @close="clearNode" width="30%">
         <el-tree
-            auto-expand-parent
             v-loading="Authority_loading"
             :data="TreeData"
             show-checkbox
             node-key="id"
-            :default-expand-all="true"
             :default-checked-keys="checked"
             @check="checking"
             ref="tree">
@@ -244,11 +242,12 @@ export default {
       }).then(() => {
         service.get("/role/update_statue/" + this.role_id_change + "?statue=" + a, resp => {
           console.log(resp)
+          this.$message({
+            type: 'success',
+            message: '修改成功!'
+          });
         })
-        this.$message({
-          type: 'success',
-          message: '修改成功!'
-        });
+        this.loaddata(this.page, '')
       }).catch(() => {
         this.loaddata(this.page, '')
       });

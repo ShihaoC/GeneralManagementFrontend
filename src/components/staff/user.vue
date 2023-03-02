@@ -55,7 +55,7 @@
               <el-switch
                   active-color="#13ce66"
                   inactive-color="#ff4949"
-                  @change="changeStatue"
+                  @change="changeStatue1"
                   v-model="scope.row.used">
               </el-switch>
             </template>
@@ -219,7 +219,8 @@ export default {
         username: '',
         role: '',
         department: '',
-        nick_name: ''
+        nick_name: '',
+        used: false
       },
       role_id_change: 0
     }
@@ -267,7 +268,7 @@ export default {
       this.updateForm.role = this.getRole_id(row.role)
       this.updateForm.department = row.department
       this.updateForm.id = row.id
-
+      this.updateForm.used = row.used
       console.log(row)
     },
     getRole_id(role_name) {
@@ -279,6 +280,7 @@ export default {
     },
     update() {
       service.post("/user/user_update", this.updateForm, resp => {
+        console.log("resp")
         this.updateDialog = false
         this.loadData()
         this.$message.success("修改成功")
@@ -290,7 +292,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        service.get("/user/user_delete/"+row.id,resp=>{
+        service.get("/user/user_delete/" + row.id, resp => {
           this.$message({
             type: 'success',
             message: resp.data
@@ -305,19 +307,19 @@ export default {
     search() {
       this.loadData()
     },
-    changeStatue(v) {
+    changeStatue1(v) {
       this.$confirm('此操作将停用该账户, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        setTimeout(()=>{
-          service.get("/user/user_update_statue/"+this.role_id_change+"?statue="+v,resp=>{
+        setTimeout(() => {
+          service.get("/user/user_update_statue/" + this.role_id_change + "?statue=" + v, resp => {
             this.loadData()
             console.log(resp)
             this.$message.success("状态切换成功")
           })
-        },10)
+        }, 10)
 
       }).catch(() => {
         this.loadData()
@@ -326,10 +328,10 @@ export default {
 
     },
     export_excel() {
-      service.download("/user/user_export_excel","用户表")
+      service.download("/user/user_export_excel", "用户表")
     },
     batch_Delete() {
-      service.post("/user/batch_Delete",this.multipleSelection,resp=>{
+      service.post("/user/batch_Delete", this.multipleSelection, resp => {
         this.loadData()
         this.multipleSelection = []
       })

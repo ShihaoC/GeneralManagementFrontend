@@ -3,6 +3,7 @@ import router from "./router";
 import Element from 'element-ui'
 
 
+// const baseURL = "http://192.168.1.203:8848";
 const baseURL = "http://localhost:8848";
 
 axios.defaults.baseURL = baseURL;

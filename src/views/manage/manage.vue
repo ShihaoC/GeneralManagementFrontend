@@ -75,7 +75,7 @@
             <el-menu-item index="/manage/reportForm" @click="check()">员工报表</el-menu-item>
           </el-submenu>
           <el-submenu index="2">
-            <template slot="title"><i class="el-icon-data-analysis"></i> <span>系统监控</span></template>
+            <template slot="title"><i class="el-icon-data-analysis"></i><span>系统监控</span></template>
             <el-menu-item index="/system/resource" @click="check()">
               <span slot="title">资源概览</span>
             </el-menu-item>
