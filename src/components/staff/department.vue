@@ -88,8 +88,8 @@
           </el-pagination>
         </div>
       </div>
-      <el-dialog title="新增岗位" :visible.sync="dialogadd">
-        <el-form :rules="insertRule" ref="ruleForm" :inline="true" :model="addform">
+      <el-dialog title="新增岗位" :visible.sync="dialogadd" width = "30%">
+        <el-form :rules="insertRule" ref="ruleForm"  :model="addform">
           <el-form-item label="岗位代号:" :label-width="formLabelWidth" prop="department">
             <el-input v-model="addform.department" autocomplete="off" class="sBox"
                       placeholder="请输入岗位代号"></el-input>
@@ -205,33 +205,29 @@ export default {
       this.upfrom.department = r.department
     },
     toDelete(i, r) {//删除方法
-      // this.checkAuth(() => {
-      service.get("/dep/delete_department?id=" + r.id, resp => {
-        console.log(resp)
-        console.log(r.id)
-      })
-      this.$message.error("删除成功")
-      this.loadData(this.page);
-      // })
+          service.get("/dep/delete_department?id=" + r.id,resp => {
+          console.log(resp)
+          console.log(r.id)
+        })
+        this.$message.error("删除成功")
+        this.loadData(this.page);
 
     },
     changePage() {
 
     },
     add() {//添加方法
-      // this.checkAuth(() => {
-      if (this.addform.nick && this.addform.department) {
-        service.post("/dep/insert_department", this.addform, resp => {
-          console.log(resp)
-          this.$message.success("添加成功")
-        })
-        this.dialogadd = false
-        this.loadData(this.page);
-      } else {
-        this.$message.warning("请检查表单内容，不能为空")
-        return
-      }
-      // })
+        if (this.addform.nick && this.addform.department) {
+            service.post("/dep/insert_department", this.addform,resp => {
+            console.log(resp)
+            this.$message.success("添加成功")
+          })
+          this.dialogadd = false
+          this.loadData(this.page);
+        } else {
+          this.$message.warning("请检查表单内容，不能为空")
+          return
+        }
       this.dialogadd = false
     },
     modify() {//修改

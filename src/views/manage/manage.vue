@@ -131,6 +131,7 @@
                   <el-button size="small" type="primary">点击上传</el-button>
                 </el-upload>
               </li>
+                <li></li>
               <li>
                 <span class="drawer-settings-item">看板娘设置</span>
                 <el-switch
