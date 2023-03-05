@@ -90,32 +90,24 @@ export default {
   name: "resource",
   mounted() {
     this.loading = true
-    service.get("/system/cpu",resp=>{
+    service.GET("/system/cpu",resp=>{
       this.CPUTable = resp.data
       this.loading = false
     })
-    // newAxios.get("/system/cpu").then((resp) => {
-    //   this.CPUTable = resp.data
-    //   this.loading = false
-    // })
-    service.get("/system/mem",resp=>{
+    service.GET("/system/mem",resp=>{
       this.MemTable = resp.data
 
     })
-    // newAxios.get("/system/mem").then((resp) => {
-    //   this.MemTable = resp.data
-    //
-    // })
-    service.get("/api/count",resp=>{
+    service.GET("/api/count",resp=>{
       this.line_data = resp.data
     })
-    // newAxios.get("/api/count").then((resp) => {
-    //   this.line_data = resp.data
-    // })
-    setInterval(() => {
+   this.intervals = setInterval(() => {
       // this.loadSystemInformation()
     }, 5000)
     this.getFileidData()
+  },
+  beforeDestroy() {
+    clearInterval(this.intervals)
   },
   data() {
     return {
@@ -123,7 +115,8 @@ export default {
       MemTable: [],
       loading: false,
       line_data: [],
-      fileid_data: []
+      fileid_data: [],
+      intervals: null
     }
   },
   methods: {

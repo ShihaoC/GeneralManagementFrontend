@@ -1,12 +1,18 @@
 <template>
-  <div id="music-main">
-    <ImageCropper></ImageCropper>
+  <div>
+
   </div>
 </template>
 
 <script>
+import service from "@/service";
 export default {
   name: "music-comp",
+  mounted() {
+    service.DELETE("/log/del/1",null,resp=>{
+      console.log(resp)
+    })
+  }
 }
 </script>
 

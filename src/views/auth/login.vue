@@ -98,7 +98,7 @@ export default {
         this.$message.warning("用户名密码不能为空")
         return
       }
-      service.post("/login?"+qs.stringify(this.loginForm),null,resp=>{
+      service.POST("/login?"+qs.stringify(this.loginForm),null,resp=>{
         console.log(resp)
         if(resp.data.data === "账户停用"){
           this.$message.error(resp.data.data)

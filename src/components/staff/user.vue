@@ -229,7 +229,7 @@ export default {
     loadData() {
       this.table_loading = true
       setTimeout(() => {
-        service.get("/user/user_query?search=" + this.ss + "&page=" + this.page, resp => {
+        service.GET("/user/user_query?search=" + this.ss + "&page=" + this.page, resp => {
           console.log(resp)
           this.tableData = resp.data.data.limit_data
           this.total = resp.data.data.count
@@ -244,17 +244,17 @@ export default {
       }, 200)
     },
     loadRoleData() {
-      service.get("/role/all", resp => {
+      service.GET("/role/all", resp => {
         this.roles = resp.data.data
       })
     },
     loadDepartment() {
-      service.get("/dep/all_department", resp => {
+      service.GET("/dep/all_department", resp => {
         this.departments = resp.data.data
       })
     },
     insert() {
-      service.post("/auth/register", this.insertForm, resp => {
+      service.POST("/auth/register", this.insertForm, resp => {
         console.log(resp)
         this.insertDialog = false
         this.$message.success("添加成功")
@@ -279,7 +279,7 @@ export default {
       }
     },
     update() {
-      service.post("/user/user_update", this.updateForm, resp => {
+      service.POST("/user/user_update", this.updateForm, resp => {
         console.log("resp")
         this.updateDialog = false
         this.loadData()
@@ -292,7 +292,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        service.get("/user/user_delete/" + row.id, resp => {
+        service.GET("/user/user_delete/" + row.id, resp => {
           this.$message({
             type: 'success',
             message: resp.data
@@ -314,7 +314,7 @@ export default {
         type: 'warning'
       }).then(() => {
         setTimeout(() => {
-          service.get("/user/user_update_statue/" + this.role_id_change + "?statue=" + v, resp => {
+          service.GET("/user/user_update_statue/" + this.role_id_change + "?statue=" + v, resp => {
             this.loadData()
             console.log(resp)
             this.$message.success("状态切换成功")
@@ -331,7 +331,7 @@ export default {
       service.download("/user/user_export_excel", "用户表")
     },
     batch_Delete() {
-      service.post("/user/batch_Delete", this.multipleSelection, resp => {
+      service.POST("/user/batch_Delete", this.multipleSelection, resp => {
         this.loadData()
         this.multipleSelection = []
       })

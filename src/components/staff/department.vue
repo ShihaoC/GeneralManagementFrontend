@@ -172,7 +172,7 @@ export default {
     loadData(page) {
       this.loading = true
       setTimeout(() => {
-        service.get("/dep/all_department_page?page=" + page, resp => {
+        service.GET("/dep/all_department_page?page=" + page, resp => {
           this.tableData = resp.data.data.limit_data
           this.loading = false
           this.total = resp.data.data.count
@@ -184,7 +184,7 @@ export default {
       }, 100)
     },
     search() {//查询方法
-      service.get("/dep/somedepartment?query=" + this.ss + "&page=" + this.page, resp => {
+      service.GET("/dep/somedepartment?query=" + this.ss + "&page=" + this.page, resp => {
         console.log(resp)
         this.tableData = resp.data.data.limit_data
       })
@@ -205,7 +205,7 @@ export default {
       this.upfrom.department = r.department
     },
     toDelete(i, r) {//删除方法
-          service.get("/dep/delete_department?id=" + r.id,resp => {
+          service.GET("/dep/delete_department?id=" + r.id,resp => {
           console.log(resp)
           console.log(r.id)
         })
@@ -218,7 +218,7 @@ export default {
     },
     add() {//添加方法
         if (this.addform.nick && this.addform.department) {
-            service.post("/dep/insert_department", this.addform,resp => {
+            service.POST("/dep/insert_department", this.addform,resp => {
             console.log(resp)
             this.$message.success("添加成功")
           })
@@ -231,7 +231,7 @@ export default {
       this.dialogadd = false
     },
     modify() {//修改
-      service.post("/dep/update_department", this.upfrom, resp => {
+      service.POST("/dep/update_department", this.upfrom, resp => {
         console.log(resp)
         if (resp.data.code === 200) {
           this.$message.success("修改成功")
@@ -243,7 +243,7 @@ export default {
 
     },
     batch_Delete() {//批量删除
-      service.post("/dep/batch_Delete", this.multipleSelection, resp => {
+      service.POST("/dep/batch_Delete", this.multipleSelection, resp => {
         this.$message.error("删除成功")
         this.loadData(this.page)
       })

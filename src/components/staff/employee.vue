@@ -230,12 +230,12 @@ export default {
   },
   methods: {
     loadDepartment() {
-      service.get("/dep/all_department", resp => {
+      service.GET("/dep/all_department", resp => {
         this.departments = resp.data.data
       })
     },
     search() {//查询
-      service.get("/em/select_something?query=" + this.ss + "&page=" + this.page, resp => {
+      service.GET("/em/select_something?query=" + this.ss + "&page=" + this.page, resp => {
         this.tableData = resp.data.data.limit_data
       })
     },
@@ -251,7 +251,7 @@ export default {
     },
     addTest() {
       if (this.addform.name && this.addform.phone && this.addform.department) {
-        service.post("/em/insert_employee", this.addform, (resp) => {
+        service.POST("/em/insert_employee", this.addform, (resp) => {
 
           this.CodeCheck(resp.data.code)
           this.dialogadd = false
@@ -265,7 +265,7 @@ export default {
     loaddata(page) {
       this.loading = true
       setTimeout(() => {
-        service.get("/em/select_all?page=" + page, resp => {
+        service.GET("/em/select_all?page=" + page, resp => {
           this.tableData = resp.data.data.limit_data
           this.loading = false
           this.total = resp.data.data.count
@@ -285,7 +285,7 @@ export default {
       }
     },
     modify() {//修改
-      service.post("/em/update_employee", this.form, resp => {
+      service.POST("/em/update_employee", this.form, resp => {
         if (resp.data.code === 200) {
           this.$message.success("修改成功")
         }
@@ -300,13 +300,13 @@ export default {
       this.loaddata(index)
     },
     toDelete(i, r) {
-      service.get("/em/delete_employee?id=" + r.id + "&name=" + r.name, resp => {
+      service.GET("/em/delete_employee?id=" + r.id + "&name=" + r.name, resp => {
         console.log(resp)
       })
       this.loaddata(this.page)
     },
     batch_Delete() {
-      service.post("/em/batch_Delete", this.multipleSelection, resp => {
+      service.POST("/em/batch_Delete", this.multipleSelection, resp => {
         this.loaddata(this.page)
       })
     },

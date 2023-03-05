@@ -162,7 +162,7 @@ export default {
   components: {Live2d},
   mounted() {
     this.fullscreenLoading = true
-    service.get("/user/headImage/" + localStorage.getItem("userid"), resp => {
+    service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
       console.log(resp.data)
       $("#head-img").css({
         "height": "2.5vw",
@@ -222,7 +222,7 @@ export default {
     reload_head() {
       this.fullscreenLoading = true
       this.fileList = []
-      service.get("/user/headImage/" + localStorage.getItem("userid"), resp => {
+      service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
         console.log(resp.data)
         $("#head-img").css({
           "height": "2.5vw",
@@ -301,7 +301,7 @@ export default {
     },
     getWeather() {
       console.log(localStorage.getItem("token"))
-      service.get("/api/weather", resp => {
+      service.GET("/api/weather", resp => {
         this.temp = resp.data.data.temp
         this.humidity = resp.data.data.humidity
         this.windScale = resp.data.data.windScale

@@ -20,7 +20,7 @@ request.interceptors.request.use(config => {
 
 let time = null;
 
-let get = (url, fun) => {
+let GET = (url, fun) => {
     request.get(url)
         .then(resp => {
             if (resp.data === "") {
@@ -33,7 +33,7 @@ let get = (url, fun) => {
         })
 }
 
-let post = (url, data, fun) => {
+let POST = (url, data, fun) => {
     console.log(localStorage.getItem("token"))
     request.post(url, data)
         .then(resp => {
@@ -42,6 +42,12 @@ let post = (url, data, fun) => {
         .catch(err => {
             Element.Message.error("没有登录或无权限")
         })
+}
+
+let DELETE = (url,data,fun)=>{
+    request.delete(url,data).then(resp=>{
+        fun(resp)
+    })
 }
 
 let download = (path,fileName) => {
@@ -80,7 +86,8 @@ let download = (path,fileName) => {
 }
 
 export default {
-    get,
-    post,
+    GET,
+    POST,
+    DELETE,
     download
 }

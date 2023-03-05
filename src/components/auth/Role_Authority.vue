@@ -30,22 +30,22 @@ export default {
   mounted() {
 
     this.role_id = this.$route.query.role_id;
-    service.get("/auth/getAuthority?role_id=1",(resp)=>{
+    service.GET("/auth/getAuthority?role_id=1",(resp)=>{
       this.TreeData = resp.data.data
     });
-    service.get("/auth/default_check?role_id=1",resp=>{
+    service.GET("/auth/default_check?role_id=1",resp=>{
       this.checked = resp.data.data
     })
 
   },
   methods:{
     loadDefaultChecked(){
-      service.get("/auth/default_check?role_id="+this.role_id,resp=>{
+      service.GET("/auth/default_check?role_id="+this.role_id,resp=>{
         this.checked = resp.data.data
       })
     },
     upload(){
-      service.post("/auth/update?role_id="+this.role_id,this.checked,resp=>{
+      service.POST("/auth/update?role_id="+this.role_id,this.checked,resp=>{
         console.log(resp)
       })
     },

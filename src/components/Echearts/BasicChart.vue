@@ -21,8 +21,12 @@ export default {
   },
   data(){
     return{
-      dataa: []
+      dataa: [],
+      intervals: null
     }
+  },
+  beforeDestroy() {
+    clearInterval(this.intervals)
   },
   methods:{
     initChart(){
@@ -53,7 +57,6 @@ export default {
         yAxis: {
           type: 'value',
           min: 0,
-          max: 50
         },
         series: [
           {
@@ -68,14 +71,6 @@ export default {
             areaStyle: {
               opacity: 0.8,
               color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                // {
-                //   offset: 0,
-                //   color: 'rgb(128, 255, 165)'
-                // },
-                // {
-                //   offset: 1,
-                //   color: 'rgb(1, 191, 236)'
-                // }
                 {
                   offset: 1,
                   color: '#409eff'
@@ -85,23 +80,29 @@ export default {
             emphasis: {
               focus: 'series'
             },
-            data: this.dataa
+            data: [0,0,0,0,0,0,0,0,0,0,0,0,0,0]
           }
         ]
       };
       // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option);
+      service.GET(this.api,resp=>{
+        myChart.setOption({
+          series:[{
+            data:resp.data
+          }]
+        })
+      })
 
-
-      setInterval(()=>{
-        service.get(this.api,resp=>{
+     this.intervals = setInterval(()=>{
+        service.GET(this.api,resp=>{
           myChart.setOption({
             series:[{
               data:resp.data
             }]
           })
         })
-      },1000)
+      },5000)
       const chartObserver = new ResizeObserver(() => {
         myChart.resize();
       });

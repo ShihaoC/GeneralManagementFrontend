@@ -44,7 +44,7 @@
                             <el-input
                                     v-model="ss"
                                     size="mini"
-                                    placeholder="输入操作人员名称搜索"
+                                    placeholder="输入操作类型名称搜索"
                                     @change="search"/>
                         </template>
                     </el-table-column>

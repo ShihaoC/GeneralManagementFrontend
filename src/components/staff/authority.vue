@@ -169,10 +169,10 @@ export default {
   mounted() {
     this.loaddata(1, '');
     this.role_id = this.$route.query.role_id;
-    service.get("/auth/getAuthority?role_id=1", (resp) => {
+    service.GET("/auth/getAuthority?role_id=1", (resp) => {
       this.TreeData = resp.data.data
     });
-    service.get("/auth/default_check?role_id=1", resp => {
+    service.GET("/auth/default_check?role_id=1", resp => {
       this.checked = resp.data.data
     })
   },
@@ -240,7 +240,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        service.get("/role/update_statue/" + this.role_id_change + "?statue=" + a, resp => {
+        service.GET("/role/update_statue/" + this.role_id_change + "?statue=" + a, resp => {
           console.log(resp)
           this.$message({
             type: 'success',
@@ -254,7 +254,7 @@ export default {
     },
     uploadAuthority() {
       this.Authority_loading = true
-      service.post("/auth/update?role_id=" + this.role_id, this.checked, resp => {
+      service.POST("/auth/update?role_id=" + this.role_id, this.checked, resp => {
         console.log(resp)
         this.Authority_Dialog = false
         this.Authority_loading = false
@@ -268,7 +268,7 @@ export default {
     },
     loadDefaultChecked() {
       this.Authority_loading = true
-      service.get("/auth/default_check?role_id=" + this.role_id, resp => {
+      service.GET("/auth/default_check?role_id=" + this.role_id, resp => {
         this.checked = resp.data.data
         this.$refs.tree.setCheckedKeys(this.checked);
         this.Authority_loading = false
@@ -296,7 +296,7 @@ export default {
     },
     insert() {
       if (this.addform.role_name && this.addform.nick && this.addform.mark) {
-        service.post("/role/insert", this.addform, resp => {
+        service.POST("/role/insert", this.addform, resp => {
           this.dialogadd = false
           this.loaddata(this.page, '')
         })
@@ -308,7 +308,7 @@ export default {
     loaddata(page, search) {
       this.table_loading = true
       setTimeout(() => {
-        service.get("/role/list?page=" + this.page + "&search=" + search, resp => {
+        service.GET("/role/list?page=" + this.page + "&search=" + search, resp => {
           console.log(resp)
           this.tableData = resp.data.data.limit_data
           this.table_loading = false
@@ -330,7 +330,7 @@ export default {
     },
     modify() {//修改
       this.checkAuth(() => {
-        service.post("/role/update", this.form, resp => {
+        service.POST("/role/update", this.form, resp => {
           console.log(resp)
         })
         this.dialogFormVisible = false
@@ -348,7 +348,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        service.get("/role/delete/" + r.id, resp => {
+        service.GET("/role/delete/" + r.id, resp => {
           console.log(resp)
           this.loaddata(this.page, '')
           this.$message({
@@ -364,7 +364,7 @@ export default {
 
     },
     batch_Delete() {
-      service.post("/role/batch_Delete", this.multipleSelection, resp => {
+      service.POST("/role/batch_Delete", this.multipleSelection, resp => {
         this.loaddata(this.page, '')
       })
 
