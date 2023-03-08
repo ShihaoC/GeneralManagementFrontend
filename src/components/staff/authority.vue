@@ -77,7 +77,8 @@
                   @click="Authority_Update(scope.row)"
                   size="mini"
                   type=""
-                  :disabled="scope.row.role_name === 'admin'">修改权限
+                  >修改权限
+<!--                  :disabled="scope.row.role_name === 'admin'"-->
               </el-button>
             </template>
           </el-table-column>

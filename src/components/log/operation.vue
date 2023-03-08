@@ -3,6 +3,9 @@
     <div class="container">
         <div class="post-main">
             <div class="up">
+                <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain
+                           size="small">批量删除
+                </el-button>
                 <el-table
                         ref="multipleTable"
                         v-loading="loading"
@@ -20,12 +23,12 @@
                             label="ID">
                     </el-table-column>
                     <el-table-column
-                            prop="Otype"
+                            prop="type"
                             label="操作类型"
                     >
                     </el-table-column>
                     <el-table-column
-                            prop="ip"
+                            prop="address"
                             label="操作地址"
                     >
                     </el-table-column>
@@ -35,7 +38,7 @@
                     >
                     </el-table-column>
                     <el-table-column
-                            prop="Operator"
+                            prop="user"
                             label="操作人员"
                     >
                     </el-table-column>
@@ -72,18 +75,35 @@
         name: 'operation',
         data() {
             return {
-                total:0,
+                total: 0,
+                select: true,
                 page: 1,
                 loading: false,
-                ss:'',
-                tableData:[],
+                ss: '',
+                tableData: [],
+                multipleSelection: [],
             }
         },
         mounted() {
+            this.loadData(1)
         },
-        methods:{
-            changePage(){
+        methods: {
+            changePage() {
 
+            },
+            loadData(page) {
+                this.loading = true
+                setTimeout(() => {
+                    service.GET("/log/getLogs?module="+this.ss+"&page=" + page, resp => {
+                        this.tableData = resp.data.data.limit_data
+                        this.loading = false
+                        this.total = resp.data.data.count
+                        if (this.tableData.length === 0 && this.page - 1 !== 0) {
+                            this.loaddata(this.page - 1)
+                        }
+                        console.log(this.total)
+                    })
+                }, 100)
             },
             cell_style() {
                 return "height:2vh";
@@ -100,11 +120,21 @@
                 }
             },
             search() {//查询方法
+                service.get("/log/getLogs?module=" + this.ss + "&page=" + this.page, resp => {
+                    console.log(resp)
+                    this.tableData = resp.data.data.limit_data
+                })
 
             },
+            batch_Delete() {
+                service.POST("/log/del", this.multipleSelection, resp => {
+                    this.$message.error("删除成功")
+                    this.loadData(this.page)
+                })
+            }
         }
     }
 </script>
 <style lang="less">
-    @import "@/assets/css/department.less";
+  @import "@/assets/css/department.less";
 </style>
