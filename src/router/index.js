@@ -15,12 +15,12 @@ const routes = [
     {
         path: '/demo',
         name: 'demo',
-        component: () => import('@/components/music/music-comp.vue')
+        component: () => import('@/views/manage/manage2.vue')
     },
     {
         path: '/index',
         name: 'index',
-        component: manage,
+        component: () => import('@/views/manage/manage2.vue'),
         meta: {
             title: '首页'
         },

@@ -21,6 +21,7 @@ import BasicChart from "@/components/Echearts/BasicChart.vue";
 import particles from 'particlesjs'
 import Role_Authority from "@/components/auth/Role_Authority.vue";
 import {message} from '@/assets/util/resetMessage'
+import navbar from "@/components/navbar.vue";
 
 Vue.prototype.$echarts = echarts;
 
@@ -43,6 +44,7 @@ Vue.component("Breadcrumb", Breadcrumb)
 Vue.component("BasicChart", BasicChart)
 Vue.component("Role_Authority", Role_Authority)
 Vue.component("ImageCropper", ImageCropper)
+Vue.component("navbar",navbar)
 
 new Vue({
     router,

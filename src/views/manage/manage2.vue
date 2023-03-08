@@ -1,25 +1,23 @@
 <template>
-  <div id="manage-main">
+  <div id="manage-main" v-loading="fullscreenLoading">
     <div id="manage-navbar">
       <Breadcrumb class="bread"></Breadcrumb>
-      <div id="open">
-        <ul>
-
-        </ul>
-      </div>
       <div id="weather">
         <ul>
-          <li>
-            <i class="iconfont icon-gitee-fill-round"></i>
+          <li class="top_item">
+            <i id="full-screen" @click="full" class="iconfont icon-fullscreen top-item"></i>
           </li>
           <li>
-            <i class="iconfont icon-github-fill"></i>
+            <i id="gitee" class="iconfont icon-gitee-fill-round"></i>
+          </li>
+          <li>
+            <i id="github" class="iconfont icon-github-fill"></i>
           </li>
           <li>
             时间: {{ time }}
           </li>
           <li>
-            温度: {{ temp }}
+            温度: {{ temp }}℃
           </li>
           <li>
             湿度: {{ humidity }} %
@@ -58,45 +56,27 @@
             :router="true"
             style="height: 100vh;"
             :unique-opened=true
-            >
-          <el-menu-item id="items" index="/index">
+        >
+          <el-menu-item id="items" index="/index" @click="check()">
             <i class="el-icon-s-grid"></i>
             <span id="items-text">员工管理系统</span>
           </el-menu-item>
-          <el-menu-item index="/index" id="itemss">
-            <i class="el-icon-s-home"></i>
-            <span>首页</span>
-          </el-menu-item>
-          <el-submenu index="1">
-            <template slot="title"><i class="el-icon-user-solid"></i><span>系统管理</span>
-            </template>
-            <el-menu-item index="/manage/department">人员管理</el-menu-item>
-            <el-menu-item index="/manage/post">岗位管理</el-menu-item>
-            <el-menu-item index="/manage/power">角色管理</el-menu-item>
-            <el-menu-item index="/manage/reportForm">员工报表</el-menu-item>
-          </el-submenu>
-          <el-submenu index="2">
-            <template slot="title"><i class="el-icon-data-analysis"></i> <span>系统监控</span></template>
-            <el-menu-item index="/system/resource">
-              <span slot="title">资源概览</span>
-            </el-menu-item>
-            <el-menu-item index="3">
-              <span slot="title">数据库概览</span>
-            </el-menu-item>
-          </el-submenu>
-
-          <el-submenu index="3">
-            <template slot="title"><i class="el-icon-document"></i><span>日志管理</span>
-            </template>
-            <el-menu-item index="/manage/operation">操作日志</el-menu-item>
-            <el-menu-item to="/manage/logLogin">日志登录</el-menu-item>
-          </el-submenu>
+          <navbar :items="items"></navbar>
         </el-menu>
         <transition name="el-fade-in">
           <Live2d v-show="kanbanniang"></Live2d>
         </transition>
       </div>
       <div id="manage-text">
+
+
+        <!--        首页-->
+        <div v-show="index_show" id="index-main">
+          <h1></h1>
+        </div>
+        <!--        首页-->
+
+
         <router-view></router-view>
       </div>
       <div id="setting-box">
@@ -110,6 +90,20 @@
           </div>
           <div id="drawer-settings">
             <ul>
+              <li>
+                <span class="drawer-settings-item">头像设置</span>
+                <el-upload
+                    :on-success="reload_head"
+                    class="upload-demo"
+                    :action="uploadURL"
+                    multiple
+                    :limit="1"
+                    :file-list="fileList"
+                    :show-file-list="false">
+                  <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
+              </li>
+                <li></li>
               <li>
                 <span class="drawer-settings-item">看板娘设置</span>
                 <el-switch
@@ -130,25 +124,36 @@
 
 <script>
 import Live2d from "@/components/Live2d.vue";
-import axios from "axios";
-import Global from "@/views/Global.vue";
+import service from "@/service";
 import $ from 'jquery'
+import screenfull from "screenfull";
 
-let newAxios = axios.create({
-  baseURL: Global.baseUrl
-})
 
 export default {
-  name: "manage",
+  name: "manage2",
   components: {Live2d},
   mounted() {
-    if(this.$route.path === '/index' || $("#itemss").focus){
+    this.fullscreenLoading = true
+    service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
+      console.log(resp.data)
+      $("#head-img").css({
+        "height": "2.5vw",
+        "background": "url(" + resp.data.data + ") no-repeat",
+        "background-size": "cover",
+        "border-radius": "8px",
+        "border": "1px solid #e6e6e6"
+      })
+    })
+    if (this.$route.path === '/index' || $("#itemss").focus) {
       $("#items").css({
-        "color":"#000000"
+        "color": "#000000"
       })
       $(".el-icon-s-grid").css({
-        "color":"#909399"
+        "color": "#909399"
       })
+    }
+    if (this.$route.path !== '/index') {
+      this.index_show = false
     }
     console.log("123" + localStorage.getItem("kanbanniang"))
     if (localStorage.getItem("kanbanniang")) {
@@ -161,13 +166,21 @@ export default {
     } else {
       this.kanbanniang = true
     }
-    this.user = localStorage.getItem("username").toUpperCase()
     console.log(this.$router.Location)
     this.init()
-
+    this.uploadURL = 'http://localhost:8848/user/uploadImage/' + localStorage.getItem("userid")
+    this.fullscreenLoading = false
+    service.GET("http://localhost:8848/menu/menus/"+localStorage.getItem("role_id"),resp=>{
+      this.items = resp.data.data
+      console.log(resp)
+    })
   },
   data() {
     return {
+      items: [],
+      fullscreenLoading: false,
+      uploadURL: '',
+      index_show: true,
       user: '',
       showed: false,
       drawer: false,
@@ -178,15 +191,58 @@ export default {
       temp: '-',
       humidity: '-',
       windScale: '-',
-      windDir: '-'
+      windDir: '-',
+      fileList: []
     }
   },
   methods: {
+    reload_head() {
+      this.fullscreenLoading = true
+      this.fileList = []
+      service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
+        console.log(resp.data)
+        $("#head-img").css({
+          "height": "2.5vw",
+          "background": "url(" + resp.data.data + ") no-repeat",
+          "background-size": "cover",
+          "border-radius": "8px",
+          "border": "1px solid #e6e6e6"
+        })
+        this.fullscreenLoading = false
+        this.drawer = false
+      })
+      this.$message.success("修改成功")
+
+
+    },
+    check() {
+      console.log("check")
+      console.log(this.$route.path)
+      if (this.$route.path !== '/index') {
+        this.index_show = false
+      } else {
+        this.index_show = true
+      }
+    },
+    full() {
+      if (!screenfull.isFullscreen) {
+        $("#full-screen").removeClass("iconfont icon-fullscreen top-item").addClass("iconfont icon-fullscreen-exit top-item")
+      } else {
+        $("#full-screen").removeClass("iconfont icon-fullscreen-exit top-item").addClass("iconfont icon-fullscreen top-item")
+
+      }
+
+      if (screenfull.isEnabled) {
+        screenfull.toggle()
+      } else {
+        this.$message.error("您的浏览器不支持全屏")
+      }
+    },
     disLogin() {
       localStorage.removeItem("token")
       localStorage.removeItem("username")
       localStorage.removeItem("password")
-      localStorage.removeItem("auth")
+      localStorage.removeItem("authorization")
       this.$router.push({
         path: '/'
       })
@@ -221,7 +277,8 @@ export default {
       return hour + ":" + minute
     },
     getWeather() {
-      newAxios.get("/api/weather").then((resp) => {
+      console.log(localStorage.getItem("token"))
+      service.GET("/api/weather", resp => {
         this.temp = resp.data.data.temp
         this.humidity = resp.data.data.humidity
         this.windScale = resp.data.data.windScale
@@ -240,10 +297,10 @@ export default {
         this.getWeather();
       }, 1000)
     },
-    checkAuth(){
-      if(localStorage.getItem("auth") === 'root'){
+    checkAuth() {
+      if (localStorage.getItem("auth") === 'root') {
 
-      }else {
+      } else {
         return
       }
     }
