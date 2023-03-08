@@ -110,6 +110,7 @@ export default {
           localStorage.setItem("authorization", resp.headers['authorization'])
           localStorage.setItem("image",resp.headers['image'])
           localStorage.setItem("userid",resp.headers['userid'])
+          localStorage.setItem("role_id",resp.headers['role_id'])
           console.log(resp.headers['image'])
           console.log(resp.headers['authorization'])
           this.$router.push({path: '/index'})

@@ -262,10 +262,12 @@ export default {
       }
     },
     disLogin() {
-      localStorage.removeItem("token")
       localStorage.removeItem("username")
       localStorage.removeItem("password")
       localStorage.removeItem("authorization")
+      localStorage.removeItem("image")
+      localStorage.removeItem("userid")
+      localStorage.removeItem("role_id")
       this.$router.push({
         path: '/'
       })
