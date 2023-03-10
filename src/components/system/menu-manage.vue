@@ -9,6 +9,7 @@
             :data="tableData"
             style="width: 100%;margin-bottom: 20px;"
             row-key="id"
+            height="800"
             :tree-props="{children: 'children', hasChildren: 'hasChildren'}">
           <el-table-column
               prop="label"
@@ -27,6 +28,10 @@
               label="图标"
               sortable
               >
+          </el-table-column>
+          <el-table-column
+              prop="data.value"
+              label="权限标识">
           </el-table-column>
           <el-table-column
               prop="data.path"
@@ -69,5 +74,4 @@ export default {
 
 <style lang="less">
 @import "@/assets/css/department.less";
-
 </style>

@@ -130,7 +130,7 @@ import screenfull from "screenfull";
 
 
 export default {
-  name: "manage",
+  name: "manage3",
   components: {Live2d},
   mounted() {
     this.fullscreenLoading = true
@@ -170,6 +170,10 @@ export default {
     this.init()
     this.uploadURL = 'http://localhost:8848/user/uploadImage/' + localStorage.getItem("userid")
     this.fullscreenLoading = false
+    // service.GET("http://localhost:8848/menu/menus/"+localStorage.getItem("role_id"),resp=>{
+    //   this.items = resp.data.data
+    //   console.log(resp)
+    // })
     service.GET("/menu/menus/+"+localStorage.getItem("role_id"),resp=>{
       console.log(resp.data.data)
       this.items = resp.data.data
@@ -239,12 +243,10 @@ export default {
       }
     },
     disLogin() {
+      localStorage.removeItem("token")
       localStorage.removeItem("username")
       localStorage.removeItem("password")
       localStorage.removeItem("authorization")
-      localStorage.removeItem("image")
-      localStorage.removeItem("userid")
-      localStorage.removeItem("role_id")
       this.$router.push({
         path: '/'
       })

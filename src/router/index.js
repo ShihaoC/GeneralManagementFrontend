@@ -20,7 +20,7 @@ const routes = [
     {
         path: '/index',
         name: 'index',
-        component: () => import('@/views/manage/manage2.vue'),
+        component: () => import('@/views/manage/manage.vue'),
         meta: {
             title: '首页'
         },
