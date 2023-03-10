@@ -158,9 +158,9 @@
 </template>
 
 <script>
-import global from "@/views/Global";
+import global from "@/views/Global.vue";
 import $ from 'jquery'
-import Post from "@/components/staff/department.vue";
+import Post from "@/components/system/department.vue";
 import service from "@/service";
 import {enable} from "core-js/internals/internal-metadata";
 

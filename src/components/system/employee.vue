@@ -168,7 +168,7 @@
 
 <script>
 // import global from "@/views/Global";
-import Post from "@/components/staff/department.vue";
+import Post from "@/components/system/department.vue";
 import service from '@/service.js'
 // import service from '@/assets/util/service.vue'
 

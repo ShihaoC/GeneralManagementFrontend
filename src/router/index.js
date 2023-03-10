@@ -28,7 +28,7 @@ const routes = [
             {
                 path: '/manage/department',
                 name: 'test',
-                component: () => import("@/components/staff/employee.vue"),
+                component: () => import("@/components/system/employee.vue"),
                 meta: {
                     title: '人员管理'
                 }
@@ -36,7 +36,7 @@ const routes = [
             {
                 path: '/manage/post',
                 name: 'test',
-                component: () => import("@/components/staff/department.vue"),
+                component: () => import("@/components/system/department.vue"),
                 meta: {
                     title: '岗位管理'
                 }
@@ -44,7 +44,7 @@ const routes = [
             {
                 path: '/manage/power',
                 name: 'test',
-                component: () => import("@/components/staff/authority.vue"),
+                component: () => import("@/components/system/authority.vue"),
                 meta: {
                     title: '角色管理'
                 }
@@ -68,7 +68,7 @@ const routes = [
             {
                 path: '/manage/reportForm',
                 name: 'test',
-                component: () => import("@/components/staff/statement.vue"),
+                component: () => import("@/components/system/statement.vue"),
                 meta: {
                     title: '员工管理'
                 }
@@ -82,9 +82,17 @@ const routes = [
                 }
             },
             {
+                path: '/manage/menu',
+                name: 'menu',
+                component: () => import("@/components/system/menu-manage.vue"),
+                meta: {
+                    title: '菜单管理'
+                }
+            },
+            {
                 path: '/manage/user',
                 name: 'user',
-                component: () => import("@/components/staff/user.vue"),
+                component: () => import("@/components/system/user.vue"),
                 meta: {
                     title: '用户管理'
                 }
