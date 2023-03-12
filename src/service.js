@@ -11,7 +11,7 @@ axios.defaults.baseURL = baseURL;
 // axios.defaults.baseURL = "http://172.20.10.2:8848";
 // axios.defaults.baseURL = "http://39.106.16.171:8848";
 const request = axios.create({
-    timeout: 5000,
+
 })
 
 request.interceptors.request.use(config => {
@@ -35,13 +35,12 @@ let GET = (url, fun) => {
 }
 
 let POST = (url, data, fun) => {
-    console.log(localStorage.getItem("token"))
     request.post(url, data)
         .then(resp => {
             fun(resp)
         })
         .catch(err => {
-            Element.Message.error("没有登录或无权限")
+            Element.Message.error(err)
         })
 }
 

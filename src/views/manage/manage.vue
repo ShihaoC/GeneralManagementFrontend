@@ -36,7 +36,7 @@
         <transition name="el-zoom-in-top">
           <div v-show="showed" id="box-main">
             <div id="user" @click="">
-              <span> <i class="el-icon-user"></i> 个人中心 </span>
+              <span> <router-link id="link" to="/manage/power"><i class="el-icon-user"></i> 个人中心</router-link>   </span>
             </div>
             <div id="setting" @click="openSetting">
               <span> <i class="el-icon-setting"></i> 系统设置</span>
@@ -135,7 +135,6 @@ export default {
   mounted() {
     this.fullscreenLoading = true
     service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
-      console.log(resp.data)
       $("#head-img").css({
         "height": "2.5vw",
         "background": "url(" + resp.data.data + ") no-repeat",
@@ -155,7 +154,6 @@ export default {
     if (this.$route.path !== '/index') {
       this.index_show = false
     }
-    console.log("123" + localStorage.getItem("kanbanniang"))
     if (localStorage.getItem("kanbanniang")) {
 
       if (localStorage.getItem("kanbanniang") === 'true') {
@@ -166,12 +164,10 @@ export default {
     } else {
       this.kanbanniang = true
     }
-    console.log(this.$router.Location)
     this.init()
     this.uploadURL = 'http://localhost:8848/user/uploadImage/' + localStorage.getItem("userid")
     this.fullscreenLoading = false
     service.GET("/menu/menus/+"+localStorage.getItem("role_id"),resp=>{
-      console.log(resp.data.data)
       this.items = resp.data.data
     })
   },
@@ -200,7 +196,6 @@ export default {
       this.fullscreenLoading = true
       this.fileList = []
       service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
-        console.log(resp.data)
         $("#head-img").css({
           "height": "2.5vw",
           "background": "url(" + resp.data.data + ") no-repeat",
@@ -216,8 +211,6 @@ export default {
 
     },
     check() {
-      console.log("check")
-      console.log(this.$route.path)
       if (this.$route.path !== '/index') {
         this.index_show = false
       } else {
@@ -279,7 +272,6 @@ export default {
       return hour + ":" + minute
     },
     getWeather() {
-      console.log(localStorage.getItem("token"))
       service.GET("/api/weather", resp => {
         this.temp = resp.data.data.temp
         this.humidity = resp.data.data.humidity

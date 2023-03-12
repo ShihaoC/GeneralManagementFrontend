@@ -6,59 +6,68 @@
         <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain
                    size="small">批量删除
         </el-button>
-        <el-table
-            ref="multipleTable"
-            v-loading="loading"
-            :data="tableData"
-            style="width: 100%;"
-            :header-cell-style="header_cell_style"
-            :cell-style="cell_style"
-            @selection-change="handleSelectionChange">
-          <el-table-column
-              width="100"
-              type="selection">
-          </el-table-column>
-          <el-table-column
-              prop="id"
-              label="ID">
-          </el-table-column>
-          <el-table-column
-              prop="type"
-              label="操作类型"
-          >
+        <el-button type="primary" @click="exportExcel" icon="el-icon-download" plain
+                   size="small">导出Excel
+        </el-button>
+        <div class="block">
+          <el-table
+              ref="multipleTable"
+              v-loading="loading"
+              :data="tableData"
+              style="width: 100%;"
+              :header-cell-style="header_cell_style"
+              :cell-style="cell_style"
+              @selection-change="handleSelectionChange">
+            <el-table-column
+                width="100"
+                type="selection">
+            </el-table-column>
+            <el-table-column
+                prop="id"
+                label="ID">
+            </el-table-column>
+            <el-table-column
+                prop="module"
+                label="操作模块"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="type"
+                label="操作接口"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="request_type"
+                label="请求方式"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="address"
+                label="操作地址"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="date"
+                label="操作日期"
+            >
+            </el-table-column>
+            <el-table-column
+                prop="user"
+                label="操作人员"
+            >
+            </el-table-column>
+            <el-table-column label="操作">
+              <template slot="header" slot-scope="scope">
+                <el-input
+                    v-model="ss"
+                    size="mini"
+                    placeholder="输入操作类型名称搜索"
+                    @change="search"/>
+              </template>
+            </el-table-column>
 
-          </el-table-column>
-          <el-table-column
-              prop="request_type"
-              label="请求方式"
-          >
-          </el-table-column>
-          <el-table-column
-              prop="address"
-              label="操作地址"
-          >
-          </el-table-column>
-          <el-table-column
-              prop="date"
-              label="操作日期"
-          >
-          </el-table-column>
-          <el-table-column
-              prop="user"
-              label="操作人员"
-          >
-          </el-table-column>
-          <el-table-column label="操作">
-            <template slot="header" slot-scope="scope">
-              <el-input
-                  v-model="ss"
-                  size="mini"
-                  placeholder="输入操作类型名称搜索"
-                  @change="search"/>
-            </template>
-          </el-table-column>
-
-        </el-table>
+          </el-table>
+        </div>
         <div id="pages">
           <el-pagination
               layout="prev, pager, next"
@@ -133,9 +142,12 @@ export default {
     },
     batch_Delete() {
       service.POST("/log/del", this.multipleSelection, resp => {
-        this.$message.error("删除成功")
+        this.$message.success("删除成功")
         this.loadData(this.page)
       })
+    },
+    exportExcel(){
+      service.download("/log/export_excel","log")
     }
   }
 }

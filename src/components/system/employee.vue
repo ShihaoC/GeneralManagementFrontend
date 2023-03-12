@@ -143,7 +143,7 @@
 
       <el-dialog title="创建员工" :visible.sync="dialogadd">
         <el-form :rules="insertRule" ref="ruleForm" :inline="true" :model="addform">
-          <el-form-item label="员工名称:" :label-width="formLabelWidth" prop="name">
+          <el-form-item label="员工名称:" :label-width="formLabelWidth" prop="name" >
             <el-input v-model="addform.name" autocomplete="off" class="sBox" placeholder="请输入员工名称"></el-input>
           </el-form-item>
           <el-form-item label="员工手机号:" :label-width="formLabelWidth" prop="phone">

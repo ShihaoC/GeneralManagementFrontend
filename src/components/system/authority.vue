@@ -254,6 +254,7 @@ export default {
       });
     },
     uploadAuthority() {
+      console.log(this.checked)
       this.Authority_loading = true
       service.POST("/auth/update?role_id=" + this.role_id, this.checked, resp => {
         console.log(resp)
