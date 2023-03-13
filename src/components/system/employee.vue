@@ -290,7 +290,6 @@ export default {
           this.$message.success("修改成功")
         }
       })
-      this.dialogFormVisible = false
       this.loaddata(this.page);
       this.dialogFormVisible = false
 

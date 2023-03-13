@@ -96,6 +96,22 @@ const routes = [
                 meta: {
                     title: '用户管理'
                 }
+            },
+            {
+                path: '/person',
+                name:'person',
+                component:() => import("@/components/system/person.vue"),
+                meta: {
+                    title: '个人中心'
+                }
+            },
+            {
+                path: '/Password',
+                name:'Password',
+                component:() => import("@/components/system/Password.vue"),
+                meta: {
+                    title: '修改密码'
+                }
             }
 
         ]
@@ -116,7 +132,8 @@ const routes = [
         name: '404',
         component: () => import("@/views/error/404.vue")
 
-    }
+    },
+
 
 
 ]
