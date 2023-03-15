@@ -13,11 +13,6 @@ const routes = [
         component: login
     },
     {
-        path: '/demo',
-        name: 'demo',
-        component: () => import('@/components/music/test.vue')
-    },
-    {
         path: '/index',
         name: 'index',
         component: () => import('@/views/manage/manage.vue'),
