@@ -92,7 +92,7 @@
                   <li data-v-652281f9=""> OSS </li>
                   <li data-v-652281f9="">FastJSON </li>
                   <li data-v-652281f9="">Spring<br/>Boot</li>
-                  <li data-v-652281f9="">Myabtis-Plus </li>
+                  <li data-v-652281f9="">Myabtis-Plus</li>
                   <li data-v-652281f9="">...</li>
                 </ul></div>
                 <div data-v-652281f9="" class="el-col el-col-6"><h4 data-v-652281f9="">前端技术</h4><ul data-v-652281f9="">
@@ -100,7 +100,7 @@
                   <li data-v-652281f9="">Vuex</li>
                   <li data-v-652281f9="">Router</li>
                   <li data-v-652281f9="">Axios</li>
-                  <li data-v-652281f9="">ElementUI</li>
+                  <li data-v-652281f9="">Element-UI</li>
                   <li data-v-652281f9="">Less </li>
                   <li data-v-652281f9="">Scss </li>
                   <li data-v-652281f9="">particles.js</li>
