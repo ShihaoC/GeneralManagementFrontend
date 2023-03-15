@@ -56,7 +56,7 @@
               <el-tag v-else type="danger">排除</el-tag>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="操作" width="300%">
             <template slot-scope="scope">
               <el-button
                   v-show="scope.row.data.type === '1'"
@@ -84,10 +84,11 @@
           </el-table-column>
         </el-table>
       </div>
+
       <div class="form">
         <el-dialog title="添加菜单" :visible.sync="insertFormVisible" width="30%">
           <el-row :gutter="15">
-            <el-form ref="form" :model="insertFormData" label-width="80px">
+            <el-form ref="form" :model="insertFormData" label-width="100px">
               <el-col :span="24">
                 <el-form-item label="上级目录">
                   <el-select ref="selectName" clearable placeholder="请选择父级节点" :label="insertFormData.PName"
@@ -96,13 +97,12 @@
                     <!-- option标签上写hidden隐藏 -->
                     <el-option hidden key="id" :value="insertFormData.level" :label="insertFormData.PName"
                                style="height: auto"></el-option>
-                    <el-tree :data="parents" :props="DefaultProps" :expand-on-click-node="false"
-                             :check-on-click-node="true"
+                    <el-tree :data="parents" :props="DefaultProps" ref="tree" :expand-on-click-node="false"
+                             :check-on-click-node="true" accordion
                              @node-click="nodeClick"></el-tree>
                   </el-select>
                 </el-form-item>
               </el-col>
-
               <el-col :span="24">
                 <el-form-item label="菜单名称">
                   <el-input v-model="insertFormData.name" placeholder="请输入菜单名称"></el-input>
@@ -149,6 +149,12 @@
                   <el-radio v-model="insertFormData.isInternet" label="false">否</el-radio>
                 </el-form-item>
               </el-col>
+              <el-col :span="12">
+                <el-form-item label="是否为权限">
+                  <el-radio v-model="insertFormData.isRole" label="true">是</el-radio>
+                  <el-radio v-model="insertFormData.isRole" label="false">否</el-radio>
+                </el-form-item>
+              </el-col>
             </el-form>
           </el-row>
           <div slot="footer" class="dialog-footer">
@@ -158,13 +164,15 @@
         </el-dialog>
       </div>
 
-
-
-
       <div class="update">
         <el-dialog title="修改菜单" :visible.sync="updateFormVisible" width="30%">
           <el-row :gutter="15">
             <el-form ref="form" :model="updateFormData" label-width="80px">
+              <el-col :span="24">
+                <el-form-item label="ID">
+                  <el-input v-model="updateFormData.id" :readonly="true"></el-input>
+                </el-form-item>
+              </el-col>
               <el-col :span="24">
                 <el-form-item label="上级目录">
                   <el-select ref="selectName" clearable placeholder="请选择父级节点" :label="updateFormData.PName"
@@ -174,7 +182,7 @@
                     <el-option hidden key="id" :value="updateFormData.level" :label="updateFormData.PName"
                                style="height: auto"></el-option>
                     <el-tree :data="parents" :props="DefaultProps" :expand-on-click-node="false"
-                             :check-on-click-node="true"
+                             :check-on-click-node="true" accordion
                              @node-click="nodeClick"></el-tree>
                   </el-select>
                 </el-form-item>
@@ -228,6 +236,10 @@
               </el-col>
             </el-form>
           </el-row>
+          <div slot="footer" class="dialog-footer">
+            <el-button type="primary" @click="saveChange()">保存</el-button>
+            <el-button type="primary" @click="updateFormVisible = false">取消</el-button>
+          </div>
         </el-dialog>
       </div>
     </div>
@@ -254,6 +266,7 @@ export default {
         Exclusions: 'true',
         isInternet: 'true',
         name: '',
+        isRole: 'false'
       },
       parents: [],
       DefaultProps: {
@@ -269,11 +282,13 @@ export default {
         PName: '',
         value: '',
         path: '',
-        menable: '',
-        Exclusions: '',
-        isInternet: '',
+        menable: 'false',
+        Exclusions: 'false',
+        isInternet: 'false',
         name: '',
-      }
+        id: 0
+      },
+      lv: 0
     }
   },
   mounted() {
@@ -285,8 +300,6 @@ export default {
       service.GET("/menu/allMenus", resp => {
         this.tableData = resp.data.data
         this.loading = false;
-        console.log(123)
-        console.log(resp)
       })
       service.GET("/menu/allParentNodes", resp => {
         this.parents = resp.data.data
@@ -323,11 +336,11 @@ export default {
     //树节点点击事件
     nodeClick(data) {
       // 树形组件点击节点后，设置选择器的值
-      console.log(data)
       this.name = data.name
       this.insertFormData.level = data.id
       this.insertFormData.PName = data.label
-      console.log(data)
+      this.updateFormData.level = data.id
+      this.updateFormData.PName = data.label
       // 选择器执行完成后，使其失去焦点隐藏下拉框的效果
       this.$refs.selectName.blur()
     },
@@ -336,7 +349,6 @@ export default {
     },
     insertMenu() {
       this.ld = true
-      console.log(this.insertFormData)
       this.insertFormVisible = false
       service.POST("/menu/insert/"+this.insertFormData.Exclusions,this.insertFormData,resp=>{
         this.initialize()
@@ -344,15 +356,32 @@ export default {
       })
     },
     handleDelete(index,row){
-      console.log(row)
-      service.GET("/menu/del/"+row.id,resp=>{
-        this.initialize()
-      })
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        service.GET("/menu/del/"+row.id,resp=>{
+          this.initialize()
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        })
+      }).catch(() => {
+        this.$message.info("差点出事儿")
+      });
+
     },
     handleEdit(index,row){
-      console.log(row)
       this.updateFormData = row.data
+      this.updateFormData.level = row.parentId
       this.updateFormVisible = true
+      this.updateFormData.Exclusions = "false"
+      this.updateFormData.isInternet = "false"
+      this.updateFormData.menable = "false"
+      this.lv = row.parentId
+      console.log(row)
     },
     handInsert(index,row){
       this.insertFormData = row.data
@@ -362,8 +391,26 @@ export default {
       this.insertFormData.isInternet = "false"
       this.insertFormData.menable = "false"
       this.insertFormVisible = true
-      console.log(this.insertFormData)
-    }
+    },
+    saveChange(){
+      console.log()
+      var level = this.lv;
+      if(level !== 0){
+        if(this.updateFormData.level === 0 || this.updateFormData.level === undefined || this.updateFormData.level === null || this.updateFormData.level == ''){
+          this.$message.warning("上级不能为空")
+          return
+        }
+      }
+      if(this.updateFormData.level == this.updateFormData.id){
+        this.$message.warning("父级不能是节点本身")
+        return;
+      }
+      service.POST("/menu/update",this.updateFormData,resp=>{
+
+      })
+
+    },
+
   }
 }
 </script>

@@ -15,7 +15,7 @@ const routes = [
     {
         path: '/demo',
         name: 'demo',
-        component: () => import('@/views/manage/manage2.vue')
+        component: () => import('@/components/music/test.vue')
     },
     {
         path: '/index',
