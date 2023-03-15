@@ -72,7 +72,42 @@
 
         <!--        首页-->
         <div v-show="index_show" id="index-main">
-          <h1></h1>
+          <div style="font-size: 20px">
+            <div data-v-652281f9="" class="el-col el-col-24 el-col-sm-24 el-col-lg-12" style="padding-left: 20px; padding-right: 10px;">
+              <h2 >员工管理系统</h2>
+              <p >
+                一直想做一款后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。
+                于是利用空闲休息时间开始自己写一套后台系统。如此有了员工管理系统，她可以用于所有的Web应用程序，
+                如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。
+                所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。
+              </p></div>
+            <div data-v-652281f9="" class="el-col el-col-24 el-col-sm-24 el-col-lg-12" style="padding-left: 50px; padding-right: 10px;">
+              <div data-v-652281f9="" class="el-row"><div data-v-652281f9="" class="el-col el-col-12">
+                <h2 data-v-652281f9="">技术选型</h2></div></div>
+              <div data-v-652281f9="" class="el-row"><div data-v-652281f9="" class="el-col el-col-6"><h4 data-v-652281f9="">后端技术</h4>
+                <ul data-v-652281f9="">
+                  <li data-v-652281f9="">Redis </li>
+                  <li data-v-652281f9="">JWT</li>
+                  <li data-v-652281f9=""> MySQL </li>
+                  <li data-v-652281f9=""> OSS </li>
+                  <li data-v-652281f9="">FastJSON </li>
+                  <li data-v-652281f9="">Spring<br/>Boot</li>
+                  <li data-v-652281f9="">Myabtis-Plus </li>
+                  <li data-v-652281f9="">...</li>
+                </ul></div>
+                <div data-v-652281f9="" class="el-col el-col-6"><h4 data-v-652281f9="">前端技术</h4><ul data-v-652281f9="">
+                  <li data-v-652281f9="">Vue</li>
+                  <li data-v-652281f9="">Vuex</li>
+                  <li data-v-652281f9="">Router</li>
+                  <li data-v-652281f9="">Axios</li>
+                  <li data-v-652281f9="">ElementUI</li>
+                  <li data-v-652281f9="">Less </li>
+                  <li data-v-652281f9="">Scss </li>
+                  <li data-v-652281f9="">particles.js</li>
+                  <li data-v-652281f9="">...</li>
+                </ul>
+                </div></div></div>
+          </div>
         </div>
         <!--        首页-->
 
@@ -132,6 +167,15 @@ import screenfull from "screenfull";
 export default {
   name: "manage",
   components: {Live2d},
+  watch:{
+    $route(to,from){
+      if(to.path == '/index'){
+        this.index_show = true
+      }else {
+        this.index_show = false
+      }
+    }
+  },
   mounted() {
     this.fullscreenLoading = true
     service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
