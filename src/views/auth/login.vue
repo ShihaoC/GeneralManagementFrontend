@@ -106,7 +106,7 @@ export default {
         }
         if (resp.data.data != null) {
           localStorage.setItem("username ", this.loginForm.username)
-          localStorage.setItem("password", this.loginForm.password)
+          // localStorage.setItem("password", this.loginForm.password)
           localStorage.setItem("authorization", resp.headers['authorization'])
           localStorage.setItem("image",resp.headers['image'])
           localStorage.setItem("userid",resp.headers['userid'])

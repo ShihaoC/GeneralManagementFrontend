@@ -1,15 +1,12 @@
 import axios from "axios";
 import router from "./router";
-import Element from 'element-ui'
+import {
+    Message
+} from 'element-ui';
 
-
-// const baseURL = "http://192.168.1.203:8848";
-// const baseURL = "https://oa.api.mrcsh.cn";
 const baseURL = "http://localhost:8848";
 
 axios.defaults.baseURL = baseURL;
-// axios.defaults.baseURL = "http://172.20.10.2:8848";
-// axios.defaults.baseURL = "http://39.106.16.171:8848";
 const request = axios.create({
 
 })
@@ -30,7 +27,7 @@ let GET = (url, fun) => {
             fun(resp)
         })
         .catch(err => {
-            Element.Message.error(err.response.data.msg)
+            Message.error(err)
         })
 }
 
@@ -40,7 +37,7 @@ let POST = (url, data, fun) => {
             fun(resp)
         })
         .catch(err => {
-            Element.Message.error(err)
+            Message.error(err)
         })
 }
 
@@ -84,6 +81,11 @@ let download = (path,fileName) => {
 //     ajax
     xhr.send()
 }
+
+
+
+
+
 
 export default {
     GET,

@@ -77,8 +77,8 @@
                   @click="Authority_Update(scope.row)"
                   size="mini"
                   type=""
-                  >修改权限
-<!--                  :disabled="scope.row.role_name === 'admin'"-->
+              >修改权限
+                <!--                  :disabled="scope.row.role_name === 'admin'"-->
               </el-button>
             </template>
           </el-table-column>
@@ -137,7 +137,7 @@
         </div>
       </el-dialog>
 
-      <el-dialog  :visible.sync="Authority_Dialog" :title="'修改权限'" @close="clearNode" width="30%">
+      <el-dialog :visible.sync="Authority_Dialog" :title="'修改权限'" @close="clearNode" width="30%">
         <el-tree
             v-loading="Authority_loading"
             :data="TreeData"
@@ -171,11 +171,14 @@ export default {
     this.loaddata(1, '');
     this.role_id = this.$route.query.role_id;
     service.GET("/auth/getAuthority?role_id=1", (resp) => {
+      console.log(resp)
       this.TreeData = resp.data.data
     });
     service.GET("/auth/default_check?role_id=1", resp => {
+      console.log(resp)
       this.checked = resp.data.data
     })
+
   },
   data() {
     return {
@@ -227,10 +230,14 @@ export default {
       multipleSelection: [],
       select: true,
       fullscreen: false,
-      Authority_Dialog: false
+      Authority_Dialog: false,
+      isChange: false
     }
   },
   methods: {
+    test(){
+      console.log(this.checked)
+    },
     clearNode() {
       this.$refs.tree.setCheckedKeys([])
     },
@@ -254,6 +261,13 @@ export default {
       });
     },
     uploadAuthority() {
+      if(!this.isChange){
+        this.$message.warning("权限没有更改")
+        this.Authority_Dialog = false
+        this.Authority_loading = false
+        this.isChange = false
+        return
+      }
       console.log(this.checked)
       this.Authority_loading = true
       service.POST("/auth/update?role_id=" + this.role_id, this.checked, resp => {
@@ -263,10 +277,12 @@ export default {
       })
     },
     Authority_Update(row) {
+      this.isChange = false
       this.role_id = row.id
       console.log(row)
       this.Authority_Dialog = true
       this.loadDefaultChecked();
+      console.log(this.checked)
     },
     loadDefaultChecked() {
       this.Authority_loading = true
@@ -283,6 +299,7 @@ export default {
       this.role_id_change = row.id
     },
     checking(a, b, c) {
+      this.isChange = true;
       console.log(a, b, c)
       this.checked = b.checkedKeys
       console.log(this.checked)

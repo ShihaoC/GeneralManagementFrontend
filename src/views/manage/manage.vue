@@ -72,7 +72,7 @@
 
         <!--        首页-->
         <div v-show="index_show" id="index-main">
-          <h1></h1>
+          <h1>123</h1>
         </div>
         <!--        首页-->
 
@@ -132,6 +132,15 @@ import screenfull from "screenfull";
 export default {
   name: "manage",
   components: {Live2d},
+  watch:{
+    $route(to,from){
+      if(to.path == '/index'){
+        this.index_show = true
+      }else {
+        this.index_show = false
+      }
+    }
+  },
   mounted() {
     this.fullscreenLoading = true
     service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
