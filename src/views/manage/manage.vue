@@ -36,11 +36,9 @@
         <transition name="el-zoom-in-top">
           <div v-show="showed" id="box-main">
             <div id="user" @click="">
-              <span> <router-link id="link"  to="/person" ><i class="el-icon-user"></i> 个人中心</router-link> </span>
+              <span> <router-link id="link" to="/manage/power"><i
+                  class="el-icon-user"></i> 个人中心</router-link>   </span>
             </div>
-              <div id="user" @click="">
-                  <span> <router-link id="link"  to="/Password" ><i class="el-icon-user"></i> 修改密码</router-link> </span>
-              </div>
             <div id="setting" @click="openSetting">
               <span> <i class="el-icon-setting"></i> 系统设置</span>
             </div>
@@ -74,9 +72,98 @@
 
 
         <!--        首页-->
+<!--        lwlsb-->
         <div v-show="index_show" id="index-main">
-          <h1></h1>
+          <div id="textMain">
+            <div id="textLeft">
+              <el-card style="width: 35vw" shadow="hover">
+                <template>
+                  <h2>员工管理系统</h2>
+                  <el-divider></el-divider>
+                  <span style="margin:  0 0 0 2vw">
+                    一直想做一款后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。于是利用空闲休息时间开始自己写一套后台系统。如此有了若依管理系统，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。
+                  </span>
+                </template>
+              </el-card>
+            </div>
+            <div id="textRight">
+              <el-card style="width: 35vw" shadow="hover">
+                <div class="left">
+                  <h2>后端技术</h2>
+                  <el-divider></el-divider>
+                    Redis<br/>
+                    JWT<br/>
+                    MySQL<br/>
+                    OSS<br/>
+                    FastJSON<br/>
+                    SpringBoot<br/>
+                    Myabtis-Plus<br/>
+                </div>
+                <div class="right">
+                  <h2>前端技术</h2>
+                  <el-divider></el-divider>
+                  <span>
+                    Vue<br/>
+                    Vuex<br/>
+                    Router<br/>
+                    Axios<br/>
+                    Element-UI<br/>
+                    Less<br/>
+                    Scss<br/>
+                    particles.js<br/>
+                  </span>
+                </div>
+              </el-card>
+
+            </div>
+          </div>
+
+
+          <!--          <div id="app">-->
+          <!--            <el-row :gutter="20">-->
+          <!--              <el-col :span="12"><div class="grid-content bg-purple">-->
+          <!--                <h2 align="center">员工管理系统</h2></div></el-col>-->
+          <!--              <el-col :span="12"><div class="grid-content bg-purple">-->
+          <!--                <h2 align="center">技术选型</h2></div></el-col>-->
+          <!--            </el-row>-->
+          <!--            <el-row :gutter="10">-->
+          <!--              <el-col :span="12"><div class="grid-content bg-purple">-->
+          <!--                <p align="center">一直想做一款后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。</p><br/>-->
+          <!--                <p align="center">于是利用空闲休息时间开始自己写一套后台系统。如此有了员工管理系统，她可以用于所有的Web应用程序，</p><br/>-->
+          <!--                <p>如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。</p><br/>-->
+          <!--                <p>所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。</p>-->
+          <!--              </div></el-col>-->
+
+          <!--              <el-col :span="6"><div class="grid-content bg-purple">-->
+          <!--                <ul align="center">-->
+          <!--                  Redis<br/>-->
+          <!--                  JWT<br/>-->
+          <!--                   MySQL<br/>-->
+          <!--                  OSS<br/>-->
+          <!--                  FastJSON<br/>-->
+          <!--                  SpringBoot<br/>-->
+          <!--                  Myabtis-Plus<br/>-->
+          <!--                  ...-->
+          <!--                </ul>-->
+          <!--              </div></el-col>-->
+          <!--              <el-col :span="6"><div class="grid-content bg-purple">-->
+          <!--                <ul align="center">-->
+          <!--                  Vue<br/>-->
+          <!--                  Vuex<br/>-->
+          <!--                  Router<br/>-->
+          <!--                  Axios<br/>-->
+          <!--                  Element-UI<br/>-->
+          <!--                  Less<br/>-->
+          <!--                  Scss<br/>-->
+          <!--                  particles.js<br/>-->
+          <!--                  ...-->
+          <!--                </ul>-->
+          <!--              </div></el-col>-->
+          <!--            </el-row>-->
+          <!--          </div>-->
+
         </div>
+
         <!--        首页-->
 
 
@@ -106,7 +193,7 @@
                   <el-button size="small" type="primary">点击上传</el-button>
                 </el-upload>
               </li>
-                <li></li>
+              <li></li>
               <li>
                 <span class="drawer-settings-item">看板娘设置</span>
                 <el-switch
@@ -135,10 +222,18 @@ import screenfull from "screenfull";
 export default {
   name: "manage",
   components: {Live2d},
+  watch: {
+    $route(to, from) {
+      if (to.path == '/index') {
+        this.index_show = true
+      } else {
+        this.index_show = false
+      }
+    }
+  },
   mounted() {
     this.fullscreenLoading = true
     service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
-      console.log(resp.data)
       $("#head-img").css({
         "height": "2.5vw",
         "background": "url(" + resp.data.data + ") no-repeat",
@@ -158,7 +253,6 @@ export default {
     if (this.$route.path !== '/index') {
       this.index_show = false
     }
-    console.log("123" + localStorage.getItem("kanbanniang"))
     if (localStorage.getItem("kanbanniang")) {
 
       if (localStorage.getItem("kanbanniang") === 'true') {
@@ -169,12 +263,10 @@ export default {
     } else {
       this.kanbanniang = true
     }
-    console.log(this.$router.Location)
     this.init()
     this.uploadURL = 'http://localhost:8848/user/uploadImage/' + localStorage.getItem("userid")
     this.fullscreenLoading = false
-    service.GET("/menu/menus/+"+localStorage.getItem("role_id"),resp=>{
-      console.log(resp.data.data)
+    service.GET("/menu/menus/+" + localStorage.getItem("role_id"), resp => {
       this.items = resp.data.data
     })
   },
@@ -203,7 +295,6 @@ export default {
       this.fullscreenLoading = true
       this.fileList = []
       service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
-        console.log(resp.data)
         $("#head-img").css({
           "height": "2.5vw",
           "background": "url(" + resp.data.data + ") no-repeat",
@@ -219,8 +310,6 @@ export default {
 
     },
     check() {
-      console.log("check")
-      console.log(this.$route.path)
       if (this.$route.path !== '/index') {
         this.index_show = false
       } else {
@@ -282,7 +371,6 @@ export default {
       return hour + ":" + minute
     },
     getWeather() {
-      console.log(localStorage.getItem("token"))
       service.GET("/api/weather", resp => {
         this.temp = resp.data.data.temp
         this.humidity = resp.data.data.humidity
@@ -315,5 +403,61 @@ export default {
 </script>
 
 <style lang="less">
+.el-row {
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.el-col {
+  border-radius: 4px;
+}
+
+.bg-purple-dark {
+  background: #99a9bf;
+}
+
+.bg-purple {
+  background: #d3dce6;
+}
+
+.bg-purple-light {
+  background: #e5e9f2;
+}
+
+.grid-content {
+  border-radius: 4px;
+  min-height: 36px;
+}
+
+.row-bg {
+  padding: 10px 0;
+  background-color: #f9fafc;
+}
+
+//------------------wws--------------------
+#textLeft {
+  margin: 0vw 1vw 0 1vw;
+  float: left;
+  //height: 20vh;
+}
+
+#textRight{
+  margin: 1vw 10vw 0 0;
+  //height: 3vh;
+}
+
+
+
+.left {
+  width: 15vw;
+  //height: 10.5vw;
+  float: left;
+
+}
+
+
 @import "@/assets/css/manage.less";
 </style>

@@ -9,6 +9,9 @@
         <el-button type="primary" @click="exportExcel" icon="el-icon-download" plain
                    size="small">导出Excel
         </el-button>
+        <el-button type="info" @click="clear" icon="el-icon-delete" plain
+                   size="small">清空日志
+        </el-button>
         <div class="block">
           <el-table
               ref="multipleTable"
