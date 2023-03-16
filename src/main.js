@@ -5,7 +5,6 @@ import store from './store'
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import echarts from "echarts";
-import {BootstrapVue, IconsPlugin} from "bootstrap-vue";
 import VueCropper from 'vue-cropper'
 Vue.use(VueCropper)
 
@@ -28,8 +27,6 @@ Vue.prototype.$echarts = echarts;
 import ImageCropper from "@/components/cropper/ImageCropper.vue";
 
 Vue.use(particles, Live2d)
-Vue.use(BootstrapVue);
-Vue.use(IconsPlugin);
 import axios from 'axios'
 import VueAxios from "vue-axios";
 

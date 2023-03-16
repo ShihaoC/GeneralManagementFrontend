@@ -92,21 +92,33 @@ const routes = [
                     title: '用户管理'
                 }
             },
+
             {
-                path: '/person',
-                name:'person',
-                component:() => import("@/components/system/person.vue"),
+                path: '/information',
+                name: 'information',
+                component: () => import("@/components/system/information.vue"),
                 meta: {
                     title: '个人中心'
-                }
-            },
-            {
-                path: '/Password',
-                name:'Password',
-                component:() => import("@/components/system/Password.vue"),
-                meta: {
-                    title: '修改密码'
-                }
+                },
+                children: [
+                    {
+                        path: '/information/person',
+                        name: 'person',
+                        component: () => import("@/components/system/person.vue"),
+                        meta: {
+                            title: '个人信息'
+                        }
+                    },
+                    {
+                        path: '/information/pwd',
+                        name: 'pwd',
+                        component: () => import("@/components/system/pwd.vue"),
+                        meta: {
+                            title: '修改密码'
+                        }
+                    },
+
+                ]
             }
 
         ]
@@ -128,7 +140,6 @@ const routes = [
         component: () => import("@/views/error/404.vue")
 
     },
-
 
 
 ]

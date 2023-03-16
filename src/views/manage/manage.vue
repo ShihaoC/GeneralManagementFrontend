@@ -36,7 +36,7 @@
         <transition name="el-zoom-in-top">
           <div v-show="showed" id="box-main">
             <div id="user" @click="">
-              <span> <router-link id="link" to="/manage/power"><i
+              <span> <router-link id="link" to="/information"><i
                   class="el-icon-user"></i> 个人中心</router-link>   </span>
             </div>
             <div id="setting" @click="openSetting">

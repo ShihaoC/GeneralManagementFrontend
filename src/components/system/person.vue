@@ -1,31 +1,34 @@
 <template>
-    <div>
+    <div id="person-main">
         <div id="left">
-            <el-card id="card">
-                <el-upload
-                        class="avatar-uploader"
-                        :action="actionURL"
-                        :show-file-list="false"
-                        :on-success="handleAvatarSuccess"
-                        style="text-align: center ; margin: 10px"
-                >
-                    <img v-if="from.image_url" :src="from.image_url" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-                <el-form>
-                    <el-form-item label="用户名:"  :label-width="formLabelWidth" >
-                        <el-input v-model="from.username" autocomplete="off" class="sBox" disabled></el-input>
-                    </el-form-item>
-                    <el-form-item label="名称:" :label-width="formLabelWidth">
-                        <el-input v-model="from.nick_name" autocomplete="off" class="sBox"></el-input>
-                    </el-form-item>
-                    <el-form-item label="手机号:" :label-width="formLabelWidth">
-                        <el-input v-model="from.phone" autocomplete="off" class="sBox"></el-input>
-                    </el-form-item>
-                </el-form>
-                <div style="text-align: center">
-                    <el-button type="primary" @click="modify">确 定</el-button>
-                </div>
+
+            <el-card style="width: 40vw" id="card">
+                    <el-upload
+                            class="avatar-uploader"
+                            :action="actionURL"
+                            :show-file-list="false"
+                            :on-success="handleAvatarSuccess"
+                            style="text-align: center; margin: 10px"
+                    >
+                        <img v-if="from.image_url" :src="from.image_url" class="avatar">
+                        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                    </el-upload>
+                    <el-form>
+                        <el-form-item label="用户名:" :label-width="formLabelWidth">
+                            <el-input v-model="from.username" autocomplete="off" class="sBox" disabled></el-input>
+                        </el-form-item>
+                        <el-form-item label="名称:" :label-width="formLabelWidth">
+                            <el-input v-model="from.nick_name" autocomplete="off" class="sBox"></el-input>
+                        </el-form-item>
+                        <el-form-item label="手机号:" :label-width="formLabelWidth">
+                            <el-input v-model="from.phone" autocomplete="off" class="sBox"></el-input>
+                        </el-form-item>
+                    </el-form>
+                    <div style="text-align: center">
+                        <el-button type="primary" @click="modify">确 定</el-button>
+                    </div>
+
+
             </el-card>
         </div>
 
@@ -42,9 +45,10 @@
         data() {
             return {
                 // imageURL: '',
+                activeIndex:1,
                 from: {},
-                pwdfrom:{},
-                formLabelWidth: '120px',
+                pwdfrom: {},
+                formLabelWidth: '180px',
                 actionURL: "http://localhost:8848/user/uploadImage/" + localStorage.getItem("userid")
             }
         },
@@ -53,7 +57,7 @@
         },
         methods: {
             modify() {
-                service.POST("/user/user_update/",this.from,resp =>{
+                service.POST("/user/user_update/", this.from, resp => {
                     if (resp.data.code === 200) {
                         this.$message.success("修改成功")
                         this.initialize()
@@ -61,7 +65,7 @@
                     }
                 })
             },
-            pwdModify(){
+            pwdModify() {
 
             },
             handleAvatarSuccess() {
@@ -73,7 +77,8 @@
                     console.log(resp);
                     this.from = resp.data.data;
                 })
-            }
+            },
+
 
         }
     }
@@ -109,10 +114,16 @@
 
     #card {
         width: 40vw;
+        margin: 2vh 0 0 1vw;
     }
 
-    #left{
-        float: left;
+    #left {
+        position: absolute;
+        /*left: ;*/
     }
+    #person-main{
+        display: block;
+        width: 100%;
 
+    }
 </style>
