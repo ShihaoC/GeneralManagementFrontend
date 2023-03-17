@@ -73,8 +73,6 @@
 
 
         <!--        首页-->
-<!--        lwlsb-->
-<!--        lwl-->
         <div v-show="index_show" id="index-main">
           <div id="textMain">
             <div id="textLeft">
