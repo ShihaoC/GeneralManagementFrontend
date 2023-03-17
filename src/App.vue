@@ -12,6 +12,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: Sc;
 }
 html {
   background-color: #ffffff;
@@ -31,6 +32,13 @@ html {
 ::-webkit-scrollbar-track {
   background: rgba(255, 255, 255, 1);
 }
+
+@font-face {
+  font-family: Sc;
+  src: url("@/assets/font/test.woff2");
+}
+
+
 
 </style>
 

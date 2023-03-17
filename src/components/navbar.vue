@@ -1,9 +1,10 @@
 <template>
   <div id="navMenu">
-    <label v-for="item in items">
+    <label v-for="item in items" :key="item.data.id">
+
       <el-menu-item :index="item.data.path" v-if="item.children.length === 0">
         <i :class="item.data.icon"></i>
-        <span slot="title">{{ item.data.name }}</span>
+        <span slot="title">{{ item.data.name }} {{ item.data.sindex }}</span>
       </el-menu-item>
       <el-submenu :index="item.data.path" v-else>
         <template slot="title">

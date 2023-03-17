@@ -73,7 +73,6 @@
                   @click="handleEdit(scope.$index, scope.row)">编辑
               </el-button>
               <el-button
-                  v-show="scope.row.data.type === '1'"
                   size="mini"
                   plain
                   :disabled="scope.row.label === '首页'"
@@ -88,11 +87,11 @@
       <div class="form">
         <el-dialog title="添加菜单" :visible.sync="insertFormVisible" width="30%">
           <el-row :gutter="15">
-            <el-form ref="form" :model="insertFormData" label-width="100px">
+            <el-form ref="insertForm" :model="insertFormData" label-width="100px">
               <el-col :span="24">
                 <el-form-item label="上级目录">
                   <el-select ref="selectName" clearable placeholder="请选择父级节点" :label="insertFormData.PName"
-                             v-model="insertFormData.level"
+                             :value="insertFormData.level"
                              @clear="handleClear" style="width: 100%">
                     <!-- option标签上写hidden隐藏 -->
                     <el-option hidden key="id" :value="insertFormData.level" :label="insertFormData.PName"
@@ -144,7 +143,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="是否外链">
+                <el-form-item label="是否外链(未完成)">
                   <el-radio v-model="insertFormData.isInternet" label="true">是</el-radio>
                   <el-radio v-model="insertFormData.isInternet" label="false">否</el-radio>
                 </el-form-item>
@@ -159,7 +158,7 @@
           </el-row>
           <div slot="footer" class="dialog-footer">
             <el-button type="primary" @click="insertMenu()">保存</el-button>
-            <el-button type="primary" @click="insertFormVisible = false">取消</el-button>
+            <el-button type="primary" @click="cancel">取消</el-button>
           </div>
         </el-dialog>
       </div>
@@ -167,7 +166,7 @@
       <div class="update">
         <el-dialog title="修改菜单" :visible.sync="updateFormVisible" width="30%">
           <el-row :gutter="15">
-            <el-form ref="form" :model="updateFormData" label-width="80px">
+            <el-form ref="updateForm" :model="updateFormData" label-width="100px">
               <el-col :span="24">
                 <el-form-item label="ID">
                   <el-input v-model="updateFormData.id" :readonly="true"></el-input>
@@ -229,9 +228,15 @@
                 </el-form-item>
               </el-col>
               <el-col :span="12">
-                <el-form-item label="是否外链">
+                <el-form-item label="是否外链(未完成)">
                   <el-radio v-model="updateFormData.isInternet" label="true">是</el-radio>
                   <el-radio v-model="updateFormData.isInternet" label="false">否</el-radio>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="是否为权限">
+                  <el-radio v-model="updateFormData.isRole" label="true">是</el-radio>
+                  <el-radio v-model="updateFormData.isRole" label="false">否</el-radio>
                 </el-form-item>
               </el-col>
             </el-form>
@@ -253,6 +258,7 @@ export default {
   name: "menu-manage",
   data() {
     return {
+      nodes: [],
       tableData: [],
       loading: false,
       opend: false,
@@ -262,9 +268,9 @@ export default {
         PName: '',
         value: '',
         path: '',
-        menable: 'true',
-        Exclusions: 'true',
-        isInternet: 'true',
+        menable: 'false',
+        Exclusions: 'false',
+        isInternet: 'false',
         name: '',
         isRole: 'false'
       },
@@ -278,6 +284,7 @@ export default {
       ld: false,
       updateFormVisible: false,
       updateFormData:{
+        icon:'',
         level: null,
         PName: '',
         value: '',
@@ -286,6 +293,7 @@ export default {
         Exclusions: 'false',
         isInternet: 'false',
         name: '',
+        isRole: 'false',
         id: 0
       },
       lv: 0
@@ -303,6 +311,9 @@ export default {
       })
       service.GET("/menu/allParentNodes", resp => {
         this.parents = resp.data.data
+      })
+      service.GET("/menu/getAllMenu",resp=>{
+        this.nodes = resp.data.data
       })
       this.icons = Icons
     },
@@ -343,6 +354,7 @@ export default {
       this.updateFormData.PName = data.label
       // 选择器执行完成后，使其失去焦点隐藏下拉框的效果
       this.$refs.selectName.blur()
+      this.$forceUpdate()
     },
     openInsert() {
       this.insertFormVisible = true;
@@ -350,7 +362,7 @@ export default {
     insertMenu() {
       this.ld = true
       this.insertFormVisible = false
-      service.POST("/menu/insert/"+this.insertFormData.Exclusions,this.insertFormData,resp=>{
+      service.POST("/menu/insert/"+this.insertFormData.Exclusions+"/"+this.insertFormData.isRole,this.insertFormData,resp=>{
         this.initialize()
         this.ld = false
       })
@@ -374,23 +386,32 @@ export default {
 
     },
     handleEdit(index,row){
-      this.updateFormData = row.data
-      this.updateFormData.level = row.parentId
       this.updateFormVisible = true
-      this.updateFormData.Exclusions = "false"
-      this.updateFormData.isInternet = "false"
-      this.updateFormData.menable = "false"
-      this.lv = row.parentId
+      this.updateFormData.id = row.id
+      if(row.parentId === 0){
+        this.updateFormData.level = ""
+        this.updateFormData.PName = "员工管理系统";
+      }else {
+        this.updateFormData.level = row.parentId
+        this.updateFormData.PName = this.getParent(row.parentId).name;
+      }
+      this.updateFormData.name = row.label
+      this.updateFormData.icon = row.data.icon
+      this.updateFormData.path = row.data.path
+      this.updateFormData.value = row.data.value
+      this.updateFormData.isRole = row.data.type === "2"?"true":"false"
+      this.updateFormData.menable = row.data.enable+""
+      this.updateFormData.Exclusions = row.data.exclusions+""
+
       console.log(row)
     },
     handInsert(index,row){
-      this.insertFormData = row.data
+      console.log(row)
       this.insertFormData.PName = row.label
+      this.insertFormData.level = row.id
       this.insertFormData.name = "";
-      this.insertFormData.Exclusions = "false"
-      this.insertFormData.isInternet = "false"
-      this.insertFormData.menable = "false"
       this.insertFormVisible = true
+      console.log(this.insertFormData)
     },
     saveChange(){
       console.log()
@@ -405,11 +426,25 @@ export default {
         this.$message.warning("父级不能是节点本身")
         return;
       }
-      service.POST("/menu/update",this.updateFormData,resp=>{
-
+      service.POST("/menu/update/"+this.updateFormData.Exclusions+"/"+this.updateFormData.isRole,this.updateFormData,resp=>{
+        this.updateFormVisible = false
+        this.initialize(123)
       })
 
     },
+    cancel(){
+      this.insertFormVisible = false
+      this.insertFormData = {}
+      this.updateFormData = {}
+    },
+    getParent(id){
+      for (let i = 0; i < this.nodes.length; i++) {
+        if(this.nodes[i].id === id){
+          return this.nodes[i];
+        }
+      }
+    }
+
 
   }
 }

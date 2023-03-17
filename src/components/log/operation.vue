@@ -151,6 +151,12 @@ export default {
     },
     exportExcel(){
       service.download("/log/export_excel","log")
+    },
+    clear(){
+      service.GET("/log/clear",resp=>{
+        console.log(resp)
+        this.loadData(1)
+      })
     }
   }
 }

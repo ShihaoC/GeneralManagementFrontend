@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import echarts from "echarts";
 import VueCropper from 'vue-cropper'
 Vue.use(VueCropper)
+import NavMenu from '@/components/navbar1.vue'
 
 
 import VueFullscreen from 'vue-fullscreen'
@@ -42,6 +43,7 @@ Vue.component("BasicChart", BasicChart)
 Vue.component("Role_Authority", Role_Authority)
 Vue.component("ImageCropper", ImageCropper)
 Vue.component("navbar",navbar)
+Vue.component("NavMenu",NavMenu)
 
 new Vue({
     router,

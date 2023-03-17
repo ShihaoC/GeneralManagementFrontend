@@ -4,6 +4,7 @@ import {
     Message
 } from 'element-ui';
 
+// const baseURL = "https://oa.api.mrcsh.cn";
 const baseURL = "http://localhost:8848";
 
 axios.defaults.baseURL = baseURL;
