@@ -29,8 +29,12 @@ import ImageCropper from "@/components/cropper/ImageCropper.vue";
 
 Vue.use(particles, Live2d)
 import axios from 'axios'
+import NoticeItem from "@/components/music/notice-item.vue";
 import VueAxios from "vue-axios";
-
+import VueClipboards from 'vue-clipboard2'
+import Notice from "@/components/music/notice.vue";
+import Himg from "@/components/img/himg.vue";
+Vue.use(VueClipboards);
 Vue.use(ElementUI);
 Vue.prototype.$message = message
 Vue.use(VueFullscreen)
@@ -44,6 +48,9 @@ Vue.component("Role_Authority", Role_Authority)
 Vue.component("ImageCropper", ImageCropper)
 Vue.component("navbar",navbar)
 Vue.component("NavMenu",NavMenu)
+Vue.component("NoticeItem",NoticeItem)
+Vue.component("Notice",Notice)
+Vue.component("himg",Himg)
 
 new Vue({
     router,

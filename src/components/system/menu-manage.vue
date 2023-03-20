@@ -43,7 +43,18 @@
           <el-table-column
               prop="data.value"
               label="权限标识">
+            <template slot-scope="scope">
+              {{scope.row.data.value}}
+              <el-button
+                  type="text"
+                  class="password-input"
+                  v-clipboard:copy="scope.row.data.value"
+                  v-clipboard:success="onCopy"
+                  v-clipboard:error="onError"
+              >复制</el-button>
+            </template>
           </el-table-column>
+
           <el-table-column
               prop="data.path"
               label="地址">
@@ -443,6 +454,12 @@ export default {
           return this.nodes[i];
         }
       }
+    },
+    onCopy(){
+      this.$message.success("复制成功")
+    },
+    onError(){
+      this.$message.error("复制出错")
     }
 
 

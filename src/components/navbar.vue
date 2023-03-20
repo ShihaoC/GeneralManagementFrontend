@@ -4,7 +4,7 @@
 
       <el-menu-item :index="item.data.path" v-if="item.children.length === 0">
         <i :class="item.data.icon"></i>
-        <span slot="title">{{ item.data.name }} {{ item.data.sindex }}</span>
+        <span slot="title">{{ item.data.name }}</span>
       </el-menu-item>
       <el-submenu :index="item.data.path" v-else>
         <template slot="title">

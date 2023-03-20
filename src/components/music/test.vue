@@ -1,39 +1,29 @@
 <template>
-  <div>
-  </div>
+  <Notice :notices="notices"></Notice>
 </template>
 <script>
 export default {
-  inheritAttrs: false,
-  components: {},
-  props: [],
-  data() {
-    return {
-      formData: {
-        field103: false,
-        field102: false,
-      },
-      rules: {},
+  data(){
+    return{
+      notices:[
+        {
+          context: '<p><strong><em><s><u>12</u></s></em></strong></p>',
+          id: '1'
+        },
+        {
+          context: '<p><strong><em><s><u>123</u></s></em></strong></p>',
+          id: '2'
+        },
+        {
+          context: '<p><strong><em><s><u>1231</u></s></em></strong></p>',
+          id: '3'
+        },
+        {
+          context: '<p><strong><em><s><u>12312</u></s></em></strong></p>',
+          id: '4'
+        }
+      ]
     }
-  },
-  computed: {},
-  watch: {},
-  created() {},
-  mounted() {},
-  methods: {
-    onOpen() {},
-    onClose() {
-      this.$refs['elForm'].resetFields()
-    },
-    close() {
-      this.$emit('update:visible', false)
-    },
-    handleConfirm() {
-      this.$refs['elForm'].validate(valid => {
-        if (!valid) return
-        this.close()
-      })
-    },
   }
 }
 

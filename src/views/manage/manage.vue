@@ -164,6 +164,8 @@
         </el-drawer>
       </div>
     </div>
+    <Notice :notices="notices"></Notice>
+
   </div>
 </template>
 
@@ -226,9 +228,13 @@ export default {
       console.log(resp)
       this.items = resp.data.data
     })
+    service.GET("/Notice/getAllNotice",resp=>{
+      this.notices = resp.data.data
+    })
   },
   data() {
     return {
+      notices: [],
       items: [],
       fullscreenLoading: false,
       uploadURL: '',

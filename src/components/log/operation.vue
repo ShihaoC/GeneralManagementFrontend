@@ -67,6 +67,13 @@
                     placeholder="输入操作类型名称搜索"
                     @change="search"/>
               </template>
+              <template slot-scope="scope">
+                <el-button
+                    size="mini"
+                    @click="edit(scope.$index, scope.row)"
+                    :disabled="scope.row.role_name === 'admin'">详情
+                </el-button>
+              </template>
             </el-table-column>
 
           </el-table>
@@ -149,11 +156,11 @@ export default {
         this.loadData(this.page)
       })
     },
-    exportExcel(){
-      service.download("/log/export_excel","log")
+    exportExcel() {
+      service.download("/log/export_excel", "log")
     },
-    clear(){
-      service.GET("/log/clear",resp=>{
+    clear() {
+      service.GET("/log/clear", resp => {
         console.log(resp)
         this.loadData(1)
       })

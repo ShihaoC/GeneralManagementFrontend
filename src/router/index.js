@@ -13,6 +13,16 @@ const routes = [
         component: login
     },
     {
+        path: '/demo',
+        name: 'demo',
+        component: ()=>import('@/components/music/test.vue')
+    },
+    {
+        path: '/Quill',
+        name: 'demo',
+        component: ()=>import('@/components/music/Quill.vue')
+    },
+    {
         path: '/index',
         name: 'index',
         component: () => import('@/views/manage/manage.vue'),
@@ -88,6 +98,14 @@ const routes = [
                 path: '/manage/user',
                 name: 'user',
                 component: () => import("@/components/system/user.vue"),
+                meta: {
+                    title: '用户管理'
+                }
+            },
+            {
+                path: '/manage/notice',
+                name: 'notice',
+                component: () => import("@/components/system/notice.vue"),
                 meta: {
                     title: '用户管理'
                 }

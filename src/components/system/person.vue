@@ -10,9 +10,9 @@
             :on-success="handleAvatarSuccess"
             style="text-align: center; margin: 10px"
         >
-            <img v-if="from.image_url" :src="from.image_url" class="avatar">
+          <himg v-show="himgshow" :image="image_url"></himg>
 
-          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          <i v-show="!himgshow" class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
         <el-form>
           <el-form-item label="用户名:" :label-width="formLabelWidth">
@@ -45,12 +45,13 @@ export default {
   name: 'person',
   data() {
     return {
-      // imageURL: '',
       activeIndex: 1,
       from: {},
       pwdfrom: {},
       formLabelWidth: '180px',
-      actionURL: "http://localhost:8848/user/uploadImage/" + localStorage.getItem("userid")
+      actionURL: "http://localhost:8848/user/uploadImage/" + localStorage.getItem("userid"),
+      himgshow: true,
+      image_url: ''
     }
   },
   mounted() {
@@ -62,6 +63,11 @@ export default {
         if (resp.data.code === 200) {
           this.$message.success("修改成功")
           this.initialize()
+          this.himgshow = false
+          this.$nextTick(()=>{
+            console.log(234)
+            this.himgshow = true
+          })
           Manage.methods.reload_head()
         }
       })
@@ -71,11 +77,13 @@ export default {
     },
     handleAvatarSuccess() {
       this.initialize()
+      console.log(123)
 
     },
     initialize() {
       service.GET("/user/username/" + localStorage.getItem("userid"), resp => {
         console.log(resp);
+        this.image_url = resp.data.data.image_url
         this.from = resp.data.data;
       })
     },
