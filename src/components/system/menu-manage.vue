@@ -39,6 +39,9 @@
               label="图标"
               sortable
           >
+            <template slot-scope="scope">
+              <i :class="scope.row.data.icon"></i> {{ scope.row.data.icon }}
+            </template>
           </el-table-column>
           <el-table-column
               prop="data.value"

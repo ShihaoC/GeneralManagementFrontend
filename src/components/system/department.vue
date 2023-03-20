@@ -4,16 +4,15 @@
     <div id="post-main">
       <div class="up">
         <el-button type="success" icon="el-icon-edit" plain size="small" @click="dialogadd = true"> 添加</el-button>
-        <span>&nbsp;&nbsp;</span>
-        <el-upload
-            style="display: inline-block"
-            class="upload-demo"
-            action="https://jsonplaceholder.typicode.com/posts/"
+<!--        <el-upload-->
+<!--            style="display: inline-block"-->
+<!--            class="upload-demo"-->
+<!--            action="https://jsonplaceholder.typicode.com/posts/"-->
 
-            :limit="3"
-        >
-          <el-button type="warning" icon="el-icon-upload2" plain size="small">导入</el-button>
-        </el-upload>
+<!--            :limit="3"-->
+<!--        >-->
+<!--          <el-button type="warning" icon="el-icon-upload2" plain size="small">导入</el-button>-->
+<!--        </el-upload>-->
         <span>&nbsp;&nbsp;</span>
         <el-button type="info" icon="el-icon-download" plain size="small">导出</el-button>
         <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain size="small">删除

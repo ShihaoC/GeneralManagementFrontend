@@ -7,7 +7,7 @@
         </el-button>
 
         <span>&nbsp;&nbsp;</span>
-        <el-button type="danger" @click="" icon="el-icon-close" size="mini" plain>
+        <el-button :disabled="select" type="danger" @click="bench_delete" icon="el-icon-close" size="mini" plain>
           批量删除
         </el-button>
       </div>
@@ -18,7 +18,8 @@
             :data="tableData"
             style="width: 100%;"
             :header-cell-style="header_cell_style"
-            :cell-style="cell_style">
+            :cell-style="cell_style"
+            @selection-change="handleSelectionChange">
           <el-table-column
               type="selection">
           </el-table-column>
@@ -158,12 +159,22 @@ export default {
       notices: [],
       aboutVisible: false,
       abouthtml: '',
+      select: true,
       updateForm: {
 
-      }
+      },
+      multipleSelection: []
     }
   },
   methods: {
+    handleSelectionChange(val) {
+      this.multipleSelection = val;
+      if (this.multipleSelection.length !== 0) {
+        this.select = false
+      } else {
+        this.select = true
+      }
+    },
     cell_style() {
       return "height:2vh";
     },
@@ -174,6 +185,11 @@ export default {
       service.GET("/Notice/getAllNotice",resp=>{
         this.tableData = resp.data.data
         this.notices = resp.data.data
+      })
+    },
+    bench_delete(){
+      service.POST("/Notice/bench_delete",this.multipleSelection,resp=>{
+        this.loadData()
       })
     },
     edit(index,row) {

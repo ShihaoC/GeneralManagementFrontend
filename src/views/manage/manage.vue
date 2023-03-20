@@ -135,19 +135,19 @@
           </div>
           <div id="drawer-settings">
             <ul>
-              <li>
-                <span class="drawer-settings-item">头像设置</span>
-                <el-upload
-                    :on-success="reload_head"
-                    class="upload-demo"
-                    :action="uploadURL"
-                    multiple
-                    :limit="1"
-                    :file-list="fileList"
-                    :show-file-list="false">
-                  <el-button size="small" type="primary">点击上传</el-button>
-                </el-upload>
-              </li>
+<!--              <li>-->
+<!--                <span class="drawer-settings-item">头像设置</span>-->
+<!--                <el-upload-->
+<!--                    :on-success="reload_head"-->
+<!--                    class="upload-demo"-->
+<!--                    :action="uploadURL"-->
+<!--                    multiple-->
+<!--                    :limit="1"-->
+<!--                    :file-list="fileList"-->
+<!--                    :show-file-list="false">-->
+<!--                  <el-button size="small" type="primary">点击上传</el-button>-->
+<!--                </el-upload>-->
+<!--              </li>-->
               <li></li>
               <li>
                 <span class="drawer-settings-item">看板娘设置</span>

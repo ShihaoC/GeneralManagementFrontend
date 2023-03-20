@@ -1,8 +1,6 @@
 import axios from "axios";
 import router from "./router";
-import {
-    Message
-} from 'element-ui';
+import {message} from '@/assets/util/resetMessage'
 
 // const baseURL = "https://oa.api.mrcsh.cn";
 const baseURL = "http://localhost:8848";
@@ -28,7 +26,7 @@ let GET = (url, fun) => {
             fun(resp)
         })
         .catch(err => {
-            Message.error(err)
+            message.error('权限不足/服务器出现问题:'+err)
         })
 }
 
@@ -38,7 +36,8 @@ let POST = (url, data, fun) => {
             fun(resp)
         })
         .catch(err => {
-            Message.error(err)
+            message.error('权限不足/服务器出现问题:'+err)
+
         })
 }
 
