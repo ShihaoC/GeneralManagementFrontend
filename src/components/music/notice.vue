@@ -24,21 +24,25 @@ export default {
   props: ["notices"],
   data() {
     return {
-      showd: true,
+      showd: false,
       showdd: false
     }
   },
   mounted() {
     setTimeout(() => {
+      console.log(123)
+
       console.log(this.notices.length)
       console.log(this.notices)
-      if (this.notices.length !== 0) {
+      if (this.notices.length !== 0 && localStorage.getItem("noticeEnable") === 'true') {
         this.showdd = true
       }
-    }, 100)
+      this.showd = true
+    }, 500)
   },
   methods: {
     hide() {
+      console.log(this.notices)
       this.showd = false
       setTimeout(() => {
         this.showdd = false

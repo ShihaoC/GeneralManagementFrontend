@@ -7,7 +7,7 @@
             class="avatar-uploader"
             :action="actionURL"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
+            :on-success="reloadHead"
             style="text-align: center; margin: 10px"
         >
           <himg v-show="himgshow" :image="image_url"></himg>
@@ -64,7 +64,7 @@ export default {
           this.$message.success("修改成功")
           this.initialize()
           this.himgshow = false
-          this.$nextTick(()=>{
+          this.$nextTick(() => {
             console.log(234)
             this.himgshow = true
           })
@@ -78,15 +78,28 @@ export default {
     handleAvatarSuccess() {
       this.initialize()
       console.log(123)
+      this.himgshow = false
+      setTimeout(() => {
+        this.himgshow = true
+      }, 1000)
 
     },
     initialize() {
+      service.GET("/user/username/" + localStorage.getItem("userid"), resp => {
+        this.image_url = resp.data.data.image_url
+        this.from = resp.data.data;
+      })
+
+    },
+    reloadHead() {
+      Manage.methods.reload_head()
+      this.$message.success("成功")
       service.GET("/user/username/" + localStorage.getItem("userid"), resp => {
         console.log(resp);
         this.image_url = resp.data.data.image_url
         this.from = resp.data.data;
       })
-    },
+    }
 
 
   }

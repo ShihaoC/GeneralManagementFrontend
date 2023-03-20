@@ -50,7 +50,7 @@
                   v-model="ss"
                   size="mini"
                   placeholder="输入关键字搜索"
-                  @change="loadData('123')"/>
+                  @change="loadData()"/>
             </template>
             <template slot-scope="scope">
               <el-button
@@ -90,6 +90,24 @@
       </div>
       <div>
         <el-dialog
+            title="修改公告"
+            :visible.sync="updateVisible"
+            width="60%"
+            :before-close="handleCloseUpdate">
+          <el-form ref="form" :model="updateForm" label-width="80px">
+            <el-form-item label="内容"><div id="editor1" ></div></el-form-item>
+            <el-form-item label="过期时间"><el-input v-model="updateForm.timeout"></el-input></el-form-item>
+
+          </el-form>
+
+          <span slot="footer" class="dialog-footer">
+    <el-button @click="updateVisible = false">取 消</el-button>
+    <el-button type="primary" @click="update">确 定</el-button>
+  </span>
+        </el-dialog>
+      </div>
+      <div>
+        <el-dialog
             title="预览公告"
             :visible.sync="aboutVisible"
             width="30%"
@@ -107,24 +125,26 @@ import Quill from 'quill';
 import service from "@/service";
 
 let quill = null;
+let quill1 = null;
 
 let count = 0;
+let count1 = 0;
 export default {
   name: "notice1",
   created() {
 
   },
   mounted() {
-    this.loadData('123')
+    this.loadData()
 
     setInterval(() => {
-      this.loadData('123')
-
+      this.loadData()
     }, 2000)
 
   },
   data() {
     return {
+      updateVisible: false,
       tableData: [],
       loading: false,
       ss: '',
@@ -137,7 +157,10 @@ export default {
       },
       notices: [],
       aboutVisible: false,
-      abouthtml: ''
+      abouthtml: '',
+      updateForm: {
+
+      }
     }
   },
   methods: {
@@ -147,29 +170,70 @@ export default {
     header_cell_style() {
       return "background:#f8f8f9";
     },
-    loadData(ss) {
+    loadData() {
       service.GET("/Notice/getAllNotice",resp=>{
         this.tableData = resp.data.data
         this.notices = resp.data.data
-        console.log(resp)
       })
     },
-    edit() {
+    edit(index,row) {
+      setTimeout(()=>{
+        if(count1 !== 1 && count1 === 0){
+          var toolbarOptions = [
+            ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
 
+            [{'header': 1}, {'header': 2}],               // custom button values
+            [{'list': 'ordered'}, {'list': 'bullet'}],
+            [{'script': 'sub'}, {'script': 'super'}],      // superscript/subscript
+            [{'indent': '-1'}, {'indent': '+1'}],          // outdent/indent
+            [{'direction': 'rtl'}],                         // text direction
+
+            [{'size': ['small', false, 'large', 'huge']}],  // custom dropdown
+            [{'header': [1, 2, 3, 4, 5, 6, false]}],
+
+            [{'color': []}, {'background': []}],          // dropdown with defaults from theme
+            [{'font': []}],
+            [{'align': []}],
+
+          ];
+
+          quill1 = new Quill('#editor1', {
+            modules: {
+              toolbar: toolbarOptions
+            },
+            theme: 'snow'
+          });
+          count1 ++;
+        }
+        quill1.container.firstChild.innerHTML = row.context
+      },20)
+      this.updateForm = row
+      this.updateVisible = true
     },
     toDelete(index,row) {
-      console.log(row)
       service.GET("/Notice/delete?id="+row.id,resp=>{
-        this.loadData('s')
+        this.loadData()
       })
     },
     handleCloseInsert() {
       this.insertVisible = false
       this.aboutVisible = false
     },
+    handleCloseUpdate(){
+      this.updateVisible = false
+      quill1.disable()
+    },
     about(index,row){
       this.abouthtml = row.context
       this.aboutVisible = true
+    },
+    update(){
+      this.updateForm.context = quill1.container.firstChild.innerHTML
+      service.POST("/Notice/update",this.updateForm,resp=>{
+        console.log(resp)
+        this.updateVisible = false
+        this.loadData()
+      })
     },
     loadQuill() {
       if(count !== 1 && count === 0){
@@ -211,8 +275,7 @@ export default {
       this.insertVisible = false
       this.inputForm.context = quill.container.firstChild.innerHTML
       service.POST("/Notice/insert/"+this.inputForm.Timeout,this.inputForm,resp=>{
-        console.log(resp)
-        this.loadData('22')
+        this.loadData()
       })
     }
   }

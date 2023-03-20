@@ -159,6 +159,16 @@
                     id="kanbanniang-btn">
                 </el-switch>
               </li>
+              <li>
+                <span class="drawer-settings-item">公告设置</span>
+                <el-switch
+                    @change="gonggao1"
+                    v-model="gonggao"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                    id="kanbanniang-btn">
+                </el-switch>
+              </li>
             </ul>
           </div>
         </el-drawer>
@@ -230,10 +240,21 @@ export default {
     })
     service.GET("/Notice/getAllNotice",resp=>{
       this.notices = resp.data.data
+      console.log(resp.data.data)
     })
+    if(localStorage.getItem("noticeEnable")){
+      if(localStorage.getItem('noticeEnable') === 'true'){
+        this.gonggao = true
+      }else {
+        this.gonggao = false
+      }
+    }
+
+    console.log(localStorage.getItem("noticeEnable"))
   },
   data() {
     return {
+      gonggao: false,
       notices: [],
       items: [],
       fullscreenLoading: false,
@@ -262,15 +283,19 @@ export default {
           "height": "2.5vw",
           "background": "url(" + resp.data.data + ") no-repeat",
           "background-size": "cover",
+          "background-position": "center",
           "border-radius": "8px",
           "border": "1px solid #e6e6e6"
         })
         this.fullscreenLoading = false
         this.drawer = false
       })
-      this.$message.success("修改成功")
 
 
+    },
+    gonggao1(){
+      console.log(this.gonggao)
+      localStorage.setItem("noticeEnable",this.gonggao)
     },
     check() {
       if (this.$route.path !== '/index') {
