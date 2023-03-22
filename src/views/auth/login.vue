@@ -35,9 +35,11 @@
 <script>
 import Global from "@/views/Global.vue";
 import axios from "axios";
+import particles_js from 'particles.js'
 import particles from 'particlesjs'
 import qs from 'qs'
 import service from "@/service";
+import particles_config from '@/static/config/particles_config.json'
 
 let canv = null;
 
@@ -59,6 +61,7 @@ export default {
       this.yiyan_from = resp.data.from
       this.loading = false
     })
+    // particlesJS("login-main", particles_config);
     canv = particles.init({
       selector: '#canv',
       connectParticles: true,

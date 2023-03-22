@@ -254,8 +254,9 @@ export default {
             type: 'success',
             message: '修改成功!'
           });
+          this.loaddata(this.page, '')
+
         })
-        this.loaddata(this.page, '')
       }).catch(() => {
         this.loaddata(this.page, '')
       });
@@ -351,9 +352,10 @@ export default {
       this.checkAuth(() => {
         service.POST("/role/update", this.form, resp => {
           console.log(resp)
+          this.loaddata(this.page, '');
         })
         this.dialogFormVisible = false
-        this.loaddata(this.page, '');
+
         this.dialogFormVisible = false
       })
     },

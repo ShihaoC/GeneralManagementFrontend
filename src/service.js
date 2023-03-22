@@ -2,8 +2,8 @@ import axios from "axios";
 import router from "./router";
 import {message} from '@/assets/util/resetMessage'
 
-// const baseURL = "https://oa.api.mrcsh.cn";
-const baseURL = "http://localhost:8848";
+const baseURL = "https://oa.api.mrcsh.cn";
+// const baseURL = "http://localhost:8848";
 
 axios.defaults.baseURL = baseURL;
 const request = axios.create({

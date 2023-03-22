@@ -16,13 +16,13 @@
         </el-upload>
         <el-form>
           <el-form-item label="用户名:" :label-width="formLabelWidth">
-            <el-input v-model="from.username" autocomplete="off" class="sBox" disabled></el-input>
+            <el-input v-model="from.username" autocomplete="off" class="ssBox" disabled></el-input>
           </el-form-item>
           <el-form-item label="名称:" :label-width="formLabelWidth">
-            <el-input v-model="from.nick_name" autocomplete="off" class="sBox"></el-input>
+            <el-input v-model="from.nick_name" autocomplete="off" class="ssBox"></el-input>
           </el-form-item>
           <el-form-item label="手机号:" :label-width="formLabelWidth">
-            <el-input v-model="from.phone" autocomplete="off" class="sBox"></el-input>
+            <el-input v-model="from.phone" autocomplete="off" class="ssBox"></el-input>
           </el-form-item>
         </el-form>
         <div style="text-align: center">
@@ -48,7 +48,7 @@ export default {
       activeIndex: 1,
       from: {},
       pwdfrom: {},
-      formLabelWidth: '180px',
+      formLabelWidth: '20%',
       actionURL: "http://localhost:8848/user/uploadImage/" + localStorage.getItem("userid"),
       himgshow: true,
       image_url: ''
@@ -113,6 +113,10 @@ export default {
   cursor: pointer;
   position: relative;
   overflow: hidden;
+}
+
+.ssBox {
+  width: 80%;
 }
 
 .avatar-uploader .el-upload:hover {

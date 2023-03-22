@@ -42,7 +42,10 @@
               prop="type"
               label="类型">
           </el-table-column>
-
+          <el-table-column
+              prop="cdate"
+              label="创建时间">
+          </el-table-column>
 
 
           <el-table-column label="操作">
@@ -138,13 +141,17 @@ export default {
   mounted() {
     this.loadData()
 
-    setInterval(() => {
+    this.intervals = setInterval(() => {
       this.loadData()
     }, 2000)
 
   },
+  beforeDestroy() {
+    clearInterval(this.intervals)
+  },
   data() {
     return {
+      intervals: null,
       updateVisible: false,
       tableData: [],
       loading: false,

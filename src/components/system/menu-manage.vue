@@ -16,7 +16,7 @@
             :data="tableData"
             style="width: 100%;margin-bottom: 20px;"
             row-key="id"
-            height="800"
+            height="80vh"
             :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
             v-loading="loading"
             :header-cell-style="header_cell_style"
@@ -64,10 +64,10 @@
           </el-table-column>
           <el-table-column
               prop="data.exclusions"
-              label="地址">
+              label="是否含有子节点">
             <template slot-scope="scope">
-              <el-tag v-if="!scope.row.data.exclusions">未排除</el-tag>
-              <el-tag v-else type="danger">排除</el-tag>
+              <el-tag v-if="!scope.row.data.exclusions">是</el-tag>
+              <el-tag v-else type="danger">否</el-tag>
             </template>
           </el-table-column>
           <el-table-column label="操作" width="300%">
