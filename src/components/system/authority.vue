@@ -6,7 +6,7 @@
         <el-button type="success" icon="el-icon-edit" plain size="small" @click="dialogadd = true"> 添加</el-button>
         <span>&nbsp;&nbsp;</span>
         <el-button type="info" @click="daochu" icon="el-icon-download" plain size="small">导出</el-button>
-        <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain size="small">删除
+        <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain size="small">批量删除
         </el-button>
       </div>
       <div class="block">
@@ -15,12 +15,14 @@
             v-loading="table_loading"
             :data="tableData"
             style="width: 100%;"
-            :header-cell-style="header_cell_style"
-            :cell-style="cell_style"
+            :header-cell-style="'height: 6vh'"
+            :cell-style="'height: 6vh'"
             @selection-change="handleSelectionChange"
             @cell-click="cellclick">
           <el-table-column
-              type="selection">
+              type="selection"
+              align="center"
+              width="50">
           </el-table-column>
           <el-table-column
               prop="id"

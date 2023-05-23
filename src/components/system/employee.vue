@@ -25,8 +25,8 @@
             v-loading="loading"
             :data="tableData"
             style="width: 100%;"
-            :header-cell-style="header_cell_style"
-            :cell-style="cell_style"
+            :header-cell-style="'height: 6vh'"
+            :cell-style="'height: 6vh'"
             @selection-change="handleSelectionChange">
           <el-table-column
               type="selection">
@@ -311,7 +311,7 @@ export default {
     },
 
     daochu() {
-      service.download("/em/export_excel")
+      service.download("/em/export_excel","员工表")
     },
     cell_style() {
       return "height:2vh";

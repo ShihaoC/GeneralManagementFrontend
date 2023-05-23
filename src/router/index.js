@@ -10,7 +10,11 @@ const routes = [
     {
         path: '/',
         name: 'login',
-        component: login
+        component: login,
+        meta: {
+            title: '登录',
+            top_title: '员工管理系统 | 登录'
+        }
     },
     {
         path: '/demo',
@@ -27,7 +31,8 @@ const routes = [
         name: 'index',
         component: () => import('@/views/manage/manage.vue'),
         meta: {
-            title: '首页'
+            title: '首页',
+            top_title: '员工管理系统 | 首页'
         },
         children: [
             {
@@ -35,7 +40,8 @@ const routes = [
                 name: 'test',
                 component: () => import("@/components/system/employee.vue"),
                 meta: {
-                    title: '人员管理'
+                    title: '人员管理',
+                    top_title: '员工管理系统 | 人员管理'
                 }
             },
             {
@@ -43,7 +49,8 @@ const routes = [
                 name: 'test',
                 component: () => import("@/components/system/department.vue"),
                 meta: {
-                    title: '岗位管理'
+                    title: '岗位管理',
+                    top_title: '员工管理系统 | 岗位管理'
                 }
             },
             {
@@ -51,7 +58,8 @@ const routes = [
                 name: 'test',
                 component: () => import("@/components/system/authority.vue"),
                 meta: {
-                    title: '角色管理'
+                    title: '角色管理',
+                    top_title: '员工管理系统 | 角色管理'
                 }
             },
             {
@@ -59,7 +67,8 @@ const routes = [
                 name: 'test',
                 component: () => import("@/components/log/operation"),
                 meta: {
-                    title: '员工管理'
+                    title: '日志管理',
+                    top_title: '员工管理系统 | 日志管理'
                 }
             },
             {
@@ -67,7 +76,8 @@ const routes = [
                 name: 'test',
                 component: () => import("@/components/log/logLogin"),
                 meta: {
-                    title: '员工管理'
+                    title: '员工管理',
+                    top_title: '员工管理系统 | 员工管理'
                 }
             },
             {
@@ -75,7 +85,8 @@ const routes = [
                 name: 'test',
                 component: () => import("@/components/system/statement.vue"),
                 meta: {
-                    title: '员工管理'
+                    title: '员工管理',
+                    top_title: '员工管理系统 | 员工管理'
                 }
             },
             {
@@ -83,7 +94,8 @@ const routes = [
                 name: 'setting',
                 component: () => import("@/components/system/resource.vue"),
                 meta: {
-                    title: '资源概览'
+                    title: '资源概览',
+                    top_title: '员工管理系统 | 资源概览'
                 }
             },
             {
@@ -91,7 +103,8 @@ const routes = [
                 name: 'menu',
                 component: () => import("@/components/system/menu-manage.vue"),
                 meta: {
-                    title: '菜单管理'
+                    title: '菜单管理',
+                    top_title: '员工管理系统 | 菜单管理'
                 }
             },
             {
@@ -99,7 +112,8 @@ const routes = [
                 name: 'user',
                 component: () => import("@/components/system/user.vue"),
                 meta: {
-                    title: '用户管理'
+                    title: '用户管理',
+                    top_title: '员工管理系统 | 用户管理'
                 }
             },
             {
@@ -107,16 +121,17 @@ const routes = [
                 name: 'notice',
                 component: () => import("@/components/system/notice.vue"),
                 meta: {
-                    title: '用户管理'
+                    title: '通知公告',
+                    top_title: '员工管理系统 | 通知公告'
                 }
             },
-
             {
                 path: '/information',
                 name: 'information',
                 component: () => import("@/components/system/information.vue"),
                 meta: {
-                    title: '个人中心'
+                    title: '个人中心',
+                    top_title: '员工管理系统 | 个人中心'
                 },
                 children: [
                     {
@@ -124,7 +139,8 @@ const routes = [
                         name: 'person',
                         component: () => import("@/components/system/person.vue"),
                         meta: {
-                            title: '个人信息'
+                            title: '个人信息',
+                            top_title: '员工管理系统 | 个人信息'
                         }
                     },
                     {
@@ -132,7 +148,8 @@ const routes = [
                         name: 'pwd',
                         component: () => import("@/components/system/pwd.vue"),
                         meta: {
-                            title: '修改密码'
+                            title: '修改密码',
+                            top_title: '员工管理系统 | 修改密码'
                         }
                     },
 
@@ -145,7 +162,11 @@ const routes = [
     {
         path: '/auth/register',
         name: 'register',
-        component: register
+        component: register,
+        meta: {
+            title: '注册',
+            top_title: '员工管理系统 | 注册'
+        }
     },
     {
         path: '/Home',
@@ -168,7 +189,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.meta.title) {
-        document.title = to.meta.title
+        document.title = to.meta.top_title
+
     }
     next()
 })

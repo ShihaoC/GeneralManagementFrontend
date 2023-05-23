@@ -43,6 +43,11 @@ export default {
         legend: {
           data: [this.name]
         },
+        toolbox: {
+          feature: {
+            saveAsImage: {}
+          }
+        },
         grid: {
           left: '3%',
           right: '4%',

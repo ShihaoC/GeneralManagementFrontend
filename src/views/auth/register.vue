@@ -34,6 +34,7 @@
 import Global from "@/views/Global.vue";
 import axios from "axios";
 import particles from 'particlesjs'
+import service from "@/service";
 
 const newAxios = axios.create({
   baseURL: Global.baseUrl
@@ -107,17 +108,19 @@ export default {
         this.$message.warning("两次密码不同")
         return;
       }
-      newAxios.post("/auth/register", {
+      service.POST("/auth/register", {
         username: this.formData.username,
         password: this.formData.password1
-      }).then((resp) => {
-        if(resp.data.code === 330){
+      },resp => {
+        if(resp.data.code === 400){
           this.$message.warning("已经存在此账号")
         }else if(resp.data.code === 200){
           localStorage.setItem("username", this.formData.username)
           localStorage.setItem("password", this.formData.password1)
           this.$router.push({path: '/'})
           console.log(resp.data)
+          localStorage.setItem("noticeEnable","true")
+          this.$message.success("注册成功，请登录")
         }
       })
     },

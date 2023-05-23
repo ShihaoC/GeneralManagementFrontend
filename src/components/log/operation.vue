@@ -3,14 +3,14 @@
   <div class="container">
     <div class="post-main">
       <div class="up">
-        <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain
-                   size="small">批量删除
-        </el-button>
         <el-button type="primary" @click="exportExcel" icon="el-icon-download" plain
                    size="small">导出Excel
         </el-button>
         <el-button type="info" @click="clear" icon="el-icon-delete" plain
                    size="small">清空日志
+        </el-button>
+        <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain
+                   size="small">批量删除
         </el-button>
         <div class="block">
           <el-table
@@ -18,12 +18,13 @@
               v-loading="loading"
               :data="tableData"
               style="width: 100%;"
-              :header-cell-style="header_cell_style"
-              :cell-style="cell_style"
+              :header-cell-style="'height: 6vh'"
+              :cell-style="'height: 6vh'"
               @selection-change="handleSelectionChange">
             <el-table-column
-                width="100"
-                type="selection">
+                width="50"
+                type="selection"
+                align="center">
             </el-table-column>
             <el-table-column
                 prop="id"
@@ -59,22 +60,22 @@
                 label="操作人员"
             >
             </el-table-column>
-            <el-table-column label="操作">
-              <template slot="header" slot-scope="scope">
-                <el-input
-                    v-model="ss"
-                    size="mini"
-                    placeholder="输入操作类型名称搜索"
-                    @change="search"/>
-              </template>
-              <template slot-scope="scope">
-                <el-button
-                    size="mini"
-                    @click="edit(scope.$index, scope.row)"
-                    :disabled="scope.row.role_name === 'admin'">详情
-                </el-button>
-              </template>
-            </el-table-column>
+            <!--            <el-table-column label="操作">-->
+            <!--              <template slot="header" slot-scope="scope">-->
+            <!--                <el-input-->
+            <!--                    v-model="ss"-->
+            <!--                    size="mini"-->
+            <!--                    placeholder="输入操作类型名称搜索"-->
+            <!--                    @change="search"/>-->
+            <!--              </template>-->
+            <!--              <template slot-scope="scope">-->
+            <!--                <el-button-->
+            <!--                    size="mini"-->
+            <!--                    @click="edit(scope.$index, scope.row)"-->
+            <!--                    :disabled="scope.row.role_name === 'admin'">详情-->
+            <!--                </el-button>-->
+            <!--              </template>-->
+            <!--            </el-table-column>-->
 
           </el-table>
         </div>

@@ -13,7 +13,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: Sc;
-  transition: all 0.1s ease-in-out;
+  //transition: all 0.1s ease-in-out;
 }
 html {
   background-color: #ffffff;

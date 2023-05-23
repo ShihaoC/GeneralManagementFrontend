@@ -4,15 +4,20 @@
       <Breadcrumb class="bread"></Breadcrumb>
       <div id="weather">
         <ul>
-          <li class="top_item">
-            <i id="full-screen" @click="full" class="iconfont icon-fullscreen top-item"></i>
-          </li>
-          <li>
-            <i id="gitee" class="iconfont icon-gitee-fill-round"></i>
-          </li>
-          <li>
-            <i id="github" class="iconfont icon-github-fill"></i>
-          </li>
+          <el-tooltip class="item" effect="dark" content="全屏" placement="bottom">
+            <li class="top_item">
+              <i id="full-screen" @click="full" class="iconfont icon-fullscreen top-item"></i>
+            </li>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="Gitee代码开源" placement="bottom">
+            <li @click="openGitee()">
+              <i id="gitee" class="iconfont icon-gitee-fill-round"></i>
+            </li>
+          </el-tooltip>
+
+          <!--          <li @click="openGithub()">-->
+          <!--            <i id="github" class="iconfont icon-github-fill"></i>-->
+          <!--          </li>-->
           <li>
             时间: {{ time }}
           </li>
@@ -35,10 +40,12 @@
         </div>
         <transition name="el-zoom-in-top">
           <div v-show="showed" id="box-main">
+            <router-link id="link" to="/information/person">
             <div id="user" @click="">
-              <span> <router-link id="link" to="/information/person"><i
-                  class="el-icon-user"></i> 个人中心</router-link>   </span>
+              <span> <i
+                  class="el-icon-user"></i> 个人中心   </span>
             </div>
+            </router-link>
             <div id="setting" @click="openSetting">
               <span> <i class="el-icon-setting"></i> 系统设置</span>
             </div>
@@ -60,10 +67,10 @@
         >
           <el-menu-item id="items" index="/index" @click="check()">
             <i class="el-icon-s-grid"></i>
-            <span id="items-text">员工管理系统</span>
+            <span id="items-text">{{Title}}</span>
           </el-menu-item>
           <navbar :items="items"></navbar>
-<!--          <NavMenu :navlist="items"></NavMenu>-->
+          <!--          <NavMenu :navlist="items"></NavMenu>-->
         </el-menu>
         <transition name="el-fade-in">
           <Live2d v-show="kanbanniang"></Live2d>
@@ -78,10 +85,11 @@
             <div id="textLeft">
               <el-card style="width: 35vw" shadow="hover">
                 <template>
-                  <h2>员工管理系统</h2>
+                  <h2>通用管理后台</h2>
                   <el-divider></el-divider>
                   <span style="margin:  0 0 0 2vw">
-                    一直想做一款后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。于是利用空闲休息时间开始自己写一套后台系统。如此有了员工管理系统，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。
+<!--                    一直想做一款后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。于是利用空闲休息时间开始自己写一套后台系统。如此有了员工管理系统，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。-->
+                      崔崔的面板qwq
                   </span>
                 </template>
               </el-card>
@@ -91,13 +99,14 @@
                 <div class="left">
                   <h2>后端技术</h2>
                   <el-divider></el-divider>
-                    Redis<br/>
-                    JWT<br/>
-                    MySQL<br/>
-                    OSS<br/>
-                    FastJSON<br/>
-                    SpringBoot<br/>
-                    Myabtis-Plus<br/>
+                  Redis<br/>
+                  JWT<br/>
+                  MySQL<br/>
+                  OSS<br/>
+                  FastJSON<br/>
+                  SpringBoot<br/>
+                  Myabtis-Plus<br/>
+                  &nbsp;
                 </div>
                 <div class="right">
                   <h2>前端技术</h2>
@@ -135,19 +144,19 @@
           </div>
           <div id="drawer-settings">
             <ul>
-<!--              <li>-->
-<!--                <span class="drawer-settings-item">头像设置</span>-->
-<!--                <el-upload-->
-<!--                    :on-success="reload_head"-->
-<!--                    class="upload-demo"-->
-<!--                    :action="uploadURL"-->
-<!--                    multiple-->
-<!--                    :limit="1"-->
-<!--                    :file-list="fileList"-->
-<!--                    :show-file-list="false">-->
-<!--                  <el-button size="small" type="primary">点击上传</el-button>-->
-<!--                </el-upload>-->
-<!--              </li>-->
+              <!--              <li>-->
+              <!--                <span class="drawer-settings-item">头像设置</span>-->
+              <!--                <el-upload-->
+              <!--                    :on-success="reload_head"-->
+              <!--                    class="upload-demo"-->
+              <!--                    :action="uploadURL"-->
+              <!--                    multiple-->
+              <!--                    :limit="1"-->
+              <!--                    :file-list="fileList"-->
+              <!--                    :show-file-list="false">-->
+              <!--                  <el-button size="small" type="primary">点击上传</el-button>-->
+              <!--                </el-upload>-->
+              <!--              </li>-->
               <li></li>
               <li>
                 <span class="drawer-settings-item">看板娘设置</span>
@@ -184,6 +193,7 @@ import Live2d from "@/components/Live2d.vue";
 import service from "@/service";
 import $ from 'jquery'
 import screenfull from "screenfull";
+import config from '@/config/config'
 
 
 export default {
@@ -199,6 +209,7 @@ export default {
     }
   },
   mounted() {
+    this.Title = config.title;
     this.fullscreenLoading = true
     service.GET("/user/headImage/" + localStorage.getItem("userid"), resp => {
       $("#head-img").css({
@@ -238,14 +249,14 @@ export default {
       console.log(resp)
       this.items = resp.data.data
     })
-    service.GET("/Notice/getAllNotice",resp=>{
+    service.GET("/Notice/getAllNotice", resp => {
       this.notices = resp.data.data
       console.log(resp.data.data)
     })
-    if(localStorage.getItem("noticeEnable")){
-      if(localStorage.getItem('noticeEnable') === 'true'){
+    if (localStorage.getItem("noticeEnable")) {
+      if (localStorage.getItem('noticeEnable') === 'true') {
         this.gonggao = true
-      }else {
+      } else {
         this.gonggao = false
       }
     }
@@ -254,6 +265,7 @@ export default {
   },
   data() {
     return {
+      Title: "",
       gonggao: false,
       notices: [],
       items: [],
@@ -293,9 +305,9 @@ export default {
 
 
     },
-    gonggao1(){
+    gonggao1() {
       console.log(this.gonggao)
-      localStorage.setItem("noticeEnable",this.gonggao)
+      localStorage.setItem("noticeEnable", this.gonggao)
     },
     check() {
       if (this.$route.path !== '/index') {
@@ -384,6 +396,12 @@ export default {
       } else {
         return
       }
+    },
+    openGitee() {
+      window.location.href = "https://gitee.com/CUICUI233/employee-manage-back-end-open";
+    },
+    openGithub() {
+
     }
 
   }
@@ -432,11 +450,10 @@ export default {
   //height: 20vh;
 }
 
-#textRight{
+#textRight {
   margin: 1vw 10vw 0 0;
   //height: 3vh;
 }
-
 
 
 .left {

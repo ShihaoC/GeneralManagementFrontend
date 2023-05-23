@@ -2,12 +2,12 @@
   <div class="container" v-loading="ld">
     <div id="menu-main">
       <div class="up">
-        <el-button type="primary" @click="openInsert" icon="el-icon-edit" size="mini" plain>
+        <el-button type="primary" @click="openInsert" icon="el-icon-edit" size="small" plain>
           添加菜单
         </el-button>
 
         <span>&nbsp;&nbsp;</span>
-        <el-button type="info" @click="open" icon="el-icon-sort" size="mini" plain>
+        <el-button type="info" @click="open" icon="el-icon-sort" size="small" plain>
           展开/折叠
         </el-button>
       </div>
@@ -19,8 +19,8 @@
             height="80vh"
             :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
             v-loading="loading"
-            :header-cell-style="header_cell_style"
-            :cell-style="cell_style"
+            :header-cell-style="'height: 6vh'"
+            :cell-style="'height: 6vh'"
             ref="listTable">
           <el-table-column
               prop="label"
@@ -382,7 +382,7 @@ export default {
       })
     },
     handleDelete(index,row){
-      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该节点, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

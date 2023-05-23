@@ -23,6 +23,8 @@
 
 <script>
 import service from "@/service";
+import {Message} from "element-ui";
+import Manage from "@/views/manage/manage.vue";
 
 export default {
 
@@ -37,8 +39,11 @@ export default {
     let validateCheckPass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请输入密码'));
-      } else {
+      } else if (value.length < 6) {
+        callback(new Error('密码最低六位'))
+      }else {
         callback();
+
       }
     };
     let validatePass2 = (rule, value, callback) => {
@@ -74,8 +79,14 @@ export default {
     submitForm() {
       if(this.ruleForm.pass && this.rules.checkPass && this.ruleForm.checkPassword){
 
-        service.GET("/updataPassword/" + localStorage.getItem("userid") + "?pass1=" + this.ruleForm.pass + "&pass2=" + this.ruleForm.checkPass, resp => {
+        service.GET("/auth/updatePassword/" + localStorage.getItem("userid") + "?pass1=" + this.ruleForm.pass + "&pass2=" + this.ruleForm.checkPass, resp => {
           console.log(resp)
+          if(resp.data.code === 400){
+            this.$message.error(resp.data.msg)
+          }else {
+            this.$message.success('修改成功请重新登录')
+            this.disLogin()
+          }
         })
       }else {
         this.$refs.ruleForm.validate()
@@ -84,7 +95,18 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
-    }
+    },
+    disLogin() {
+      localStorage.removeItem("username")
+      localStorage.removeItem("password")
+      localStorage.removeItem("authorization")
+      localStorage.removeItem("image")
+      localStorage.removeItem("userid")
+      localStorage.removeItem("role_id")
+      this.$router.push({
+        path: '/'
+      })
+    },
   }
 
 }

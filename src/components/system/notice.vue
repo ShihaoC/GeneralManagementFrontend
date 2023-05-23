@@ -2,12 +2,12 @@
   <div class="container" v-loading="false">
     <div id="notice-main">
       <div class="up">
-        <el-button type="primary" @click="toInsert" icon="el-icon-edit" size="mini" plain>
+        <el-button type="primary" @click="toInsert" icon="el-icon-edit" size="small" plain>
           发布通知
         </el-button>
 
         <span>&nbsp;&nbsp;</span>
-        <el-button :disabled="select" type="danger" @click="bench_delete" icon="el-icon-close" size="mini" plain>
+        <el-button :disabled="select" type="danger" @click="bench_delete" icon="el-icon-close" size="small" plain>
           批量删除
         </el-button>
       </div>
@@ -17,11 +17,14 @@
             v-loading="loading"
             :data="tableData"
             style="width: 100%;"
-            :header-cell-style="header_cell_style"
-            :cell-style="cell_style"
+            :header-cell-style="'height: 6vh'"
+            :cell-style="'height: 6vh'"
             @selection-change="handleSelectionChange">
           <el-table-column
-              type="selection">
+              type="selection"
+              align="center"
+              width="50"
+          >
           </el-table-column>
           <el-table-column
               prop="id"
@@ -29,7 +32,14 @@
           </el-table-column>
           <el-table-column
               prop="context"
-              label="内容">
+              label="内容"
+          >
+            <template slot-scope="scope">
+              <span style="white-space: nowrap;text-overflow: ellipsis;">
+                {{ scope.row.context }}
+              </span>
+
+            </template>
           </el-table-column>
           <el-table-column
               prop="timeout"
@@ -38,10 +48,10 @@
               {{ scope.row.timeout }} s
             </template>
           </el-table-column>
-          <el-table-column
-              prop="type"
-              label="类型">
-          </el-table-column>
+<!--          <el-table-column-->
+<!--              prop="type"-->
+<!--              label="类型">-->
+<!--          </el-table-column>-->
           <el-table-column
               prop="cdate"
               label="创建时间">
@@ -49,13 +59,7 @@
 
 
           <el-table-column label="操作">
-            <template slot="header" slot-scope="scope">
-              <el-input
-                  v-model="ss"
-                  size="mini"
-                  placeholder="输入关键字搜索"
-                  @change="loadData()"/>
-            </template>
+
             <template slot-scope="scope">
               <el-button
                   size="mini"

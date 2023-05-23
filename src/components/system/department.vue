@@ -3,19 +3,10 @@
   <div class="container">
     <div id="post-main">
       <div class="up">
-        <el-button type="success" icon="el-icon-edit" plain size="small" @click="dialogadd = true"> 添加</el-button>
-<!--        <el-upload-->
-<!--            style="display: inline-block"-->
-<!--            class="upload-demo"-->
-<!--            action="https://jsonplaceholder.typicode.com/posts/"-->
-
-<!--            :limit="3"-->
-<!--        >-->
-<!--          <el-button type="warning" icon="el-icon-upload2" plain size="small">导入</el-button>-->
-<!--        </el-upload>-->
+        <el-button type="success" icon="el-icon-edit" plain size="small"> 添加</el-button>
         <span>&nbsp;&nbsp;</span>
-        <el-button type="info" icon="el-icon-download" plain size="small">导出</el-button>
-        <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain size="small">删除
+        <el-button type="info" icon="el-icon-download" @click="exportExcel" plain size="small">导出</el-button>
+        <el-button :disabled="select" type="danger" @click="batch_Delete" icon="el-icon-close" plain size="small">批量删除
         </el-button>
       </div>
       <div class="block">
@@ -24,11 +15,12 @@
             v-loading="loading"
             :data="tableData"
             style="width: 100%;"
-            :header-cell-style="header_cell_style"
-            :cell-style="cell_style"
+            :header-cell-style="'height: 6vh'"
+            :cell-style="'height: 6vh'"
             @selection-change="handleSelectionChange">
           <el-table-column
-              width="100"
+              align="center"
+              width="50"
               type="selection">
           </el-table-column>
           <el-table-column
@@ -105,8 +97,8 @@
         </div>
       </el-dialog>
       <!--            :rules="insertRule" ref="ruleForm"-->
-      <el-dialog title="岗位编辑" :visible.sync="dialogFormVisible">
-        <el-form :inline="true" :model="upfrom">
+      <el-dialog title="岗位编辑" :visible.sync="dialogFormVisible" width = "30%">
+        <el-form :model="upfrom" >
           <el-form-item label="ID:" :label-width="formLabelWidth" prop="department">
             <el-input v-model="upfrom.id" autocomplete="off" class="sBox" disabled></el-input>
           </el-form-item>
@@ -247,7 +239,9 @@ export default {
         this.loadData(this.page)
       })
     },
-
+    exportExcel(){
+      service.download("/dep/export","岗位信息表")
+    }
   }
 };
 </script>

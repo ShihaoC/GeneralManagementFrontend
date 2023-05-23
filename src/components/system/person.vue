@@ -49,7 +49,7 @@ export default {
       from: {},
       pwdfrom: {},
       formLabelWidth: '20%',
-      actionURL: "http://localhost:8848/user/uploadImage/" + localStorage.getItem("userid"),
+      actionURL: "http://47.93.223.115:62655/user/uploadImage/" + localStorage.getItem("userid"),
       himgshow: true,
       image_url: ''
     }

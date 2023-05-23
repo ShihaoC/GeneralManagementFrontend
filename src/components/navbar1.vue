@@ -36,7 +36,7 @@ export default {
   methods: {}
 };
 </script>
-<style lang='scss' >
+<style lang='scss'>
 //如果没有此样式的话  折叠有子级菜单的父菜单文字是不会隐藏的
 .el-menu--collapse .el-menu-item span,
 .el-menu--collapse .el-submenu .el-submenu__title span {
@@ -46,8 +46,8 @@ export default {
   visibility: hidden;
   display: inline-block;
 }
-// .el-menu{
-//   width: 200px;
+ //.el-menu{
+ //  width: 200px;
 //    .el-submenu__icon-arrow{
 //     opacity: 1;
 //   }

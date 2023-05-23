@@ -64,7 +64,6 @@ export default {
     // particlesJS("login-main", particles_config);
     canv = particles.init({
       selector: '#canv',
-      connectParticles: true,
       color: Global.canvColor,
       speed: Global.canvSpeed
     });
@@ -110,7 +109,7 @@ export default {
         if (resp.data.data != null) {
           localStorage.setItem("username ", this.loginForm.username)
           // localStorage.setItem("password", this.loginForm.password)
-          localStorage.setItem("authorization", resp.headers['authorization'])
+          localStorage.setItem("Authorization", resp.headers['authorization'])
           localStorage.setItem("image",resp.headers['image'])
           localStorage.setItem("userid",resp.headers['userid'])
           localStorage.setItem("role_id",resp.headers['role_id'])

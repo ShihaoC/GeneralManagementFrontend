@@ -2,8 +2,9 @@ import axios from "axios";
 import router from "./router";
 import {message} from '@/assets/util/resetMessage'
 
-const baseURL = "https://oa.api.mrcsh.cn";
-// const baseURL = "http://localhost:8848";
+// const baseURL = "https://oa.api.mrcsh.cn";
+// const baseURL = "http://47.93.223.115:62655/";
+const baseURL = "http://localhost:8848";
 
 axios.defaults.baseURL = baseURL;
 const request = axios.create({
@@ -11,7 +12,7 @@ const request = axios.create({
 })
 
 request.interceptors.request.use(config => {
-    config.headers['authorization'] = localStorage.getItem("authorization")
+    config.headers['Authorization'] = localStorage.getItem("Authorization")
     return config
 })
 
@@ -51,7 +52,7 @@ let download = (path,fileName) => {
     let xhr = new XMLHttpRequest();
     xhr.open('GET', baseURL+path, true); //
     xhr.responseType = "blob"; //js 中的二进制对象
-    xhr.setRequestHeader("authorization",localStorage.getItem("authorization"))
+    xhr.setRequestHeader("Authorization",localStorage.getItem("Authorization"))
     xhr.onreadystatechange = function () {
 
 
